@@ -6,7 +6,7 @@ import { Home, Menu, ForkKnife, User, Users, LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { logout } from "../actions";
+import { logout } from "@/app/actions";
 
 function MobileSideBar() {
   return (

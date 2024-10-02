@@ -3,6 +3,7 @@
 import { z } from "zod";
 import Link from "next/link";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { login } from "./actions";
+import { login } from "@/app/actions";
 
 const formSchema = z.object({
   email: z.string().email(),
