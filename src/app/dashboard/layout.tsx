@@ -31,7 +31,7 @@ function MobileSideBar() {
             />
           </Link>
           <Link
-            href="#"
+            href="/dashboard"
             className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
           >
             <Home className="h-5 w-5" />
@@ -91,7 +91,7 @@ function DesktopSideBar() {
         <div className="flex-1">
           <nav className="grid items-start px-2 text-lg font-medium lg:px-4 gap-5">
             <Link
-              href="#"
+              href="/dashboard"
               className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
               <Home className="h-6 w-6" />
