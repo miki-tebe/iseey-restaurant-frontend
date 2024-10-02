@@ -52,19 +52,19 @@ function MobileSideBar() {
             Users
           </Link>
           <Link
-            href="#"
+            href="/dashboard/profile"
             className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
           >
             <User className="h-5 w-5" />
             My Profile
           </Link>
-          <Link
-            href="#"
+          <a
+            onClick={() => logout()}
             className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
           >
             <LogOut className="h-5 w-5" />
             Logout
-          </Link>
+          </a>
         </nav>
       </SheetContent>
     </Sheet>
@@ -112,7 +112,7 @@ function DesktopSideBar() {
               Users
             </Link>
             <Link
-              href="#"
+              href="/dashboard/profile"
               className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
               <User className="h-6 w-6" />
