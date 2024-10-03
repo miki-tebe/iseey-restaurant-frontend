@@ -35,7 +35,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-      <Card x-chunk="dashboard-05-chunk-3">
+      <Card>
         <CardHeader className="px-7">
           <CardTitle>Recent Users</CardTitle>
         </CardHeader>
