@@ -113,9 +113,8 @@ export default function Users() {
           }
           className="max-w-sm"
         />
-        {/* add new use link */}
         <Button asChild className="justify-self-end">
-          <Link href="/users/new">Add User</Link>
+          <Link href="/dashboard/users/add">Add User</Link>
         </Button>
       </div>
       <Card>
