@@ -38,7 +38,7 @@ function MobileSideBar() {
             Dashboard
           </Link>
           <Link
-            href="#"
+            href="/dashboard/restaurants"
             className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
           >
             <ForkKnife className="h-5 w-5" />
@@ -98,7 +98,7 @@ function DesktopSideBar() {
               Dashboard
             </Link>
             <Link
-              href="#"
+              href="/dashboard/restaurants"
               className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
               <ForkKnife className="h-6 w-6" />
