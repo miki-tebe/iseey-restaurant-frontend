@@ -29,3 +29,16 @@ export const getUser = cache(async () => {
   const data = await payload.json();
   return data.result;
 });
+
+export const getDashboard = cache(async () => {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch("http://localhost:8090/api/admin/dashboard", {
+    headers: {
+      Authorization: `Bearer ${session.token}`,
+    },
+  });
+  const data = await payload.json();
+  return data.result;
+});

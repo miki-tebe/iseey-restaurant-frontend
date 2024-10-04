@@ -1,5 +1,8 @@
+import { format } from "date-fns";
 import { ForkKnife, Users } from "lucide-react";
 
+import { getDashboard } from "@/lib/dal";
+import { User } from "@/app/dashboard/users/page";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -10,7 +13,9 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const data = await getDashboard();
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
@@ -23,7 +28,7 @@ export default function Dashboard() {
             <Users className="h-10 w-10 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">20</div>
+            <div className="text-2xl font-bold">{data?.usersCount}</div>
           </CardContent>
         </Card>
         <Card>
@@ -32,7 +37,7 @@ export default function Dashboard() {
             <ForkKnife className="h-10 w-10 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">99</div>
+            <div className="text-2xl font-bold">{data?.restuantCount}</div>
           </CardContent>
         </Card>
       </div>
@@ -52,15 +57,29 @@ export default function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow className="bg-accent">
-                <TableCell className="hidden sm:table-cell">1</TableCell>
-                <TableCell>Liam</TableCell>
-                <TableCell>Johnson</TableCell>
-                <TableCell className="hidden md:table-cell">18</TableCell>
-                <TableCell className="hidden md:table-cell">
-                  2023-06-23
-                </TableCell>
-              </TableRow>
+              {data?.users.map((user: User, index: number) => (
+                <TableRow key={index}>
+                  <TableCell className="hidden sm:table-cell">
+                    {index + 1}
+                  </TableCell>
+                  <TableCell>{user?.first_name}</TableCell>
+                  <TableCell>{user?.last_name}</TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {user?.age}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {user.createdAt
+                      ? format(new Date(user.createdAt), "PPP")
+                      : "N/A"}
+                  </TableCell>
+                </TableRow>
+              )) || (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">
+                    No data available
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>

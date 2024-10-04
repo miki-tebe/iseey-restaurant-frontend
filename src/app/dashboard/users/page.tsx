@@ -32,6 +32,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export type User = {
+  first_name?: string;
+  last_name?: string;
+  age?: number;
   name: string;
   email: string;
   image: string;
@@ -46,6 +49,7 @@ export type User = {
   deleted: string;
   created: number;
   user_id: string;
+  createdAt?: string;
 };
 
 export const columns: ColumnDef<User>[] = [
