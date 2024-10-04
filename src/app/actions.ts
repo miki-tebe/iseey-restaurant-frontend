@@ -1,7 +1,8 @@
 "use server";
 
-import { createSession, destroySession } from "@/lib/session";
 import { redirect } from "next/navigation";
+
+import { createSession, destroySession } from "@/lib/session";
 
 export async function login(data: { email: string; password: string }) {
   const payload = await fetch("http://localhost:8090/api/admin/login", {

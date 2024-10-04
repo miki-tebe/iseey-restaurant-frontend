@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Home, Menu, ForkKnife, User, Users, LogOut } from "lucide-react";
 
+import { logout } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { logout } from "@/app/actions";
 
 function MobileSideBar() {
   return (

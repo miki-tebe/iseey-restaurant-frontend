@@ -256,7 +256,7 @@ export default function AddRestaurant() {
                     name="drink"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Drink</FormLabel>
+                        <FormLabel>Drink Menu</FormLabel>
                         <FormControl>
                           <Input type="file" {...field} />
                         </FormControl>

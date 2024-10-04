@@ -1,3 +1,5 @@
+import { ForkKnife, Users } from "lucide-react";
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -7,7 +9,6 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { ForkKnife, Users } from "lucide-react";
 
 export default function Dashboard() {
   return (
