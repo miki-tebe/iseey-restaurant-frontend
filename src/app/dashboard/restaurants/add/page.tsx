@@ -1,9 +1,13 @@
 "use client";
 
 import { z } from "zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,10 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
 
 const formSchema = z.object({
   name: z
@@ -233,7 +233,7 @@ export default function AddRestaurant() {
                   checked={drinkURL}
                   onCheckedChange={setDrinkURL}
                 />
-                <Label htmlFor="drink">Drink URL</Label>
+                <Label htmlFor="drink">Drink Menu URL</Label>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {drinkURL ? (
@@ -242,9 +242,9 @@ export default function AddRestaurant() {
                     name="drink"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Drink</FormLabel>
+                        <FormLabel>Drink Menu</FormLabel>
                         <FormControl>
-                          <Input placeholder="Drink URL" {...field} />
+                          <Input placeholder="Drink Menu URL" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
