@@ -134,7 +134,7 @@ export default function AddUser() {
                 <FormField
                   name="dob"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="grid gap-2">
                       <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
                         <Popover>
@@ -154,7 +154,7 @@ export default function AddUser() {
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
+                          <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
                               mode="single"
                               selected={field.value}
