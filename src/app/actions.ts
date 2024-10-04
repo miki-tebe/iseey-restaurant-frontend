@@ -13,8 +13,8 @@ export async function login(data: { email: string; password: string }) {
     body: JSON.stringify(data),
   });
   const result = await payload.json();
-  if (result.result?.user_id) {
-    await createSession(result.result.user_id);
+  if (result.result?.token) {
+    await createSession(result.result.token);
     redirect("/dashboard");
   }
 }
