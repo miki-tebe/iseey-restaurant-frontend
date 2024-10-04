@@ -1,11 +1,12 @@
 "use client";
 
 import { z } from "zod";
-import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { PencilIcon } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { getProfile } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,12 +37,22 @@ const passwordFormSchema = z.object({
 });
 
 export default function Profile() {
-  const [avatarSrc, setAvatarSrc] = useState("/images/logo4.png");
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const profileForm = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
   });
+
+  useEffect(() => {
+    async function fetchProfile() {
+      const profileData = await getProfile();
+      profileForm.setValue("name", profileData.name);
+      profileForm.setValue("email", profileData.email);
+      setAvatarSrc(profileData.image);
+    }
+    fetchProfile();
+  }, [profileForm]);
 
   const passwordForm = useForm<z.infer<typeof passwordFormSchema>>({
     resolver: zodResolver(passwordFormSchema),
@@ -82,7 +93,7 @@ export default function Profile() {
           <CardContent className="flex flex-col items-center space-y-4 lg:pt-32">
             <div className="relative">
               <Avatar className="w-44 h-44">
-                <AvatarImage src={avatarSrc} alt="Profile picture" />
+                <AvatarImage src={avatarSrc ?? ""} alt="Profile picture" />
                 <AvatarFallback>KA</AvatarFallback>
               </Avatar>
               <div
@@ -100,7 +111,9 @@ export default function Profile() {
                 className="hidden"
               />
             </div>
-            <h2 className="text-2xl font-bold">Kaleb-Admin</h2>
+            <h2 className="text-2xl font-bold">
+              {profileForm.getValues("name")}
+            </h2>
             <p className="text-zinc-400">Super Admin</p>
           </CardContent>
         </Card>
