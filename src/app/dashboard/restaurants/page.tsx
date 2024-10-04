@@ -3,6 +3,16 @@
 import Link from "next/link";
 import * as React from "react";
 import { format } from "date-fns";
+import { MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getFilteredRowModel,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+} from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -16,14 +26,11 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getFilteredRowModel,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-} from "@tanstack/react-table";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export type Restaurant = {
   _id: string;
@@ -97,6 +104,41 @@ export const columns: ColumnDef<Restaurant>[] = [
   {
     header: "Status",
     accessorKey: "active",
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const restaurant = row.original as Restaurant;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <Link href={`/dashboard/restaurants/view/${restaurant._id}`}>
+              <DropdownMenuItem>
+                <Eye className="mr-2 h-4 w-4" />
+                View restaurant
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/dashboard/restaurants/edit/${restaurant._id}`}>
+              <DropdownMenuItem>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit restaurant
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete restaurant
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
 

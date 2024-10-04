@@ -1,5 +1,18 @@
 "use client";
 
+import Link from "next/link";
+import * as React from "react";
+import { MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getFilteredRowModel,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+} from "@tanstack/react-table";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,16 +25,11 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getFilteredRowModel,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-} from "@tanstack/react-table";
-import Link from "next/link";
-import * as React from "react";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export type User = {
   name: string;
@@ -39,25 +47,6 @@ export type User = {
   created: number;
   user_id: string;
 };
-
-const data: User[] = [
-  {
-    name: "Liam Johnson",
-    email: "[email protected]",
-    image: "/images/avatar.jpg",
-    gender: "F",
-    dob: "1993-06-23",
-    lat: "52.5200",
-    lng: "13.4050",
-    address: "Berlin",
-    postal_code: "10115",
-    description: "Description",
-    active: "1",
-    deleted: "0",
-    created: 1624416000,
-    user_id: "1",
-  },
-];
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -80,12 +69,65 @@ export const columns: ColumnDef<User>[] = [
     header: "Status",
     accessorKey: "active",
   },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const user = row.original as User;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <Link href={`/dashboard/users/view/${user.user_id}`}>
+              <DropdownMenuItem>
+                <Eye className="mr-2 h-4 w-4" />
+                View user
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/dashboard/users/edit/${user.user_id}`}>
+              <DropdownMenuItem>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit user
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete user
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
 ];
 
 export default function Users() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const data: User[] = [
+    {
+      name: "Liam Johnson",
+      email: "[email protected]",
+      image: "/images/avatar.jpg",
+      gender: "F",
+      dob: "1993-06-23",
+      lat: "52.5200",
+      lng: "13.4050",
+      address: "Berlin",
+      postal_code: "10115",
+      description: "Description",
+      active: "1",
+      deleted: "0",
+      created: 1624416000,
+      user_id: "1",
+    },
+  ];
 
   const table = useReactTable({
     data,
