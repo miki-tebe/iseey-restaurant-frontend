@@ -5,9 +5,10 @@ import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { PencilIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardHeader,
@@ -23,7 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 const profileFormSchema = z.object({
   name: z.string().min(3).max(255),
@@ -72,16 +72,16 @@ export default function Profile() {
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-3xl font-bold text-center">
+            <CardTitle className="text-3xl font-bold text-left">
               My Profile
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col items-center space-y-4">
+          <CardContent className="flex flex-col items-center space-y-4 lg:pt-32">
             <div className="relative">
-              <Avatar>
+              <Avatar className="w-44 h-44">
                 <AvatarImage src={avatarSrc} alt="Profile picture" />
                 <AvatarFallback>KA</AvatarFallback>
               </Avatar>
@@ -104,7 +104,7 @@ export default function Profile() {
             <p className="text-zinc-400">Super Admin</p>
           </CardContent>
         </Card>
-        <div className="grid gap-4">
+        <div className="grid gap-4 col-span-2">
           <Card>
             <CardHeader>
               <CardTitle>Edit Profile</CardTitle>
