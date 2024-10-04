@@ -46,7 +46,7 @@ const formSchema = z.object({
   drink: z.string(),
 });
 
-export default function AddUser() {
+export default function AddRestaurant() {
   const [menuURL, setMenuURL] = useState(false);
   const [drinkURL, setDrinkURL] = useState(false);
 
