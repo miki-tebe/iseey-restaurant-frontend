@@ -28,45 +28,47 @@ export default function ViewRestaurant({ params }: { params: { id: string } }) {
         <div className="grid gap-4 col-span-2">
           <Card>
             <CardContent className="space-y-5 pt-5">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-1.5">
-                  <Label>Restaurant Name</Label>
-                  <Input disabled />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Address</Label>
-                  <Input disabled />
-                </div>
-              </div>
               <div className="grid gap-1.5">
-                <Label>Email</Label>
+                <Label>Restaurant Name</Label>
                 <Input disabled />
               </div>
               <div className="grid gap-1.5">
-                <Label>Phone Number</Label>
+                <Label>Address</Label>
                 <Input disabled />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-1.5">
-                  <Label>Number of Tables</Label>
-                  <Input type="date" disabled />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Facebook</Label>
+                  <Label>Email</Label>
                   <Input disabled />
                 </div>
                 <div className="grid gap-1.5">
-                  <Label>Instagram</Label>
-                  <Input disabled />
-                </div>
-                <div className="grid gap-1.5">
-                  <Label>Website</Label>
+                  <Label>Phone Number</Label>
                   <Input disabled />
                 </div>
               </div>
               <div className="grid gap-1.5">
-                <Label>Email Address</Label>
-                <Input type="email" disabled />
+                <Label>Number of Tables</Label>
+                <Input disabled />
+              </div>
+              <div className="grid gap-1.5">
+                <Label>Facebook</Label>
+                <Input disabled />
+              </div>
+              <div className="grid gap-1.5">
+                <Label>Instagram</Label>
+                <Input disabled />
+              </div>
+              <div className="grid gap-1.5">
+                <Label>Website</Label>
+                <Input disabled />
+              </div>
+              <div className="grid gap-1.5">
+                <Label>Menu</Label>
+                <Input disabled />
+              </div>
+              <div className="grid gap-1.5">
+                <Label>Drink menu</Label>
+                <Input disabled />
               </div>
             </CardContent>
           </Card>
