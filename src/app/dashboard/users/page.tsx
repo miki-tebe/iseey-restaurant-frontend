@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
+import { getUsers } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -56,10 +57,21 @@ export const columns: ColumnDef<User>[] = [
   {
     header: "Nr",
     accessorKey: "user_id",
+    cell: ({ row }) => {
+      return <>{row.index + 1}</>;
+    },
   },
   {
     header: "Name",
     accessorKey: "name",
+    cell: ({ row }) => {
+      const user = row.original as User;
+      return (
+        <>
+          {user.first_name} {user.last_name}
+        </>
+      );
+    },
   },
   {
     header: "Gender",
@@ -68,10 +80,20 @@ export const columns: ColumnDef<User>[] = [
   {
     header: "Age",
     accessorKey: "dob",
+    cell: ({ row }) => {
+      const user = row.original as User;
+      const dob = new Date(parseFloat(user.dob));
+      const age = new Date().getFullYear() - dob.getFullYear();
+      return <>{age}</>;
+    },
   },
   {
     header: "Status",
     accessorKey: "active",
+    cell: ({ row }) => {
+      const user = row.original as User;
+      return <>{user.active === "Y" ? "Active" : "Inactive"}</>;
+    },
   },
   {
     id: "actions",
@@ -114,24 +136,17 @@ export default function Users() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const data: User[] = [
-    {
-      name: "Liam Johnson",
-      email: "[email protected]",
-      image: "/images/avatar.jpg",
-      gender: "F",
-      dob: "1993-06-23",
-      lat: "52.5200",
-      lng: "13.4050",
-      address: "Berlin",
-      postal_code: "10115",
-      description: "Description",
-      active: "1",
-      deleted: "0",
-      created: 1624416000,
-      user_id: "1",
-    },
-  ];
+  const [data, setData] = React.useState<User[]>([]);
+
+  React.useEffect(() => {
+    async function fetchUsers() {
+      const users = await getUsers();
+      if (users) {
+        setData(users);
+      }
+    }
+    fetchUsers();
+  }, []);
 
   const table = useReactTable({
     data,

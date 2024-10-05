@@ -132,7 +132,7 @@ export default function Profile() {
                       <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input placeholder="Name" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

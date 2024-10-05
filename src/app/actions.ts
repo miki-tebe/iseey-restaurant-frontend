@@ -35,5 +35,20 @@ export async function getProfile() {
     },
   });
   const data = await payload.json();
-  return data.result;
+  if (data.success == 200) return data.result;
+  return null;
+}
+
+export async function getUsers() {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch("http://localhost:8090/api/admin/users/list", {
+    headers: {
+      Authorization: `Bearer ${session.token}`,
+    },
+  });
+  const data = await payload.json();
+  if (data.success == 200) return data.result.users;
+  return null;
 }
