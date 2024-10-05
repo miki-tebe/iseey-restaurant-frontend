@@ -65,7 +65,8 @@ export default async function Dashboard() {
                   <TableCell>{user?.first_name}</TableCell>
                   <TableCell>{user?.last_name}</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {user?.age}
+                    {new Date().getFullYear() -
+                      new Date(parseFloat(user?.dob)).getFullYear()}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {user.createdAt

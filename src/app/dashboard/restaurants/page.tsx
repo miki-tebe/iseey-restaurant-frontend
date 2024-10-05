@@ -31,6 +31,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getRestaurants } from "@/app/actions";
 
 export type Restaurant = {
   _id: string;
@@ -54,34 +55,13 @@ export type Restaurant = {
   bio: string;
 };
 
-const data: Restaurant[] = [
-  {
-    _id: "1",
-    email_verified: "1",
-    image: "/images/avatar.jpg",
-    lat: 52.52,
-    lng: 13.405,
-    address: "Berlin",
-    active: "1",
-    deleted: "0",
-    number_of_tables: 10,
-    menu_type: "Vegan",
-    menu: "Menu",
-    facebook: "facebook",
-    website: "website",
-    name: "Restaurant",
-    phoneNumber: "123456789",
-    email: "[email protected]",
-    updated: 1624416000,
-    created: 1689793402676,
-    bio: "Description",
-  },
-];
-
 export const columns: ColumnDef<Restaurant>[] = [
   {
     header: "Nr",
     accessorKey: "_id",
+    cell: ({ row }) => {
+      return <span>{row.index + 1}</span>;
+    },
   },
   {
     header: "Restaurant Name",
@@ -104,6 +84,10 @@ export const columns: ColumnDef<Restaurant>[] = [
   {
     header: "Status",
     accessorKey: "active",
+    cell: ({ row }) => {
+      const active = row.getValue("active");
+      return <span>{active === "Y" ? "Active" : "Inactive"}</span>;
+    },
   },
   {
     id: "actions",
@@ -142,10 +126,22 @@ export const columns: ColumnDef<Restaurant>[] = [
   },
 ];
 
-export default function Users() {
+export default function Restaurants() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const [data, setData] = React.useState<Restaurant[]>([]);
+
+  React.useEffect(() => {
+    async function fetchRestaurants() {
+      const restaurants = await getRestaurants();
+      if (restaurants) {
+        setData(restaurants);
+      }
+    }
+    fetchRestaurants();
+  }, []);
 
   const table = useReactTable({
     data,
