@@ -109,7 +109,7 @@ export async function getRestaurants() {
   if (!session) return null;
 
   const payload = await fetch(
-    "http://localhost:8090/api/admin/restaurants/list",
+    "http://localhost:8090/api/admin/restaurants/list?limit=100",
     {
       headers: {
         Authorization: `Bearer ${session.token}`,
