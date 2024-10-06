@@ -72,6 +72,23 @@ export async function getUsers() {
   return null;
 }
 
+export async function getUser(data: { id: string }) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(
+    `http://localhost:8090/api/admin/users/getProfile/${data.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    }
+  );
+  const result = await payload.json();
+  if (result.success == 200) return result.result;
+  return null;
+}
+
 export async function addUser(data: z.infer<typeof addUserFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
@@ -101,6 +118,23 @@ export async function getRestaurants() {
   );
   const data = await payload.json();
   if (data.success == 200) return data.result.restaurants;
+  return null;
+}
+
+export async function getRestaurant(data: { id: string }) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(
+    `http://localhost:8090/api/admin/restaurants/getRestaurant/${data.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    }
+  );
+  const result = await payload.json();
+  if (result.success == 200) return result.result;
   return null;
 }
 
