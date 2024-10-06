@@ -1,9 +1,13 @@
 "use server";
 
+import { z } from "zod";
 import { redirect } from "next/navigation";
 
 import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
+import { profileFormSchema } from "@/app/dashboard/profile/page";
+import { addUserFormSchema } from "@/app/dashboard/users/add/page";
+import { restaurantFormSchema } from "@/app/dashboard/restaurants/add/page";
 
 export async function login(data: { email: string; password: string }) {
   const payload = await fetch("http://localhost:8090/api/admin/login", {
@@ -39,6 +43,21 @@ export async function getProfile() {
   return null;
 }
 
+export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch("http://localhost:8090/api/admin/updateProfile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return await payload.json();
+}
+
 export async function getUsers() {
   const session = await verifySession();
   if (!session) return null;
@@ -51,6 +70,21 @@ export async function getUsers() {
   const data = await payload.json();
   if (data.success == 200) return data.result.users;
   return null;
+}
+
+export async function addUser(data: z.infer<typeof addUserFormSchema>) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch("http://localhost:8090/api/admin/users/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return await payload.json();
 }
 
 export async function getRestaurants() {
@@ -68,4 +102,24 @@ export async function getRestaurants() {
   const data = await payload.json();
   if (data.success == 200) return data.result.restaurants;
   return null;
+}
+
+export async function addRestaurant(
+  data: z.infer<typeof restaurantFormSchema>
+) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(
+    "http://localhost:8090/api/admin/restaurants/addRestaurant",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  return await payload.json();
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { PencilIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { getProfile } from "@/app/actions";
+import { getProfile, updateProfile } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,7 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const profileFormSchema = z.object({
+export const profileFormSchema = z.object({
   name: z.string().min(3).max(255),
   email: z.string().email(),
 });
@@ -59,7 +60,9 @@ export default function Profile() {
   });
 
   function handleProfileSubmit(data: z.infer<typeof profileFormSchema>) {
-    console.log(data);
+    updateProfile(data).then((result) => {
+      toast(result.message);
+    });
   }
 
   function handlePasswordSubmit(data: z.infer<typeof passwordFormSchema>) {

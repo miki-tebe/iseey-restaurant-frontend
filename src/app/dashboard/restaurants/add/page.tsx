@@ -1,10 +1,12 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { addRestaurant } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -25,7 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
+export const restaurantFormSchema = z.object({
   name: z
     .string()
     .min(3, {
@@ -50,12 +52,14 @@ export default function AddRestaurant() {
   const [menuURL, setMenuURL] = useState(false);
   const [drinkURL, setDrinkURL] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof restaurantFormSchema>>({
+    resolver: zodResolver(restaurantFormSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  function onSubmit(values: z.infer<typeof restaurantFormSchema>) {
+    addRestaurant(values).then((result) => {
+      toast(result.message);
+    });
   }
 
   return (

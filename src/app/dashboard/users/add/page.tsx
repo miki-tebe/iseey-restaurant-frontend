@@ -1,12 +1,14 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { cn } from "@/lib/utils";
+import { addUser } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -39,7 +41,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
+export const addUserFormSchema = z.object({
   firstName: z
     .string()
     .min(3, {
@@ -63,12 +65,14 @@ const formSchema = z.object({
 });
 
 export default function AddUser() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof addUserFormSchema>>({
+    resolver: zodResolver(addUserFormSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  function onSubmit(values: z.infer<typeof addUserFormSchema>) {
+    addUser(values).then((result) => {
+      toast(result.message);
+    });
   }
 
   return (
