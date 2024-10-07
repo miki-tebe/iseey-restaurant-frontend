@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { toast } from "sonner";
 import { useState } from "react";
 import { MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
 import {
@@ -13,6 +14,7 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
+import { deleteUser } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -111,7 +113,13 @@ export const columns: ColumnDef<User>[] = [
                 Edit user
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-500"
+              onClick={async () => {
+                const result = await deleteUser({ id: user.user_id });
+                toast(result.message);
+              }}
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete user
             </DropdownMenuItem>

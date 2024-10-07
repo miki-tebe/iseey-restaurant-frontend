@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { toast } from "sonner";
 import { useState } from "react";
 import { format } from "date-fns";
 import { MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
@@ -14,6 +15,7 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
+import { deleteRestaurant } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -113,7 +115,13 @@ export const columns: ColumnDef<Restaurant>[] = [
                 Edit restaurant
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-500"
+              onClick={async () => {
+                const result = await deleteRestaurant({ id: restaurant._id });
+                toast(result.message);
+              }}
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete restaurant
             </DropdownMenuItem>

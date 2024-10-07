@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
@@ -104,6 +105,23 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>) {
   return await payload.json();
 }
 
+export async function deleteUser(data: { id: string }) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(
+    `http://localhost:8090/api/admin/users/delete/${data.id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    }
+  );
+  revalidatePath("/dashboard/users");
+  return await payload.json();
+}
+
 export async function getRestaurants() {
   const session = await verifySession();
   if (!session) return null;
@@ -155,5 +173,22 @@ export async function addRestaurant(
       body: JSON.stringify(data),
     }
   );
+  return await payload.json();
+}
+
+export async function deleteRestaurant(data: { id: string }) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(
+    `http://localhost:8090/api/admin/restaurants/delete/${data.id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    }
+  );
+  revalidatePath("/dashboard/restaurants");
   return await payload.json();
 }
