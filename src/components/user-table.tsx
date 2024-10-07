@@ -68,6 +68,12 @@ export const columns: ColumnDef<User>[] = [
   {
     header: "Gender",
     accessorKey: "gender",
+    cell: ({ row }) => {
+      const user = row.original as User;
+      if (user.gender === "M") return <>Male</>;
+      else if (user.gender === "F") return <>Female</>;
+      else return <>Other</>;
+    },
   },
   {
     header: "Age",
