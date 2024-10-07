@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Home, Menu, ForkKnife, User, Users, LogOut } from "lucide-react";
 
 import { logout } from "@/app/actions";
@@ -9,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function MobileSideBar() {
+  const pathname = usePathname();
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -32,28 +35,36 @@ export default function MobileSideBar() {
           </Link>
           <Link
             href="/dashboard"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
+              pathname === "/dashboard" ? "text-primary" : ""
+            }`}
           >
             <Home className="h-5 w-5" />
             Dashboard
           </Link>
           <Link
             href="/dashboard/restaurants"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
+              pathname === "/dashboard/restaurants" ? "text-primary" : ""
+            }`}
           >
             <ForkKnife className="h-5 w-5" />
             Restaurants
           </Link>
           <Link
             href="/dashboard/users"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
+              pathname === "/dashboard/users" ? "text-primary" : ""
+            }`}
           >
             <Users className="h-5 w-5" />
             Users
           </Link>
           <Link
             href="/dashboard/profile"
-            className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
+              pathname === "/dashboard/profile" ? "text-primary" : ""
+            }`}
           >
             <User className="h-5 w-5" />
             My Profile

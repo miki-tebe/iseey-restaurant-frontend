@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Home, ForkKnife, User, Users, LogOut } from "lucide-react";
 
 import { logout } from "@/app/actions";
 
 export default function DesktopSideBar() {
+  const pathname = usePathname();
+
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-5">
@@ -27,35 +30,43 @@ export default function DesktopSideBar() {
           <nav className="grid items-start px-2 text-lg font-medium lg:px-4 gap-5">
             <Link
               href="/dashboard"
-              className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
+                pathname === "/dashboard" ? "text-primary" : ""
+              }`}
             >
               <Home className="h-6 w-6" />
               Dashboard
             </Link>
             <Link
               href="/dashboard/restaurants"
-              className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
+                pathname === "/dashboard/restaurants" ? "text-primary" : ""
+              }`}
             >
               <ForkKnife className="h-6 w-6" />
               Restaurants
             </Link>
             <Link
               href="/dashboard/users"
-              className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
+                pathname === "/dashboard/users" ? "text-primary" : ""
+              }`}
             >
               <Users className="h-6 w-6" />
               Users
             </Link>
             <Link
               href="/dashboard/profile"
-              className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
+                pathname === "/dashboard/profile" ? "text-primary" : ""
+              }`}
             >
               <User className="h-6 w-6" />
               My Profile
             </Link>
             <a
               onClick={() => logout()}
-              className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground"
             >
               <LogOut className="h-6 w-6" />
               Logout
