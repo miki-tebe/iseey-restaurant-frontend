@@ -45,7 +45,9 @@ export default function MobileSideBar() {
           <Link
             href="/dashboard/restaurants"
             className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname === "/dashboard/restaurants" ? "text-primary" : ""
+              pathname.startsWith("/dashboard/restaurants")
+                ? "text-primary"
+                : ""
             }`}
           >
             <ForkKnife className="h-5 w-5" />
@@ -54,7 +56,7 @@ export default function MobileSideBar() {
           <Link
             href="/dashboard/users"
             className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname === "/dashboard/users" ? "text-primary" : ""
+              pathname.startsWith("/dashboard/users") ? "text-primary" : ""
             }`}
           >
             <Users className="h-5 w-5" />

@@ -40,7 +40,9 @@ export default function DesktopSideBar() {
             <Link
               href="/dashboard/restaurants"
               className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname === "/dashboard/restaurants" ? "text-primary" : ""
+                pathname.startsWith("/dashboard/restaurants")
+                  ? "text-primary"
+                  : ""
               }`}
             >
               <ForkKnife className="h-6 w-6" />
@@ -49,7 +51,7 @@ export default function DesktopSideBar() {
             <Link
               href="/dashboard/users"
               className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname === "/dashboard/users" ? "text-primary" : ""
+                pathname.startsWith("/dashboard/users") ? "text-primary" : ""
               }`}
             >
               <Users className="h-6 w-6" />
