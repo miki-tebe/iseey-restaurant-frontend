@@ -1,17 +1,18 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { format } from "date-fns";
-import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { PencilIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon, PencilIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { getUser, updateUser } from "@/app/actions";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -22,11 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Form,
   FormControl,
   FormField,
@@ -35,14 +31,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
-  firstName: z
+export const editUserFormSchema = z.object({
+  first_name: z
     .string()
     .min(3, {
       message: "First Name must be at least 3 characters long",
     })
     .max(255),
-  lastName: z
+  last_name: z
     .string()
     .min(3, {
       message: "Last Name must be at least 3 characters long",
@@ -50,20 +46,43 @@ const formSchema = z.object({
     .max(255),
   description: z.string().min(5),
   address: z.string().max(255),
-  dob: z.date(),
+  dob: z.string(),
   gender: z.string(),
   email: z.string().email(),
-  profilePicture: z.string(),
-  password: z.string().min(8),
-  confirmPassword: z.string().min(8),
+  profilePicture: z.string().optional(),
 });
 
 export default function EditUser({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [avatarSrc, setAvatarSrc] = useState("/images/logo4.png");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof editUserFormSchema>>({
+    resolver: zodResolver(editUserFormSchema),
   });
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const data = await getUser({ id: params.id });
+        form.reset({
+          first_name: data.first_name,
+          last_name: data.last_name,
+          description: data.description,
+          address: data.address,
+          email: data.email,
+          gender: data.gender,
+        });
+        form.setValue(
+          "dob",
+          format(new Date(parseFloat(data.dob)).toISOString(), "yyyy-MM-dd")
+        );
+        setAvatarSrc(data.image);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchUser();
+  }, [form, params.id]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -80,11 +99,14 @@ export default function EditUser({ params }: { params: { id: string } }) {
     fileInputRef.current?.click();
   }
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  function onSubmit(values: z.infer<typeof editUserFormSchema>) {
+    updateUser(values, params.id).then((result) => {
+      toast(result.message);
+      if (result.success === 200) {
+        router.push("/dashboard/users");
+      }
+    });
   }
-
-  console.log(params.id);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
@@ -97,7 +119,7 @@ export default function EditUser({ params }: { params: { id: string } }) {
             <div className="relative">
               <Avatar className="w-44 h-44">
                 <AvatarImage src={avatarSrc} alt="Profile picture" />
-                <AvatarFallback>KA</AvatarFallback>
+                <AvatarFallback>{form.getValues("first_name")}</AvatarFallback>
               </Avatar>
               <div
                 onClick={handleEditClick}
@@ -114,8 +136,9 @@ export default function EditUser({ params }: { params: { id: string } }) {
                 className="hidden"
               />
             </div>
-            <h2 className="text-2xl font-bold">Kaleb-Admin</h2>
-            <p className="text-zinc-400">Super Admin</p>
+            <h2 className="text-2xl font-bold">
+              {form.getValues("first_name")}
+            </h2>
           </CardContent>
         </Card>
         <div className="grid gap-4 col-span-2">
@@ -128,7 +151,7 @@ export default function EditUser({ params }: { params: { id: string } }) {
                 >
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
-                      name="firstName"
+                      name="first_name"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>First Name</FormLabel>
@@ -144,7 +167,7 @@ export default function EditUser({ params }: { params: { id: string } }) {
                       )}
                     />
                     <FormField
-                      name="lastName"
+                      name="last_name"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Last Name</FormLabel>
@@ -190,41 +213,9 @@ export default function EditUser({ params }: { params: { id: string } }) {
                       render={({ field }) => (
                         <FormItem className="grid gap-2">
                           <FormLabel>Date of Birth</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() ||
-                                  date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
+                          <FormControl>
+                            <Input type="date" {...field} className="w-36" />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -236,7 +227,7 @@ export default function EditUser({ params }: { params: { id: string } }) {
                           <FormLabel>Gender</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={form.getValues("gender")}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -244,9 +235,9 @@ export default function EditUser({ params }: { params: { id: string } }) {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="M">Male</SelectItem>
+                              <SelectItem value="F">Female</SelectItem>
+                              <SelectItem value="O">Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />

@@ -8,7 +8,9 @@ import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
 import { profileFormSchema } from "@/app/dashboard/profile/page";
 import { addUserFormSchema } from "@/app/dashboard/users/add/page";
+import { editUserFormSchema } from "@/app/dashboard/users/edit/[id]/page";
 import { restaurantFormSchema } from "@/app/dashboard/restaurants/add/page";
+import { editRestaurantFormSchema } from "@/app/dashboard/restaurants/edit/[id]/page";
 
 export async function login(data: { email: string; password: string }) {
   const payload = await fetch("http://localhost:8090/api/admin/login", {
@@ -118,6 +120,32 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>) {
   return await payload.json();
 }
 
+export async function updateUser(
+  data: z.infer<typeof editUserFormSchema>,
+  id: string
+) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  if (data.dob) {
+    data.dob = new Date(data.dob).getTime().toString();
+  }
+
+  const payload = await fetch(
+    `http://localhost:8090/api/admin/users/updateProfile/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  revalidatePath("/dashboard/users");
+  return await payload.json();
+}
+
 export async function deleteUser(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
@@ -189,6 +217,31 @@ export async function addRestaurant(
       body: JSON.stringify(data),
     }
   );
+  return await payload.json();
+}
+
+export async function updateRestaurant(
+  data: z.infer<typeof editRestaurantFormSchema>,
+  id: string
+) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  data.lat = "20.5797727";
+  data.lng = "72.9341574";
+
+  const payload = await fetch(
+    `http://localhost:8090/api/admin/restaurants/updateRestaurant/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  revalidatePath("/dashboard/restaurants");
   return await payload.json();
 }
 

@@ -1,15 +1,18 @@
 "use client";
 
 import { z } from "zod";
-import { useState, useRef } from "react";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { PencilIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { getRestaurant, updateRestaurant } from "@/app/actions";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -21,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
+export const editRestaurantFormSchema = z.object({
   name: z
     .string()
     .min(3, {
@@ -31,25 +34,49 @@ const formSchema = z.object({
   address: z.string().max(255),
   email: z.string().email(),
   phoneNumber: z.string(),
-  tables: z.string(),
-  facebook: z.string(),
-  instagram: z.string(),
-  website: z.string(),
-  logo: z.string(),
-  password: z.string().min(8),
-  confirmPassword: z.string().min(8),
-  menu: z.string(),
-  drink: z.string(),
+  number_of_tables: z.string(),
+  facebook: z.string().optional(),
+  instagram: z.string().optional(),
+  website: z.string().optional(),
+  logo: z.string().optional(),
+  menu: z.string().optional(),
+  drink: z.string().optional(),
+  lat: z.string().optional(),
+  lng: z.string().optional(),
 });
 
 export default function EditRestaurant({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [avatarSrc, setAvatarSrc] = useState("/images/logo4.png");
-  const [menuURL, setMenuURL] = useState(false);
-  const [drinkURL, setDrinkURL] = useState(false);
+  const [menuURL, setMenuURL] = useState(true);
+  const [drinkURL, setDrinkURL] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof editRestaurantFormSchema>>({
+    resolver: zodResolver(editRestaurantFormSchema),
   });
+
+  useEffect(() => {
+    async function fetchRestaurant() {
+      try {
+        const data = await getRestaurant({ id: params.id });
+        form.reset({
+          name: data.name,
+          address: data.address,
+          email: data.email,
+          phoneNumber: data.phoneNumber.original,
+          number_of_tables: data.number_of_tables.toString(),
+          facebook: data.facebook,
+          instagram: data.instagram,
+          website: data.website,
+        });
+        setAvatarSrc(data.image);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchRestaurant();
+  }, [form, params.id]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -66,16 +93,19 @@ export default function EditRestaurant({ params }: { params: { id: string } }) {
     fileInputRef.current?.click();
   }
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  function onSubmit(values: z.infer<typeof editRestaurantFormSchema>) {
+    updateRestaurant(values, params.id).then((result) => {
+      toast(result.message);
+      if (result.success === 200) {
+        router.push("/dashboard/restaurants");
+      }
+    });
   }
-
-  console.log(params.id);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">Edit User</h1>
+        <h1 className="text-lg font-semibold md:text-2xl">Edit Restaurant</h1>
       </div>
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
         <Card>
@@ -83,7 +113,7 @@ export default function EditRestaurant({ params }: { params: { id: string } }) {
             <div className="relative">
               <Avatar className="w-44 h-44">
                 <AvatarImage src={avatarSrc} alt="Profile picture" />
-                <AvatarFallback>KA</AvatarFallback>
+                <AvatarFallback>{form.getValues("name")}</AvatarFallback>
               </Avatar>
               <div
                 onClick={handleEditClick}
@@ -100,8 +130,7 @@ export default function EditRestaurant({ params }: { params: { id: string } }) {
                 className="hidden"
               />
             </div>
-            <h2 className="text-2xl font-bold">Kaleb-Admin</h2>
-            <p className="text-zinc-400">Super Admin</p>
+            <h2 className="text-2xl font-bold">{form.getValues("name")}</h2>
           </CardContent>
         </Card>
         <div className="grid gap-4 col-span-2">
@@ -168,7 +197,7 @@ export default function EditRestaurant({ params }: { params: { id: string } }) {
                   </div>
                   <FormField
                     control={form.control}
-                    name="tables"
+                    name="number_of_tables"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Number of Tables</FormLabel>
