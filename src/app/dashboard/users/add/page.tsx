@@ -2,16 +2,13 @@
 
 import { z } from "zod";
 import { toast } from "sonner";
-import { format } from "date-fns";
 import { useForm } from "react-hook-form";
-import { CalendarIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { cn } from "@/lib/utils";
 import { addUser } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
@@ -28,11 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Form,
   FormControl,
   FormField,
@@ -42,13 +34,14 @@ import {
 } from "@/components/ui/form";
 
 export const addUserFormSchema = z.object({
-  firstName: z
+  first_name: z
     .string()
     .min(3, {
       message: "First Name must be at least 3 characters long",
     })
-    .max(255),
-  lastName: z
+    .max(255)
+    .optional(),
+  last_name: z
     .string()
     .min(3, {
       message: "Last Name must be at least 3 characters long",
@@ -56,7 +49,7 @@ export const addUserFormSchema = z.object({
     .max(255),
   description: z.string().min(5),
   address: z.string().max(255),
-  dob: z.date(),
+  dob: z.string(),
   gender: z.string(),
   email: z.string().email(),
   profilePicture: z.string(),
@@ -65,6 +58,7 @@ export const addUserFormSchema = z.object({
 });
 
 export default function AddUser() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof addUserFormSchema>>({
     resolver: zodResolver(addUserFormSchema),
   });
@@ -72,6 +66,9 @@ export default function AddUser() {
   function onSubmit(values: z.infer<typeof addUserFormSchema>) {
     addUser(values).then((result) => {
       toast(result.message);
+      if (result.success === 200) {
+        router.push("/dashboard/users");
+      }
     });
   }
 
@@ -86,7 +83,7 @@ export default function AddUser() {
             <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
-                  name="firstName"
+                  name="first_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>First Name</FormLabel>
@@ -98,7 +95,7 @@ export default function AddUser() {
                   )}
                 />
                 <FormField
-                  name="lastName"
+                  name="last_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Last Name</FormLabel>
@@ -141,36 +138,7 @@ export default function AddUser() {
                     <FormItem className="grid gap-2">
                       <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() ||
-                                date < new Date("1900-01-01")
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
+                        <Input type="date" {...field} className="w-36" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -193,9 +161,9 @@ export default function AddUser() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
+                          <SelectItem value="M">Male</SelectItem>
+                          <SelectItem value="F">Female</SelectItem>
+                          <SelectItem value="O">Other</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

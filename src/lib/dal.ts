@@ -21,24 +21,34 @@ export const getUser = cache(async () => {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch("http://localhost:8090/api/admin/getProfile", {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const data = await payload.json();
-  return data.result;
+  try {
+    const payload = await fetch("http://localhost:8090/api/admin/getProfile", {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const data = await payload.json();
+    return data.result;
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
 });
 
 export const getDashboard = cache(async () => {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch("http://localhost:8090/api/admin/dashboard", {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const data = await payload.json();
-  return data.result;
+  try {
+    const payload = await fetch("http://localhost:8090/api/admin/dashboard", {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const data = await payload.json();
+    return data.result;
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
 });

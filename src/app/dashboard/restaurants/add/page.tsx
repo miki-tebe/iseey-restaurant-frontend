@@ -4,6 +4,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { addRestaurant } from "@/app/actions";
@@ -46,9 +47,12 @@ export const restaurantFormSchema = z.object({
   confirmPassword: z.string().min(8),
   menu: z.string(),
   drink: z.string(),
+  lat: z.string().optional(),
+  lng: z.string().optional(),
 });
 
 export default function AddRestaurant() {
+  const router = useRouter();
   const [menuURL, setMenuURL] = useState(false);
   const [drinkURL, setDrinkURL] = useState(false);
 
@@ -59,6 +63,9 @@ export default function AddRestaurant() {
   function onSubmit(values: z.infer<typeof restaurantFormSchema>) {
     addRestaurant(values).then((result) => {
       toast(result.message);
+      if (result.success === 200) {
+        router.push("/dashboard/restaurants");
+      }
     });
   }
 

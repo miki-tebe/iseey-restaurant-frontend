@@ -32,6 +32,15 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 export type Restaurant = {
   _id: string;
@@ -95,38 +104,55 @@ export const columns: ColumnDef<Restaurant>[] = [
     cell: ({ row }) => {
       const restaurant = row.original as Restaurant;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <Link href={`/dashboard/restaurants/view/${restaurant._id}`}>
-              <DropdownMenuItem>
-                <Eye className="mr-2 h-4 w-4" />
-                View restaurant
-              </DropdownMenuItem>
-            </Link>
-            <Link href={`/dashboard/restaurants/edit/${restaurant._id}`}>
-              <DropdownMenuItem>
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit restaurant
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuItem
-              className="text-red-500"
-              onClick={async () => {
-                const result = await deleteRestaurant({ id: restaurant._id });
-                toast(result.message);
-              }}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete restaurant
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Dialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <Link href={`/dashboard/restaurants/view/${restaurant._id}`}>
+                <DropdownMenuItem>
+                  <Eye className="mr-2 h-4 w-4" />
+                  View restaurant
+                </DropdownMenuItem>
+              </Link>
+              <Link href={`/dashboard/restaurants/edit/${restaurant._id}`}>
+                <DropdownMenuItem>
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Edit restaurant
+                </DropdownMenuItem>
+              </Link>
+              <DialogTrigger asChild>
+                <DropdownMenuItem className="text-red-500">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete restaurant
+                </DropdownMenuItem>
+              </DialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you sure?</DialogTitle>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button
+                  onClick={async () => {
+                    const result = await deleteRestaurant({
+                      id: restaurant._id,
+                    });
+                    toast(result.message);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       );
     },
   },

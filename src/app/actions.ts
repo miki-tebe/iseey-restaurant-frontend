@@ -34,13 +34,17 @@ export async function getProfile() {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch("http://localhost:8090/api/admin/getProfile", {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const data = await payload.json();
-  if (data.success == 200) return data.result;
+  try {
+    const payload = await fetch("http://localhost:8090/api/admin/getProfile", {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const data = await payload.json();
+    if (data.success == 200) return data.result;
+  } catch (e) {
+    console.log(e);
+  }
   return null;
 }
 
@@ -62,14 +66,18 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
 export async function getUsers() {
   const session = await verifySession();
   if (!session) return null;
+  try {
+    const payload = await fetch("http://localhost:8090/api/admin/users/list", {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const data = await payload.json();
+    if (data.success == 200) return data.result.users;
+  } catch (e) {
+    console.log(e);
+  }
 
-  const payload = await fetch("http://localhost:8090/api/admin/users/list", {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const data = await payload.json();
-  if (data.success == 200) return data.result.users;
   return null;
 }
 
@@ -94,6 +102,10 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
 
+  if (data.dob) {
+    data.dob = new Date(data.dob).getTime().toString();
+  }
+
   const payload = await fetch("http://localhost:8090/api/admin/users/add", {
     method: "POST",
     headers: {
@@ -102,6 +114,7 @@ export async function addUser(data: z.infer<typeof addUserFormSchema>) {
     },
     body: JSON.stringify(data),
   });
+  revalidatePath("/dashboard/users");
   return await payload.json();
 }
 
@@ -161,6 +174,9 @@ export async function addRestaurant(
 ) {
   const session = await verifySession();
   if (!session) return null;
+
+  data.lat = "20.5797727";
+  data.lng = "72.9341574";
 
   const payload = await fetch(
     "http://localhost:8090/api/admin/restaurants/addRestaurant",
