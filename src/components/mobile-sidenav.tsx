@@ -43,24 +43,22 @@ export default function MobileSideBar() {
             Dashboard
           </Link>
           <Link
-            href="/dashboard/restaurants"
+            href="/dashboard/offers"
             className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname.startsWith("/dashboard/restaurants")
-                ? "text-primary"
-                : ""
+              pathname.startsWith("/dashboard/offers") ? "text-primary" : ""
             }`}
           >
             <ForkKnife className="h-5 w-5" />
-            Restaurants
+            Angebote
           </Link>
           <Link
-            href="/dashboard/users"
+            href="/dashboard/guests"
             className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname.startsWith("/dashboard/users") ? "text-primary" : ""
+              pathname.startsWith("/dashboard/guests") ? "text-primary" : ""
             }`}
           >
             <Users className="h-5 w-5" />
-            Users
+            Gäste
           </Link>
           <Link
             href="/dashboard/profile"

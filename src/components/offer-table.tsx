@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { toast } from "sonner";
 import { useState } from "react";
+import { format } from "date-fns";
 import { MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react";
 import {
   ColumnDef,
@@ -14,7 +16,7 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
-import { deleteUser } from "@/app/actions";
+import { deleteOffer } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,73 +43,73 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
-export type User = {
-  first_name?: string;
-  last_name?: string;
-  age?: number;
-  name: string;
-  email: string;
+export type Offer = {
+  _id: string;
+  code: string;
   image: string;
-  gender: string;
-  dob: string;
-  lat: string;
-  lng: string;
-  address: string;
-  postal_code: string;
+  currency?: string;
+  deleted: "Y" | "N";
+  name: string;
+  discount: number;
+  start_date: string;
+  end_date: string;
+  restaurant_id: string;
   description: string;
-  active: string;
-  deleted: string;
-  created: number;
-  user_id: string;
-  createdAt?: string;
-  country_name?: string;
+  offer_type: "percentage" | "fixed";
 };
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Offer>[] = [
   {
     header: "Nr",
-    accessorKey: "user_id",
+    accessorKey: "_id",
     cell: ({ row }) => {
-      return <>{row.index + 1}</>;
+      return <span>{row.index + 1}</span>;
     },
   },
   {
-    header: "Name",
-    accessorKey: "first_name",
-  },
-  {
-    header: "Gender",
-    accessorKey: "gender",
+    header: "Bild",
+    accessorKey: "image",
     cell: ({ row }) => {
-      const user = row.original as User;
-      if (user.gender === "M") return <>Male</>;
-      else if (user.gender === "F") return <>Female</>;
-      else return <>Other</>;
+      return (
+        <Image
+          src={row.getValue("image")}
+          alt={row.getValue("name")}
+          className="h-8 w-8 rounded-full"
+          width={32}
+          height={32}
+        />
+      );
     },
   },
   {
-    header: "Age",
-    accessorKey: "dob",
-    cell: ({ row }) => {
-      const user = row.original as User;
-      const dob = new Date(parseFloat(user.dob));
-      const age = new Date().getFullYear() - dob.getFullYear();
-      return <>{age}</>;
-    },
+    header: "Bietet an",
+    accessorKey: "name",
   },
   {
-    header: "Status",
-    accessorKey: "active",
-    cell: ({ row }) => {
-      const user = row.original as User;
-      return <>{user.active === "Y" ? "Active" : "Inactive"}</>;
-    },
+    header: "Rabatt",
+    accessorKey: "discount",
   },
   {
-    id: "actions",
+    header: "Code",
+    accessorKey: "code",
+  },
+  {
+    header: "Startdatum",
+    accessorKey: "start_date",
+    cell: ({ row }) =>
+      format(new Date(row.getValue("start_date")).toLocaleDateString(), "PPP"),
+  },
+  {
+    header: "Endtermin",
+    accessorKey: "end_date",
+    cell: ({ row }) =>
+      format(new Date(row.getValue("end_date")).toLocaleDateString(), "PPP"),
+  },
+  {
+    id: "Aktionen",
     header: "Actions",
     cell: ({ row }) => {
-      const user = row.original as User;
+      const offer = row.original as Offer;
       return (
         <Dialog>
           <DropdownMenu>
@@ -118,22 +120,22 @@ export const columns: ColumnDef<User>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <Link href={`/dashboard/users/view/${user.user_id}`}>
+              <Link href={`/dashboard/offers/view/${offer._id}`}>
                 <DropdownMenuItem>
                   <Eye className="mr-2 h-4 w-4" />
-                  View user
+                  View offer
                 </DropdownMenuItem>
               </Link>
-              <Link href={`/dashboard/users/edit/${user.user_id}`}>
+              <Link href={`/dashboard/offers/edit/${offer._id}`}>
                 <DropdownMenuItem>
                   <Pencil className="mr-2 h-4 w-4" />
-                  Edit user
+                  Edit offer
                 </DropdownMenuItem>
               </Link>
               <DialogTrigger asChild>
                 <DropdownMenuItem className="text-red-500">
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete user
+                  Delete offer
                 </DropdownMenuItem>
               </DialogTrigger>
             </DropdownMenuContent>
@@ -146,7 +148,9 @@ export const columns: ColumnDef<User>[] = [
               <DialogClose asChild>
                 <Button
                   onClick={async () => {
-                    const result = await deleteUser({ id: user.user_id });
+                    const result = await deleteOffer({
+                      id: offer._id,
+                    });
                     toast(result.message);
                   }}
                 >
@@ -161,11 +165,11 @@ export const columns: ColumnDef<User>[] = [
   },
 ];
 
-export default function UserTable({ users }: { users: User[] }) {
+export default function OfferTable({ offers }: { offers: Offer[] }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
-    data: users,
+    data: offers,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -181,16 +185,14 @@ export default function UserTable({ users }: { users: User[] }) {
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <Input
           placeholder="Search"
-          value={
-            (table.getColumn("first_name")?.getFilterValue() as string) ?? ""
-          }
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("first_name")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <Button asChild className="justify-self-end">
-          <Link href="/dashboard/users/add">Add User</Link>
+          <Link href="/dashboard/offers/add">Neue hinzufügen</Link>
         </Button>
       </div>
       <Table>

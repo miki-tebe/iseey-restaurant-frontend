@@ -13,7 +13,7 @@ import { restaurantFormSchema } from "@/app/dashboard/restaurants/add/page";
 import { editRestaurantFormSchema } from "@/app/dashboard/restaurants/edit/[id]/page";
 
 export async function login(data: { email: string; password: string }) {
-  const payload = await fetch("http://localhost:8090/api/admin/login", {
+  const payload = await fetch("http://localhost:8090/api/restaurants/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,11 +37,14 @@ export async function getProfile() {
   if (!session) return null;
 
   try {
-    const payload = await fetch("http://localhost:8090/api/admin/getProfile", {
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-    });
+    const payload = await fetch(
+      "http://localhost:8090/api/restaurants/getProfile",
+      {
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        },
+      }
+    );
     const data = await payload.json();
     if (data.success == 200) return data.result;
   } catch (e) {
@@ -65,17 +68,20 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   return await payload.json();
 }
 
-export async function getUsers() {
+export async function getGuests() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch("http://localhost:8090/api/admin/users/list", {
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-    });
+    const payload = await fetch(
+      "http://localhost:8090/api/restaurants/customers/list",
+      {
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        },
+      }
+    );
     const data = await payload.json();
-    if (data.success == 200) return data.result.users;
+    if (data.success == 200) return data.result.customers;
   } catch (e) {
     console.log(e);
   }
@@ -163,12 +169,12 @@ export async function deleteUser(data: { id: string }) {
   return await payload.json();
 }
 
-export async function getRestaurants() {
+export async function getOffers() {
   const session = await verifySession();
   if (!session) return null;
 
   const payload = await fetch(
-    "http://localhost:8090/api/admin/restaurants/list?limit=100",
+    "http://localhost:8090/api/restaurants/offers/list",
     {
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -176,7 +182,7 @@ export async function getRestaurants() {
     }
   );
   const data = await payload.json();
-  if (data.success == 200) return data.result.restaurants;
+  if (data.success == 200) return data.result.offers;
   return null;
 }
 
@@ -245,12 +251,12 @@ export async function updateRestaurant(
   return await payload.json();
 }
 
-export async function deleteRestaurant(data: { id: string }) {
+export async function deleteOffer(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
   const payload = await fetch(
-    `http://localhost:8090/api/admin/restaurants/delete/${data.id}`,
+    `http://localhost:8090/api/restaurants/offers/delete/${data.id}`,
     {
       method: "DELETE",
       headers: {
@@ -258,6 +264,6 @@ export async function deleteRestaurant(data: { id: string }) {
       },
     }
   );
-  revalidatePath("/dashboard/restaurants");
+  revalidatePath("/dashboard/offers");
   return await payload.json();
 }

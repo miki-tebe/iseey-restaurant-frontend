@@ -24,7 +24,9 @@ async function Header() {
       </Button>
       <div>
         <div className="text-sm font-medium">{user?.name}</div>
-        <div className="text-xs text-muted-foreground">Super-Admin</div>
+        <div className="text-xs text-muted-foreground">
+          Restaurant administrator
+        </div>
       </div>
     </header>
   );

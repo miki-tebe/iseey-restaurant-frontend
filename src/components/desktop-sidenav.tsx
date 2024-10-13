@@ -38,24 +38,22 @@ export default function DesktopSideBar() {
               Dashboard
             </Link>
             <Link
-              href="/dashboard/restaurants"
+              href="/dashboard/offers"
               className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname.startsWith("/dashboard/restaurants")
-                  ? "text-primary"
-                  : ""
+                pathname.startsWith("/dashboard/offers") ? "text-primary" : ""
               }`}
             >
               <ForkKnife className="h-6 w-6" />
-              Restaurants
+              Angebote
             </Link>
             <Link
-              href="/dashboard/users"
+              href="/dashboard/guests"
               className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname.startsWith("/dashboard/users") ? "text-primary" : ""
+                pathname.startsWith("/dashboard/guests") ? "text-primary" : ""
               }`}
             >
               <Users className="h-6 w-6" />
-              Users
+              Gäste
             </Link>
             <Link
               href="/dashboard/profile"

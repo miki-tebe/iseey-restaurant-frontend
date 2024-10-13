@@ -16,8 +16,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "ISEEY Admin",
-  description: "Admin panel for ISEEY application",
+  title: "ISEEY Restaurant",
+  description: "Restaurant portal for ISEEY application",
 };
 
 export default function RootLayout({

@@ -45,7 +45,9 @@ export default function Login() {
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Willkommen im Admin-Portal</h1>
+            <h1 className="text-3xl font-bold">
+              Willkommen im Restaurant-Portal
+            </h1>
             <p className="text-balance text-muted-foreground">
               Melden Sie sich an
             </p>

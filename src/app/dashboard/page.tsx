@@ -1,8 +1,7 @@
 import { format } from "date-fns";
-import { ForkKnife, Users } from "lucide-react";
+import { ForkKnife, Users, FileBarChartIcon } from "lucide-react";
 
 import { getDashboard } from "@/lib/dal";
-import { User } from "@/app/dashboard/users/page";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -13,6 +12,16 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
+type Customer = {
+  userDetail: {
+    first_name?: string;
+    last_name?: string;
+    country_name?: string;
+    dob: string;
+  };
+  created: string;
+};
+
 export default async function Dashboard() {
   const data = await getDashboard();
 
@@ -21,57 +30,74 @@ export default async function Dashboard() {
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
       </div>
+      <p>Aktive Gäste: 0</p>
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg">Users</CardTitle>
+            <CardTitle className="text-lg">Gäste</CardTitle>
             <Users className="h-10 w-10 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data?.usersCount}</div>
+            <div className="text-2xl font-bold">{data?.customersCount}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg">Restaurants</CardTitle>
+            <CardTitle className="text-lg">Tische</CardTitle>
             <ForkKnife className="h-10 w-10 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data?.restuantCount}</div>
+            <div className="text-2xl font-bold">{data?.number_of_tables}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-lg">Angebote</CardTitle>
+            <FileBarChartIcon className="h-10 w-10 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{data?.offerCount}</div>
           </CardContent>
         </Card>
       </div>
       <Card>
         <CardHeader className="px-7">
-          <CardTitle>Recent Users</CardTitle>
+          <CardTitle>Gäste</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="hidden sm:table-cell">Nr</TableHead>
-                <TableHead>First Name</TableHead>
-                <TableHead>Last Name</TableHead>
-                <TableHead className="hidden md:table-cell">Age</TableHead>
-                <TableHead className="hidden md:table-cell">Date</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead className="hidden md:table-cell">Datum</TableHead>
+                <TableHead className="hidden md:table-cell">Land</TableHead>
+                <TableHead className="hidden md:table-cell">Alter</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data?.users.map((user: User, index: number) => (
+              {data?.customers.map((customer: Customer, index: number) => (
                 <TableRow key={index}>
                   <TableCell className="hidden sm:table-cell">
                     {index + 1}
                   </TableCell>
-                  <TableCell>{user?.first_name}</TableCell>
-                  <TableCell>{user?.last_name}</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {new Date().getFullYear() -
-                      new Date(parseFloat(user?.dob)).getFullYear()}
+                  <TableCell>
+                    {customer?.userDetail?.first_name}{" "}
+                    {customer?.userDetail?.last_name}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {user.createdAt
-                      ? format(new Date(user.createdAt), "PPP")
+                    {customer?.created
+                      ? format(new Date(customer?.created), "PPP")
                       : "N/A"}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {customer?.userDetail?.country_name}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {new Date().getFullYear() -
+                      new Date(
+                        parseFloat(customer?.userDetail?.dob)
+                      ).getFullYear()}
                   </TableCell>
                 </TableRow>
               )) || (
