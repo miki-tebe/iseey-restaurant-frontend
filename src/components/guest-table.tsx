@@ -38,7 +38,6 @@ export type Guest = {
   user_id: string;
   created: number;
   updated: number;
-  __v: number;
   userDetail: User;
   lastCheckOut: {
     table_number: number;
@@ -57,10 +56,11 @@ export const columns: ColumnDef<Guest>[] = [
     header: "Bild",
     accessorKey: "image",
     cell: ({ row }) => {
+      const guest = row.original as Guest;
       return (
         <Image
-          src={row.getValue("image")}
-          alt={row.getValue("name")}
+          src={guest.userDetail.image}
+          alt={guest.userDetail.first_name || "Guest"}
           className="h-8 w-8 rounded-full"
           width={32}
           height={32}
@@ -83,13 +83,18 @@ export const columns: ColumnDef<Guest>[] = [
   {
     header: "Datum",
     accessorKey: "created",
+    cell: ({ row }) => {
+      const guest = row.original as Guest;
+      const date = new Date(guest.created);
+      return <>{date.toLocaleDateString()}</>;
+    },
   },
   {
     header: "Tisch Nummer",
     accessorKey: "code",
     cell: ({ row }) => {
       const guest = row.original as Guest;
-      return <>{guest.lastCheckOut.table_number}</>;
+      return <>{guest.lastCheckOut?.table_number}</>;
     },
   },
   {
