@@ -61,13 +61,22 @@ export default function MobileSideBar() {
             Gäste
           </Link>
           <Link
+            href="/dashboard/newsletter"
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
+              pathname === "/dashboard/newsletter" ? "text-primary" : ""
+            }`}
+          >
+            <User className="h-5 w-5" />
+            NewsLetter
+          </Link>
+          <Link
             href="/dashboard/profile"
             className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
               pathname === "/dashboard/profile" ? "text-primary" : ""
             }`}
           >
             <User className="h-5 w-5" />
-            My Profile
+            Mein Profil
           </Link>
           <a
             onClick={() => logout()}

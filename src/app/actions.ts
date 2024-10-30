@@ -267,3 +267,20 @@ export async function deleteOffer(data: { id: string }) {
   revalidatePath("/dashboard/offers");
   return await payload.json();
 }
+
+export async function getNewsletters() {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(
+    "http://localhost:8090/api/restaurants/newsletter/list",
+    {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    }
+  );
+  const data = await payload.json();
+  if (data.success == 200) return data.result.newsletters;
+  return null;
+}

@@ -56,13 +56,22 @@ export default function DesktopSideBar() {
               Gäste
             </Link>
             <Link
+              href="/dashboard/newsletter"
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
+                pathname === "/dashboard/newsletter" ? "text-primary" : ""
+              }`}
+            >
+              <User className="h-6 w-6" />
+              NewsLetter
+            </Link>
+            <Link
               href="/dashboard/profile"
               className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
                 pathname === "/dashboard/profile" ? "text-primary" : ""
               }`}
             >
               <User className="h-6 w-6" />
-              My Profile
+              Mein Profil
             </Link>
             <a
               onClick={() => logout()}
