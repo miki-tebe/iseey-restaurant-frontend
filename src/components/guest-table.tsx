@@ -129,7 +129,7 @@ export const columns: ColumnDef<Guest>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            <Link href={`/dashboard/guests/view/${guest._id}`}>
+            <Link href={`/dashboard/guests/view/${guest.user_id}`}>
               <DropdownMenuItem>
                 <Eye className="mr-2 h-4 w-4" />
                 View guest

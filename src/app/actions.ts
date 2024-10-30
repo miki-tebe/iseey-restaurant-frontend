@@ -89,12 +89,12 @@ export async function getGuests() {
   return null;
 }
 
-export async function getUser(data: { id: string }) {
+export async function getGuest(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
   const payload = await fetch(
-    `http://localhost:8090/api/admin/users/getProfile/${data.id}`,
+    `http://localhost:8090/api/restaurants/users/get/${data.id}`,
     {
       headers: {
         Authorization: `Bearer ${session.token}`,
