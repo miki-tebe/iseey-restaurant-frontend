@@ -9,8 +9,8 @@ import { createSession, destroySession } from "@/lib/session";
 import { profileFormSchema } from "@/app/dashboard/profile/page";
 import { addUserFormSchema } from "@/app/dashboard/users/add/page";
 import { editUserFormSchema } from "@/app/dashboard/users/edit/[id]/page";
-import { restaurantFormSchema } from "@/app/dashboard/restaurants/add/page";
-import { editRestaurantFormSchema } from "@/app/dashboard/restaurants/edit/[id]/page";
+import { offerFormSchema } from "@/app/dashboard/offers/add/page";
+import { editOfferFormSchema } from "@/app/dashboard/offers/edit/[id]/page";
 
 export async function login(data: { email: string; password: string }) {
   const payload = await fetch("http://localhost:8090/api/restaurants/login", {
@@ -186,12 +186,12 @@ export async function getOffers() {
   return null;
 }
 
-export async function getRestaurant(data: { id: string }) {
+export async function getOffer(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
   const payload = await fetch(
-    `http://localhost:8090/api/admin/restaurants/getRestaurant/${data.id}`,
+    `http://localhost:8090/api/restaurants/offers/get/${data.id}`,
     {
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -203,17 +203,12 @@ export async function getRestaurant(data: { id: string }) {
   return null;
 }
 
-export async function addRestaurant(
-  data: z.infer<typeof restaurantFormSchema>
-) {
+export async function addOffer(data: z.infer<typeof offerFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
 
-  data.lat = "20.5797727";
-  data.lng = "72.9341574";
-
   const payload = await fetch(
-    "http://localhost:8090/api/admin/restaurants/addRestaurant",
+    "http://localhost:8090/api/restaurants/offers/create",
     {
       method: "POST",
       headers: {
@@ -226,20 +221,17 @@ export async function addRestaurant(
   return await payload.json();
 }
 
-export async function updateRestaurant(
-  data: z.infer<typeof editRestaurantFormSchema>,
+export async function updateOffer(
+  data: z.infer<typeof editOfferFormSchema>,
   id: string
 ) {
   const session = await verifySession();
   if (!session) return null;
 
-  data.lat = "20.5797727";
-  data.lng = "72.9341574";
-
   const payload = await fetch(
-    `http://localhost:8090/api/admin/restaurants/updateRestaurant/${id}`,
+    `http://localhost:8090/api/restaurants/offers/update/${id}`,
     {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.token}`,
@@ -247,7 +239,7 @@ export async function updateRestaurant(
       body: JSON.stringify(data),
     }
   );
-  revalidatePath("/dashboard/restaurants");
+  revalidatePath("/dashboard/offers");
   return await payload.json();
 }
 
