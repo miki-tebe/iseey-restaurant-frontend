@@ -168,9 +168,6 @@ export default function GuestTable({ guests }: { guests: Guest[] }) {
           }
           className="max-w-sm"
         />
-        <Button asChild className="justify-self-end">
-          <Link href="/dashboard/offers/add">Neue hinzufügen</Link>
-        </Button>
       </div>
       <Table>
         <TableHeader>
