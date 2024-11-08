@@ -9,7 +9,7 @@ export default async function NewsLetter() {
         <h1 className="text-lg font-semibold md:text-2xl">NewsLetter</h1>
       </div>
       <div className="grid gap-4 col-span-2"></div>
-      <NewsletterTable newsletters={data} />
+      <NewsletterTable newsletters={data ?? []} />
     </main>
   );
 }

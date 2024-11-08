@@ -1,13 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { getOffer, updateOffer } from "@/app/actions";
+import { getOffer, updateOffer, uploadOfferPhoto } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,6 +27,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import Image from "next/image";
 
 export const editOfferFormSchema = z.object({
   name: z
@@ -36,8 +37,9 @@ export const editOfferFormSchema = z.object({
     .optional(),
   description: z.string().max(500).optional(),
   image: z.string().optional(),
+  photo: z.string().optional(), // required for file upload
   code: z.string().max(50).optional(),
-  discount: z.string().optional(),
+  discount: z.union([z.string(), z.number().min(1).max(100)]),
   offer_type: z.enum(["percentage", "fixed"]).optional(),
   start_date: z.union([z.string(), z.number()]),
   end_date: z.union([z.string(), z.number()]),
@@ -45,6 +47,8 @@ export const editOfferFormSchema = z.object({
 
 export default function EditOffer({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { id } = params;
 
   const form = useForm<z.infer<typeof editOfferFormSchema>>({
@@ -56,15 +60,11 @@ export default function EditOffer({ params }: { params: { id: string } }) {
       const offer = await getOffer({ id });
       if (offer) {
         form.reset({
-          name: offer.name,
-          description: offer.description,
-          image: offer.image,
-          code: offer.code,
-          discount: offer.discount,
-          offer_type: offer.offer_type,
-          start_date: new Date(offer.start_date).toISOString(),
-          end_date: new Date(offer.end_date).toISOString(),
+          ...offer,
+          start_date: new Date(offer.start_date).toISOString().split("T")[0],
+          end_date: new Date(offer.end_date).toISOString().split("T")[0],
         });
+        setAvatarSrc(offer.image);
       }
     }
     fetchOffer();
@@ -73,11 +73,29 @@ export default function EditOffer({ params }: { params: { id: string } }) {
   async function onSubmit(values: z.infer<typeof editOfferFormSchema>) {
     values.start_date = new Date(values.start_date).getTime();
     values.end_date = new Date(values.end_date).getTime();
+    if (values.image == "") delete values.image;
     const result = await updateOffer(values, id);
     toast(result.message);
-    if (result.success === 200) {
+    if (result.success == true) {
       router.push("/dashboard/offers");
     }
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("picture", file);
+      uploadOfferPhoto(formData).then((result) => {
+        form.setValue("image", result?.url ?? "");
+        setAvatarSrc(result?.url ?? null);
+        toast(result ? result.message : "Failed to upload offer file");
+      });
+    }
+  }
+
+  function handleEditClick() {
+    fileInputRef.current?.click();
   }
 
   return (
@@ -87,6 +105,16 @@ export default function EditOffer({ params }: { params: { id: string } }) {
           <CardTitle>Edit Offer</CardTitle>
         </CardHeader>
         <CardContent>
+          {avatarSrc && (
+            <div className="mb-4">
+              <Image
+                src={avatarSrc}
+                alt="Offer Image"
+                width={200}
+                height={200}
+              />
+            </div>
+          )}
           <Form {...form}>
             <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-4">
@@ -113,6 +141,8 @@ export default function EditOffer({ params }: { params: { id: string } }) {
                         <Input
                           type="number"
                           placeholder="Discount Amount"
+                          min={1}
+                          max={100}
                           {...field}
                         />
                       </FormControl>
@@ -192,12 +222,17 @@ export default function EditOffer({ params }: { params: { id: string } }) {
               </div>
               <FormField
                 control={form.control}
-                name="image"
+                name="photo"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Image</FormLabel>
                     <FormControl>
-                      <Input type="file" {...field} />
+                      <Input
+                        type="file"
+                        {...field}
+                        onChange={handleFileChange}
+                        onClick={handleEditClick}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

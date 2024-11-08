@@ -76,31 +76,33 @@ export default async function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data?.customers.map((customer: Customer, index: number) => (
-                <TableRow key={index}>
-                  <TableCell className="hidden sm:table-cell">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell>
-                    {customer?.userDetail?.first_name}{" "}
-                    {customer?.userDetail?.last_name}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {customer?.created
-                      ? format(new Date(customer?.created), "PPP")
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {customer?.userDetail?.country_name}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {new Date().getFullYear() -
-                      new Date(
-                        parseFloat(customer?.userDetail?.dob)
-                      ).getFullYear()}
-                  </TableCell>
-                </TableRow>
-              )) || (
+              {data && data.customers.length > 0 ? (
+                data.customers.map((customer: Customer, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell className="hidden sm:table-cell">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>
+                      {customer?.userDetail?.first_name}{" "}
+                      {customer?.userDetail?.last_name}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {customer?.created
+                        ? format(new Date(customer?.created), "PPP")
+                        : "N/A"}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {customer?.userDetail?.country_name}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {new Date().getFullYear() -
+                        new Date(
+                          parseFloat(customer?.userDetail?.dob)
+                        ).getFullYear()}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center">
                     No data available

@@ -23,15 +23,15 @@ export const getUser = cache(async () => {
 
   try {
     const payload = await fetch(
-      "http://localhost:8090/api/restaurants/getProfile",
+      "http://localhost:5002/api/restaurant-app/restaurants/profile",
       {
         headers: {
           Authorization: `Bearer ${session.token}`,
         },
       }
     );
-    const data = await payload.json();
-    return data.result;
+    const result = await payload.json();
+    return result.data;
   } catch (e) {
     console.log(e);
   }
@@ -44,15 +44,15 @@ export const getDashboard = cache(async () => {
 
   try {
     const payload = await fetch(
-      "http://localhost:8090/api/restaurants/dashboard",
+      "http://localhost:5002/api/restaurant-app/restaurants/dashboard",
       {
         headers: {
           Authorization: `Bearer ${session.token}`,
         },
       }
     );
-    const data = await payload.json();
-    return data.result;
+    const result = await payload.json();
+    return result.data;
   } catch (e) {
     console.log(e);
   }

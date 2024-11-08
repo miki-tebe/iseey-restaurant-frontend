@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { addOffer } from "@/app/actions";
+import { addOffer, uploadOfferPhoto } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,6 +26,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { useRef } from "react";
 
 export const offerFormSchema = z.object({
   name: z
@@ -35,17 +36,19 @@ export const offerFormSchema = z.object({
     })
     .max(255),
   description: z.string().max(500),
-  image: z.string(),
-  currency: z.string().max(10),
-  code: z.string().max(50),
-  discount: z.string(),
-  offer_type: z.enum(["percentage", "fixed"]),
+  image: z.string().optional(),
+  photo: z.string().optional(), // required for file upload
+  currency: z.string().max(10).optional(),
+  code: z.string().max(50).optional(),
+  discount: z.union([z.string(), z.number().min(1).max(100)]),
+  offer_type: z.enum(["percentage", "flat"]),
   start_date: z.union([z.string(), z.number()]),
   end_date: z.union([z.string(), z.number()]),
 });
 
 export default function AddOffer() {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof offerFormSchema>>({
     resolver: zodResolver(offerFormSchema),
@@ -56,9 +59,25 @@ export default function AddOffer() {
     values.end_date = new Date(values.end_date).getTime();
     const result = await addOffer(values);
     toast(result.message);
-    if (result.success === 200) {
+    if (result.success == true) {
       router.push("/dashboard/offers");
     }
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("picture", file);
+      uploadOfferPhoto(formData).then((result) => {
+        form.setValue("image", result?.url ?? "");
+        toast(result ? result.message : "Failed to upload offer file");
+      });
+    }
+  }
+
+  function handleEditClick() {
+    fileInputRef.current?.click();
   }
 
   return (
@@ -94,6 +113,8 @@ export default function AddOffer() {
                         <Input
                           type="number"
                           placeholder="Discount Amount"
+                          min={1}
+                          max={100}
                           {...field}
                         />
                       </FormControl>
@@ -149,7 +170,7 @@ export default function AddOffer() {
                             <SelectItem value="percentage">
                               Percentage
                             </SelectItem>
-                            <SelectItem value="fixed">Fixed</SelectItem>
+                            <SelectItem value="flat">Flat</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -187,12 +208,17 @@ export default function AddOffer() {
                 />
                 <FormField
                   control={form.control}
-                  name="image"
+                  name="photo"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Image</FormLabel>
                       <FormControl>
-                        <Input type="file" {...field} />
+                        <Input
+                          type="file"
+                          {...field}
+                          onChange={handleFileChange}
+                          onClick={handleEditClick}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

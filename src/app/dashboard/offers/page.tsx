@@ -11,7 +11,7 @@ export default async function Offers() {
           <CardTitle>Angebotsliste</CardTitle>
         </CardHeader>
         <CardContent>
-          <OfferTable offers={data} />
+          <OfferTable offers={data ?? []} />
         </CardContent>
       </Card>
     </main>

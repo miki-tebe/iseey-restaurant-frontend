@@ -106,6 +106,15 @@ export default function Login() {
               <Button type="submit" className="w-full">
                 Anmelden
               </Button>
+              <div className="text-center mt-4 text-sm">
+                Noch kein Konto?{" "}
+                <Link
+                  href="/signup"
+                  className="font-medium text-primary underline"
+                >
+                  Registrieren
+                </Link>
+              </div>
             </form>
           </Form>
         </div>

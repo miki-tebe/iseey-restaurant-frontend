@@ -11,7 +11,7 @@ export default async function Guests() {
           <CardTitle>Gäste</CardTitle>
         </CardHeader>
         <CardContent>
-          <GuestTable guests={data} />
+          <GuestTable guests={data ?? []} />
         </CardContent>
       </Card>
     </main>
