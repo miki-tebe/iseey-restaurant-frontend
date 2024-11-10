@@ -80,9 +80,9 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   if (!session) return null;
 
   const payload = await fetch(
-    "http://localhost:8090/api/restaurants/updateProfile",
+    "http://localhost:5002/api/restaurant-app/restaurants/profile",
     {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.token}`,
@@ -276,4 +276,23 @@ export async function uploadOfferPhoto(data: FormData) {
   if (result.success == true) {
     return { message: "Offer photo uploaded", url: result.data.url };
   } else return { message: "Failed to upload offer photo" };
+}
+
+export async function uploadRestaurantMenus(data: FormData) {
+  const session = await verifySession();
+  if (!session) return null;
+  const payload = await fetch(
+    "http://localhost:5002/api/restaurant-app/upload/menu",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: data,
+    }
+  );
+  const result = await payload.json();
+  if (result.success == true) {
+    return { message: "Restaurant menu uploaded", url: result.data.url };
+  } else return { message: "Failed to upload restaurant menu" };
 }

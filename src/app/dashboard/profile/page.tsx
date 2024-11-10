@@ -6,7 +6,11 @@ import { useForm } from "react-hook-form";
 import { useLayoutEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { getProfile, updateProfile } from "@/app/actions";
+import {
+  getProfile,
+  updateProfile,
+  uploadRestaurantMenus,
+} from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -34,20 +38,21 @@ export const profileFormSchema = z.object({
       message: "Name must be at least 3 characters long",
     })
     .max(255),
-  address: z.string().max(255),
-  email: z.string().email(),
-  phoneNumber: z.string(),
-  tables: z.string(),
-  facebook: z.string(),
-  instagram: z.string(),
-  website: z.string(),
-  logo: z.string(),
+  address: z.string().max(255).optional(),
+  email: z.string().email().optional(),
+  phoneNumber: z.string().optional(),
+  number_of_tables: z.union([
+    z.string().optional(),
+    z.number().min(1).max(100).optional(),
+  ]),
+  facebook: z.string().optional(),
+  instagram: z.string().optional(),
+  website: z.string().optional(),
+  logo: z.string().optional(),
   password: z.string().min(8).optional(),
   confirmPassword: z.string().min(8).optional(),
   menu: z.string().optional(),
-  drink: z.string().optional(),
-  lat: z.string().optional(),
-  lng: z.string().optional(),
+  drinkMenu: z.string().optional(),
 });
 
 export default function Profile() {
@@ -60,22 +65,57 @@ export default function Profile() {
   useLayoutEffect(() => {
     async function fetchProfile() {
       const profileData = await getProfile();
-      profileForm.setValue("name", profileData.name);
-      profileForm.setValue("address", profileData.address);
-      profileForm.setValue("email", profileData.email);
-      profileForm.setValue("phoneNumber", profileData.phoneNumber);
-      profileForm.setValue("tables", profileData.number_of_tables.toString());
-      profileForm.setValue("facebook", profileData.facebook);
-      profileForm.setValue("instagram", profileData.instagram);
-      profileForm.setValue("website", profileData.website);
+      profileForm.reset(profileData);
+      if (profileData.drinkMenu != undefined) {
+        setDrinkURL(true);
+        profileForm.setValue("drinkMenu", profileData.drinkMenu);
+      }
+      if (profileData.menu != undefined) {
+        setMenuURL(true);
+        profileForm.setValue("menu", profileData.menu);
+      }
     }
     fetchProfile();
   }, [profileForm]);
 
-  function handleProfileSubmit(data: z.infer<typeof profileFormSchema>) {
+  function handleMenuFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const id = event.target.id;
+    const file = event.target.files?.[0];
+    const isDrink = id === "drink_menu";
+    if (file) {
+      const formData = new FormData();
+      formData.append("picture", file);
+      uploadRestaurantMenus(formData).then((result) => {
+        if (isDrink) {
+          setDrinkURL(true);
+          profileForm.setValue("drinkMenu", result?.url ?? "");
+        } else {
+          setMenuURL(true);
+          profileForm.setValue("menu", result?.url ?? "");
+        }
+        toast(result ? "Menu uploaded" : "Failed to upload menu");
+      });
+    }
+  }
+
+  function onSubmit(data: z.infer<typeof profileFormSchema>) {
+    // delete object property if empty
+    Object.keys(data).forEach((key) => {
+      const typedKey = key as keyof typeof data;
+      if (data[typedKey] === "" || data[typedKey] === undefined) {
+        delete data[typedKey];
+      }
+    });
     updateProfile(data).then((result) => {
       toast(result.message);
     });
+  }
+
+  function handleMenuSwitch() {
+    profileForm.setValue("menu", "");
+  }
+  function handleDrinkSwitch() {
+    profileForm.setValue("drinkMenu", "");
   }
 
   return (
@@ -92,7 +132,7 @@ export default function Profile() {
             <Form {...profileForm}>
               <form
                 className="space-y-4"
-                onSubmit={profileForm.handleSubmit(handleProfileSubmit)}
+                onSubmit={profileForm.handleSubmit(onSubmit)}
               >
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
@@ -153,12 +193,18 @@ export default function Profile() {
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={profileForm.control}
-                    name="tables"
+                    name="number_of_tables"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Anzahl der Tische</FormLabel>
                         <FormControl>
-                          <Input placeholder="Tables" {...field} />
+                          <Input
+                            placeholder="Tables"
+                            type="number"
+                            min={1}
+                            max={100}
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -211,6 +257,7 @@ export default function Profile() {
                     id="menu"
                     checked={menuURL}
                     onCheckedChange={setMenuURL}
+                    onClick={handleMenuSwitch}
                   />
                   <Label htmlFor="menu">Menu URL</Label>
                 </div>
@@ -237,7 +284,11 @@ export default function Profile() {
                         <FormItem>
                           <FormLabel>Menu</FormLabel>
                           <FormControl>
-                            <Input type="file" {...field} />
+                            <Input
+                              type="file"
+                              {...field}
+                              onChange={handleMenuFileChange}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -247,17 +298,18 @@ export default function Profile() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Switch
-                    id="drink"
+                    id="drinkMenu"
                     checked={drinkURL}
                     onCheckedChange={setDrinkURL}
+                    onClick={handleDrinkSwitch}
                   />
-                  <Label htmlFor="drink">Drink Menu URL</Label>
+                  <Label htmlFor="drinkMenu">Drink Menu URL</Label>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   {drinkURL ? (
                     <FormField
                       control={profileForm.control}
-                      name="drink"
+                      name="drinkMenu"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Drink Menu</FormLabel>
@@ -271,12 +323,17 @@ export default function Profile() {
                   ) : (
                     <FormField
                       control={profileForm.control}
-                      name="drink"
+                      name="drinkMenu"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Drink Menu</FormLabel>
                           <FormControl>
-                            <Input type="file" {...field} />
+                            <Input
+                              id="drink_menu"
+                              type="file"
+                              {...field}
+                              onChange={handleMenuFileChange}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -323,10 +380,8 @@ export default function Profile() {
               </form>
             </Form>
           </CardContent>
-          <CardFooter className="border-t px-6 py-4">
-            <Button
-              onClick={() => profileForm.handleSubmit(handleProfileSubmit)()}
-            >
+          <CardFooter>
+            <Button type="submit" onClick={profileForm.handleSubmit(onSubmit)}>
               Einreichen
             </Button>
           </CardFooter>
