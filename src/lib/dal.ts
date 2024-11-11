@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 
 import { decrypt } from "@/lib/session";
 
+const API_URL = process.env.API_URL;
+
 export const verifySession = cache(async () => {
   const cookie = cookies().get("session")?.value;
   const session = await decrypt(cookie);
@@ -23,7 +25,7 @@ export const getUser = cache(async () => {
 
   try {
     const payload = await fetch(
-      "http://localhost:5002/api/restaurant-app/restaurants/profile",
+      `${API_URL}/api/restaurant-app/restaurants/profile`,
       {
         headers: {
           Authorization: `Bearer ${session.token}`,
@@ -44,7 +46,7 @@ export const getDashboard = cache(async () => {
 
   try {
     const payload = await fetch(
-      "http://localhost:5002/api/restaurant-app/restaurants/dashboard",
+      `${API_URL}/api/restaurant-app/restaurants/dashboard`,
       {
         headers: {
           Authorization: `Bearer ${session.token}`,
