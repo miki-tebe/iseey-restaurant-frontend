@@ -298,3 +298,20 @@ export async function forgotPassword(
   console.log(result);
   return result;
 }
+
+export async function resetPassword(data: {
+  password: string;
+  confirmPassword: string;
+  token: string;
+}) {
+  const payload = await fetch(`${API_URL}/api/restaurant-app/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const result = await payload.json();
+  console.log(result);
+  return result;
+}
