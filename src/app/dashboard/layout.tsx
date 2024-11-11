@@ -2,7 +2,6 @@ import Image from "next/image";
 
 import { getUser } from "@/lib/dal";
 import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/sonner";
 import MobileSideBar from "@/components/mobile-sidenav";
 import DesktopSideBar from "@/components/desktop-sidenav";
 
@@ -43,7 +42,6 @@ export default function DashboardLayout({
       <div className="flex flex-col">
         <Header />
         {children}
-        <Toaster />
       </div>
     </div>
   );

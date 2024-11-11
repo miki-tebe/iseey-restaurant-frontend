@@ -10,6 +10,7 @@ import { profileFormSchema } from "@/app/dashboard/profile/page";
 import { offerFormSchema } from "@/app/dashboard/offers/add/page";
 import { editOfferFormSchema } from "@/app/dashboard/offers/edit/[id]/page";
 import { signupValidationSchema } from "@/app/signup/page";
+import { forgotPasswordSchema } from "@/app/forgot-password/page";
 
 const API_URL = process.env.API_URL;
 
@@ -29,6 +30,7 @@ export async function login(data: { email: string; password: string }) {
     await createSession(result.data.token);
     redirect("/dashboard");
   }
+  return result;
 }
 
 export async function signup(data: z.infer<typeof signupValidationSchema>) {
@@ -49,6 +51,7 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
     await createSession(result.data.token);
     redirect("/dashboard");
   }
+  return result;
 }
 
 export async function logout() {
@@ -279,4 +282,19 @@ export async function uploadRestaurantMenus(data: FormData) {
   if (result.success == true) {
     return { message: "Restaurant menu uploaded", url: result.data.url };
   } else return { message: "Failed to upload restaurant menu" };
+}
+
+export async function forgotPassword(
+  data: z.infer<typeof forgotPasswordSchema>
+) {
+  const payload = await fetch(`${API_URL}/api/restaurant-app/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const result = await payload.json();
+  console.log(result);
+  return result;
 }

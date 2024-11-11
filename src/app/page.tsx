@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import Link from "next/link";
+import { toast } from "sonner";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,7 +30,11 @@ export default function Login() {
   });
 
   function handleSubmit(data: z.infer<typeof formSchema>) {
-    login(data);
+    login(data).then((result) => {
+      if (result) {
+        toast.error(result.message);
+      }
+    });
   }
 
   return (
@@ -84,7 +89,7 @@ export default function Login() {
                     <div className="flex items-center justify-between">
                       <FormLabel>Passwort</FormLabel>
                       <Link
-                        href="/forgot"
+                        href="/forgot-password"
                         className="ml-auto inline-block text-sm underline"
                       >
                         Passwort vergessen?

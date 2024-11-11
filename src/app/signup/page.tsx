@@ -3,6 +3,7 @@
 import { z } from "zod";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -44,8 +45,11 @@ export default function Signup() {
   });
 
   function handleSubmit(data: z.infer<typeof signupValidationSchema>) {
-    console.log("test");
-    signup(data);
+    signup(data).then((result) => {
+      if (result) {
+        toast.error(result.message);
+      }
+    });
   }
 
   return (
