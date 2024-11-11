@@ -287,13 +287,16 @@ export async function uploadRestaurantMenus(data: FormData) {
 export async function forgotPassword(
   data: z.infer<typeof forgotPasswordSchema>
 ) {
-  const payload = await fetch(`${API_URL}/api/restaurant-app/forgot-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const payload = await fetch(
+    `${API_URL}/api/restaurant-app/restaurants/forgot-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
   const result = await payload.json();
   console.log(result);
   return result;
@@ -304,13 +307,16 @@ export async function resetPassword(data: {
   confirmPassword: string;
   token: string;
 }) {
-  const payload = await fetch(`${API_URL}/api/restaurant-app/reset-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const payload = await fetch(
+    `${API_URL}/api/restaurant-app/restaurants/reset-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
   const result = await payload.json();
   console.log(result);
   return result;
