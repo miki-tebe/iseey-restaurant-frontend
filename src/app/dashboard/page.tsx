@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { ForkKnife, Users, FileBarChartIcon } from "lucide-react";
 
-import { getDashboard } from "@/lib/dal";
+import { getDashboard, verifySession } from "@/lib/dal";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import ActiveGuests from "@/components/active-guests"; // Import the new component
 
 type Customer = {
   userDetail: {
@@ -24,13 +25,15 @@ type Customer = {
 
 export default async function Dashboard() {
   const data = await getDashboard();
+  const session = await verifySession();
+  const token: string = session.token as string;
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
       </div>
-      <p>Aktive Gäste: 0</p>
+      <ActiveGuests sessionToken={token} />
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
