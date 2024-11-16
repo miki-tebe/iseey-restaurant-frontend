@@ -15,16 +15,13 @@ import { forgotPasswordSchema } from "@/app/forgot-password/page";
 const API_URL = process.env.API_URL;
 
 export async function login(data: { email: string; password: string }) {
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/restaurants/login/`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/restaurants/login/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
   const result = await payload.json();
   if (result.data?.token) {
     await createSession(result.data.token);
@@ -36,18 +33,16 @@ export async function login(data: { email: string; password: string }) {
 export async function signup(data: z.infer<typeof signupValidationSchema>) {
   data.lat = "1.3521";
   data.lng = "103.8198";
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/restaurants/signup`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/restaurants/signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
   const result = await payload.json();
   if (result.data?.token) {
+    console.log("first_________-", result.data?.token);
     await createSession(result.data.token);
     redirect("/dashboard");
   }
@@ -64,14 +59,11 @@ export async function getProfile() {
   if (!session) return null;
 
   try {
-    const payload = await fetch(
-      `${API_URL}/api/restaurant-app/restaurants/profile`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-        },
-      }
-    );
+    const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
     const result = await payload.json();
     if (result.success == true) return result.data;
   } catch (e) {
@@ -84,17 +76,14 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/restaurants/profile`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.token}`,
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.token}`,
+    },
+    body: JSON.stringify(data),
+  });
   return await payload.json();
 }
 
@@ -102,14 +91,11 @@ export async function getGuests() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(
-      `${API_URL}/api/restaurant-app/customers/list`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-        },
-      }
-    );
+    const payload = await fetch(`${API_URL}/api/customers/list`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
     const result = await payload.json();
     if (result.success == true) return result.data.customers;
   } catch (e) {
@@ -123,14 +109,11 @@ export async function getGuest(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/customers/get/${data.id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/customers/get/${data.id}`, {
+    headers: {
+      Authorization: `Bearer ${session.token}`,
+    },
+  });
   const result = await payload.json();
   if (result.success == true) return result.data;
   return null;
@@ -157,7 +140,7 @@ export async function getOffers() {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/restaurant-app/offers/`, {
+  const payload = await fetch(`${API_URL}/api/offers/`, {
     headers: {
       Authorization: `Bearer ${session.token}`,
     },
@@ -171,14 +154,11 @@ export async function getOffer(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/offers/${data.id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+    headers: {
+      Authorization: `Bearer ${session.token}`,
+    },
+  });
   const result = await payload.json();
   if (result.success == true) return result.data;
   return null;
@@ -188,7 +168,7 @@ export async function addOffer(data: z.infer<typeof offerFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/restaurant-app/offers`, {
+  const payload = await fetch(`${API_URL}/api/offers`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -208,7 +188,7 @@ export async function updateOffer(
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/restaurant-app/offers/${id}`, {
+  const payload = await fetch(`${API_URL}/api/offers/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -224,15 +204,12 @@ export async function deleteOffer(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/offers/${data.id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${session.token}`,
+    },
+  });
   revalidatePath("/dashboard/offers");
   return await payload.json();
 }
@@ -241,7 +218,7 @@ export async function getNewsletters() {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/restaurant-app/newsletters/`, {
+  const payload = await fetch(`${API_URL}/api/newsletters/`, {
     headers: {
       Authorization: `Bearer ${session.token}`,
     },
@@ -255,7 +232,7 @@ export async function getNewsletters() {
 export async function uploadOfferPhoto(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
-  const payload = await fetch(`${API_URL}/api/restaurant-app/upload/offer`, {
+  const payload = await fetch(`${API_URL}/api/upload/offer`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${session.token}`,
@@ -271,7 +248,7 @@ export async function uploadOfferPhoto(data: FormData) {
 export async function uploadRestaurantMenus(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
-  const payload = await fetch(`${API_URL}/api/restaurant-app/upload/menu`, {
+  const payload = await fetch(`${API_URL}/api/upload/menu`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${session.token}`,
@@ -287,16 +264,13 @@ export async function uploadRestaurantMenus(data: FormData) {
 export async function forgotPassword(
   data: z.infer<typeof forgotPasswordSchema>
 ) {
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/restaurants/forgot-password`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/restaurants/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
   const result = await payload.json();
   console.log(result);
   return result;
@@ -307,16 +281,13 @@ export async function resetPassword(data: {
   confirmPassword: string;
   token: string;
 }) {
-  const payload = await fetch(
-    `${API_URL}/api/restaurant-app/restaurants/reset-password`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const payload = await fetch(`${API_URL}/api/restaurants/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
   const result = await payload.json();
   console.log(result);
   return result;

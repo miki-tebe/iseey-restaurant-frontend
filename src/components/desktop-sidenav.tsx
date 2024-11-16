@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Home, ForkKnife, User, Users, LogOut } from "lucide-react";
+import { Home, ForkKnife, User, Users, LogOut, Gem } from "lucide-react";
 
 import { logout } from "@/app/actions";
 
@@ -45,6 +45,15 @@ export default function DesktopSideBar() {
             >
               <ForkKnife className="h-6 w-6" />
               Angebote
+            </Link>
+            <Link
+              href="/dashboard/pricing"
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
+                pathname.startsWith("/dashboard/pricing") ? "text-primary" : ""
+              }`}
+            >
+              <Gem className="h-6 w-6" />
+              Preise
             </Link>
             <Link
               href="/dashboard/guests"
