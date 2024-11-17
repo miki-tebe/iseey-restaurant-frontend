@@ -292,3 +292,18 @@ export async function resetPassword(data: {
   console.log(result);
   return result;
 }
+
+// plans actions
+export async function getPlans() {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(`${API_URL}/api/stripe/getPrices`, {
+    headers: {
+      Authorization: `Bearer ${session.token}`,
+    },
+  });
+  const result = await payload.json();
+  if (result.success == true) return result.data;
+  return null;
+}

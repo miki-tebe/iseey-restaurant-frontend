@@ -1,18 +1,22 @@
-import Image from "next/image";
+// import Image from "next/image";
 
-import { getUser } from "@/lib/dal";
-import { Button } from "@/components/ui/button";
+// import { getUser } from "@/lib/dal";
+// import { Button } from "@/components/ui/button";
 import MobileSideBar from "@/components/mobile-sidenav";
 import DesktopSideBar from "@/components/desktop-sidenav";
+import { Suspense } from "react";
+import UserProfile from "@/components/user-profile";
+import { UserProfileSkeleton } from "@/components/user-profile-skeleton";
 
 async function Header() {
-  const user = await getUser();
-
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <MobileSideBar />
       <div className="ml-auto flex items-center gap-2"></div>
-      <Button variant="secondary" size="icon" className="rounded-full">
+      <Suspense fallback={<UserProfileSkeleton />}>
+        <UserProfile />
+      </Suspense>
+      {/* <Button variant="secondary" size="icon" className="rounded-full">
         <Image
           src={user?.image}
           alt="User Avatar"
@@ -26,7 +30,7 @@ async function Header() {
         <div className="text-xs text-muted-foreground">
           Restaurant administrator
         </div>
-      </div>
+      </div> */}
     </header>
   );
 }
