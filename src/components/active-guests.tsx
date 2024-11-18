@@ -27,8 +27,12 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
       console.log("Disconnected from socket server");
     });
 
-    socket.on("activeGuestsUpdate", (data) => {
-      setActiveGuests(data.count);
+    socket.on("NEW_CHECK_IN_CREATED", () => {
+      setActiveGuests((prev) => prev + 1);
+    });
+
+    socket.on("NEW_CHECK_OUT_CREATED", () => {
+      setActiveGuests((prev) => prev - 1);
     });
 
     return () => {
