@@ -37,18 +37,20 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
 
     socket.on("NEW_CHECK_IN_CREATED", (data) => {
       if (data.restaurant_id !== restaurant) return;
+      console.log("NEW_CHECK_IN_CREATED", data);
       setActiveGuests((prev) => prev + 1);
     });
 
     socket.on("NEW_CHECK_OUT_CREATED", (data) => {
       if (data.restaurant_id !== restaurant) return;
+      if (activeGuests === 0) return;
       setActiveGuests((prev) => prev - 1);
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [sessionToken, restaurant]);
+  }, [sessionToken, restaurant, activeGuests]);
 
   return <p>Aktive Gäste: {activeGuests}</p>;
 }
