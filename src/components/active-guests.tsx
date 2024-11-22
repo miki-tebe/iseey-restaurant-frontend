@@ -1,6 +1,6 @@
 "use client";
 
-import { getUser } from "@/lib/dal";
+import { getProfile } from "@/app/actions";
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
@@ -16,7 +16,7 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const user = await getUser();
+      const user = await getProfile();
       setRestaurant(user.restaurant_id);
     };
     fetchData();
