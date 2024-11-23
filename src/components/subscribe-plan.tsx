@@ -1,3 +1,5 @@
+"use client";
+
 import { useSubscribePlan } from "@/hooks/use-subscribe-plan";
 import {
   AlertDialog,
@@ -9,9 +11,28 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { changePlan } from "@/app/actions";
 
 export default function SubscribePlan() {
-  const { isOpen, onClose, plan } = useSubscribePlan();
+  const { isOpen, onClose, plan, priceId, setLoading } = useSubscribePlan();
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    try {
+      const data = await changePlan({ plan, priceId });
+      if (data.url) {
+        window.location.href = data.url;
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
@@ -23,7 +44,7 @@ export default function SubscribePlan() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onClose}>Confirm</AlertDialogAction>
+          <AlertDialogAction onClick={handleSubmit}>Confirm</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

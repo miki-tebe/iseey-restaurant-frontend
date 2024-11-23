@@ -1,9 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
-import { MoreHorizontal, Eye } from "lucide-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,15 +11,9 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
-import { User } from "@/components/user-table";
 // import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   Table,
   TableHeader,
@@ -32,121 +23,76 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-export type Guest = {
+export type Order = {
   _id: string;
   restaurant_id: string;
-  user_id: string;
+  product_id: string;
   created: number;
   updated: number;
-  userDetail: User;
-  lastCheckOut: {
-    table_number: number;
-  };
+  total_price: number;
+  quantity: number;
 };
 
-export const columns: ColumnDef<Guest>[] = [
+export const columns: ColumnDef<Order>[] = [
   {
     header: "Nr",
     accessorKey: "_id",
-    cell: ({ row }) => {
-      return <span>{row.index + 1}</span>;
-    },
+    // cell: ({ row }) => {
+    //   return <span>{row.index + 1}</span>;
+    // },
   },
   {
-    header: "Bild",
-    accessorKey: "image",
-    cell: ({ row }) => {
-      const guest = row.original as Guest;
-      return (
-        <Image
-          src={guest.userDetail.image}
-          alt={guest.userDetail.first_name || "Guest"}
-          className="h-8 w-8 rounded-full"
-          width={32}
-          height={32}
-        />
-      );
-    },
+    header: "Restaurant",
+    accessorKey: "restaurant_id",
+    // cell: ({ row }) => {
+    //   const guest = row.original as Guest;
+    //   return (
+    //     <Image
+    //       src={guest.userDetail.image}
+    //       alt={guest.userDetail.first_name || "Guest"}
+    //       className="h-8 w-8 rounded-full"
+    //       width={32}
+    //       height={32}
+    //     />
+    //   );
+    // },
   },
   {
-    header: "Name",
-    accessorKey: "name",
-    cell: ({ row }) => {
-      const guest = row.original as Guest;
-      return (
-        <>
-          {guest.userDetail.first_name} {guest.userDetail.last_name}
-        </>
-      );
-    },
+    header: "Product",
+    accessorKey: "product_id",
+    // cell: ({ row }) => {
+    //   const guest = row.original as Guest;
+    //   return (
+    //     <>
+    //       {guest.userDetail.first_name} {guest.userDetail.last_name}
+    //     </>
+    //   );
+    // },
   },
   {
     header: "Datum",
     accessorKey: "created",
     cell: ({ row }) => {
-      const guest = row.original as Guest;
-      const date = new Date(guest.created);
+      const odrder = row.original as Order;
+      const date = new Date(odrder.created);
       return <>{date.toLocaleDateString()}</>;
     },
   },
   {
-    header: "Tisch Nummer",
-    accessorKey: "code",
-    cell: ({ row }) => {
-      const guest = row.original as Guest;
-      return <>{guest.lastCheckOut?.table_number}</>;
-    },
-  },
-  {
-    header: "Land",
-    accessorKey: "code",
-    cell: ({ row }) => {
-      const guest = row.original as Guest;
-      return <>{guest.userDetail.country_name}</>;
-    },
-  },
-  {
-    header: "Alter",
-    accessorKey: "code",
-    cell: ({ row }) => {
-      const guest = row.original as Guest;
-      const dob = new Date(parseFloat(guest.userDetail.dob));
-      const age = new Date().getFullYear() - dob.getFullYear();
-      return <>{age}</>;
-    },
-  },
-  {
-    id: "Aktionen",
-    header: "Actions",
-    cell: ({ row }) => {
-      const guest = row.original as Guest;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <Link href={`/dashboard/guests/view/${guest.user_id}`}>
-              <DropdownMenuItem>
-                <Eye className="mr-2 h-4 w-4" />
-                View guest
-              </DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    header: "Total Price",
+    accessorKey: "total_price",
+    // cell: ({ row }) => {
+    //   const guest = row.original as Guest;
+    //   return <>{guest.lastCheckOut?.table_number}</>;
+    // },
   },
 ];
 
-export default function OrdersTable({ guests }: { guests: Guest[] }) {
+export default function OrdersTable({ orders }: { orders: Order[] }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
-    data: guests,
+    data: orders,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

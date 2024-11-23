@@ -12,6 +12,7 @@ import { editOfferFormSchema } from "@/app/dashboard/offers/edit/[id]/page";
 import { signupValidationSchema } from "@/app/signup/page";
 import { forgotPasswordSchema } from "@/app/forgot-password/page";
 import { ITableStand, Price, Product } from "@/types/type";
+import { changePlanSchema } from "@/app/dashboard/pricing/page";
 
 const API_URL = process.env.API_URL;
 
@@ -341,4 +342,38 @@ export async function getPlans() {
     console.error("Error in getPlans:", error);
     return null;
   }
+}
+
+export async function changePlan(data: z.infer<typeof changePlanSchema>) {
+  const session = await verifySession();
+  if (!session) return null;
+  try {
+    const payload = await fetch(`${API_URL}/api/stripe/change_plan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await payload.json();
+    return result;
+  } catch (error) {
+    console.error("Error in changePlan:", error);
+    throw new Error("Failed to change plan");
+  }
+}
+
+export async function fetchOrders() {
+  const session = await verifySession();
+  if (!session) return null;
+
+  const payload = await fetch(`${API_URL}/api/stripe/orders`, {
+    headers: {
+      Authorization: `Bearer ${session.token}`,
+    },
+  });
+  const result = await payload.json();
+  if (result.success == true) return result.data;
+  return null;
 }

@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 
 const secretKey = process.env.SESSION_SECRET;
-console.log("secret----", secretKey);
 const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: JWTPayload) {
