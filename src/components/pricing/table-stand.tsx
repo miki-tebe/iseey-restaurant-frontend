@@ -2,9 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
+import { Minus, Plus } from "lucide-react";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus } from "lucide-react";
 
 export default function TableStand() {
   const [quantity, setQuantity] = React.useState(1);

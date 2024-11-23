@@ -11,6 +11,7 @@ import { offerFormSchema } from "@/app/dashboard/offers/add/page";
 import { editOfferFormSchema } from "@/app/dashboard/offers/edit/[id]/page";
 import { signupValidationSchema } from "@/app/signup/page";
 import { forgotPasswordSchema } from "@/app/forgot-password/page";
+import { ITableStand, Price, Product } from "@/types/type";
 
 const API_URL = process.env.API_URL;
 
@@ -295,15 +296,49 @@ export async function resetPassword(data: {
 
 // plans actions
 export async function getPlans() {
-  const session = await verifySession();
-  if (!session) return null;
+  try {
+    const session = await verifySession();
+    if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/stripe/getPrices`, {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const result = await payload.json();
-  if (result.success == true) return result.data;
-  return null;
+    const response = await fetch(`${API_URL}/api/stripe/getPrices`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch prices: ${response.statusText}`);
+      return null;
+    }
+
+    const result = await response.json();
+    if (!result.success) {
+      console.error("Failed to fetch prices:", result);
+      return null;
+    }
+
+    const products: Product[] = result.data;
+    const prices: Price[] = [];
+    let tableStands: ITableStand | undefined;
+
+    products.forEach((product: Product) => {
+      if (product.title === "Iseey") {
+        const sortedPrices = product.prices.sort(
+          (a, b) => a.unit_amount - b.unit_amount
+        );
+        prices.push(...sortedPrices);
+      } else if (product.title === "Table Stand" && product.prices.length > 0) {
+        tableStands = {
+          product_id: product._id,
+          price_id: product.prices[0]._id,
+          unit_amount: product.prices[0].unit_amount,
+        };
+      }
+    });
+
+    return { prices, tableStands };
+  } catch (error) {
+    console.error("Error in getPlans:", error);
+    return null;
+  }
 }
