@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Home, Menu, ForkKnife, User, Users, LogOut } from "lucide-react";
+import { Home, Menu, ForkKnife, User, Users, LogOut, Gem } from "lucide-react";
 
 import { logout } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -50,6 +50,15 @@ export default function MobileSideBar() {
           >
             <ForkKnife className="h-5 w-5" />
             Angebote
+          </Link>
+          <Link
+            href="/dashboard/pricing"
+            className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
+              pathname.startsWith("/dashboard/pricing") ? "text-primary" : ""
+            }`}
+          >
+            <Gem className="h-6 w-6" />
+            Preise
           </Link>
           <Link
             href="/dashboard/guests"

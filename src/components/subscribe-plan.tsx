@@ -22,7 +22,7 @@ export default function SubscribePlan() {
     try {
       const data = await changePlan({ plan, priceId });
       if (data.url) {
-        window.location.href = data.url;
+        window.open(data.url);
       }
       setLoading(false);
     } catch (error) {

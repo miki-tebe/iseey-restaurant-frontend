@@ -34,7 +34,7 @@ export default async function TableStand() {
             <span className="ml-1 text-zinc-400">EURO</span>
           </div>
         </CardHeader>
-        <TableStandFooter />
+        <TableStandFooter tableStand={plans.tableStands} />
       </Card>
     </>
   );

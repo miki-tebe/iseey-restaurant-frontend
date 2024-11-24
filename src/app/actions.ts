@@ -13,6 +13,7 @@ import { signupValidationSchema } from "@/app/signup/page";
 import { forgotPasswordSchema } from "@/app/forgot-password/page";
 import { ITableStand, Price, Product } from "@/types/type";
 import { changePlanSchema } from "@/app/dashboard/pricing/page";
+import { createTableStandSchema } from "@/schema/table-stand.schema";
 
 const API_URL = process.env.API_URL;
 
@@ -44,7 +45,6 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
   });
   const result = await payload.json();
   if (result.data?.token) {
-    console.log("first_________-", result.data?.token);
     await createSession(result.data.token);
     redirect("/dashboard");
   }
@@ -376,4 +376,30 @@ export async function fetchOrders() {
   const result = await payload.json();
   if (result.success == true) return result.data;
   return null;
+}
+
+export async function createTableStand(
+  data: z.infer<typeof createTableStandSchema>
+) {
+  console.log("create Table data", data);
+  const session = await verifySession();
+  if (!session) return null;
+  try {
+    const payload = await fetch(
+      `${API_URL}/api/stripe/session/purchaseTableStand`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    const result = await payload.json();
+    return result.data;
+  } catch (error) {
+    console.error("Error in creating Table Stand:", error);
+    throw new Error("Failed to change plan");
+  }
 }

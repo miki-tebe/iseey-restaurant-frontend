@@ -5,10 +5,11 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import SubscribeButton from "@/components/subscribe-button";
 
-import { getPlans } from "@/app/actions";
+import { getPlans, getProfile } from "@/app/actions";
 
 export default async function PlanSection() {
   const plans = await getPlans();
+  const profile = await getProfile();
 
   if (!plans?.prices || plans?.prices.length === 0) {
     return <p className="mt-4 text-gray-400">No data available.</p>;
@@ -58,6 +59,8 @@ export default async function PlanSection() {
           <SubscribeButton
             plan={plans.prices[0].recurringInterval}
             priceId={plans.prices[0]._id}
+            isSubscribed={profile?.activeSubscription?.status}
+            subscribeYear={profile?.activeSubscription?.plan}
           />
         </Card>
 
@@ -102,6 +105,8 @@ export default async function PlanSection() {
             <SubscribeButton
               plan={plans.prices[1].recurringInterval}
               priceId={plans.prices[1]._id}
+              isSubscribed={profile?.activeSubscription?.status}
+              subscribeYear={profile?.activeSubscription?.plan}
             />
           </Card>
         )}

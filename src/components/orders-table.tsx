@@ -42,8 +42,8 @@ export const columns: ColumnDef<Order>[] = [
     // },
   },
   {
-    header: "Restaurant",
-    accessorKey: "restaurant_id",
+    header: "Crowd",
+    accessorKey: "quantity",
     // cell: ({ row }) => {
     //   const guest = row.original as Guest;
     //   return (
@@ -58,8 +58,8 @@ export const columns: ColumnDef<Order>[] = [
     // },
   },
   {
-    header: "Product",
-    accessorKey: "product_id",
+    header: "Total Price",
+    accessorKey: "total_price",
     // cell: ({ row }) => {
     //   const guest = row.original as Guest;
     //   return (
@@ -70,17 +70,16 @@ export const columns: ColumnDef<Order>[] = [
     // },
   },
   {
-    header: "Datum",
-    accessorKey: "created",
-    cell: ({ row }) => {
-      const odrder = row.original as Order;
-      const date = new Date(odrder.created);
-      return <>{date.toLocaleDateString()}</>;
-    },
+    header: "Product",
+    accessorKey: "title",
+    // cell: ({ row }) => {
+    //   const guest = row.original as Guest;
+    //   return <>{guest.lastCheckOut?.table_number}</>;
+    // },
   },
   {
-    header: "Total Price",
-    accessorKey: "total_price",
+    header: "Status",
+    accessorKey: "status",
     // cell: ({ row }) => {
     //   const guest = row.original as Guest;
     //   return <>{guest.lastCheckOut?.table_number}</>;
