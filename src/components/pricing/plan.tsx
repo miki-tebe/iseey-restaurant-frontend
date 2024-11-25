@@ -15,6 +15,8 @@ export default async function PlanSection() {
     return <p className="mt-4 text-gray-400">No data available.</p>;
   }
 
+  console.log("profile", profile);
+
   return (
     <>
       <h1 className="text-4xl font-bold text-center mb-12">Pricing</h1>

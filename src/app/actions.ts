@@ -59,7 +59,7 @@ export async function logout() {
 export async function getProfile() {
   const session = await verifySession();
   if (!session) return null;
-
+  console.log("----->", session.token);
   try {
     const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
       headers: {
@@ -67,6 +67,7 @@ export async function getProfile() {
       },
     });
     const result = await payload.json();
+    // console.log("result_____", result);
     if (result.success == true) return result.data;
   } catch (e) {
     console.log(e);
