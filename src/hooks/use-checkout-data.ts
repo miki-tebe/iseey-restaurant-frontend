@@ -6,7 +6,9 @@ export interface DataEntry {
 }
 
 interface DataStore {
-  data: DataEntry[];
+  date: Date;
+  setDate: (newDate: Date) => void;
+  graphData: DataEntry[];
   setData: (newData: DataEntry[]) => void; // Set the entire dataset
   getData: () => DataEntry[];
   resetData: () => void; // Reset to initial default state
@@ -40,10 +42,12 @@ const initialData: DataEntry[] = [
 ];
 
 const useDataStore = create<DataStore>((set, get) => ({
-  data: initialData, // Default initial state
-  setData: (newData: DataEntry[]) => set({ data: newData }), // Overwrite the entire data array
-  getData: () => get().data, // Getter to retrieve the data
-  resetData: () => set({ data: initialData }), // Reset data to default
+  graphData: [], // Default initial state
+  setData: (newData: DataEntry[]) => set({ graphData: newData }), // Overwrite the entire data array
+  getData: () => get().graphData, // Getter to retrieve the data
+  resetData: () => set({ graphData: initialData }), // Reset data to default
+  date: new Date(),
+  setDate: (newDate: Date) => set({ date: newDate }),
 }));
 
 export default useDataStore;

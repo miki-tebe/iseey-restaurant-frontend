@@ -20,33 +20,47 @@ import {
 } from "@/components/ui/select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useDataStore from "@/hooks/use-checkout-data";
+import { getChartData } from "@/app/actions";
+import { toast } from "sonner";
+import { useSubscribePlan } from "@/hooks/use-subscribe-plan";
+import convertToChartData from "@/lib/convertToChartData";
 
 export default function GuestActivityChart() {
-  const { data } = useDataStore();
-  const [date, setDate] = useState(new Date("2024-11-25"));
+  const { graphData, date, setDate, setData } = useDataStore();
+  const { setLoading } = useSubscribePlan();
   const [viewType, setViewType] = useState("daily");
 
   const handlePrevDate = () => {
-    setDate((prevDate) => {
-      const newDate = new Date(prevDate);
-      newDate.setDate(newDate.getDate() - 1);
-      return newDate;
-    });
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() - 1);
+    setDate(newDate);
   };
 
   const handleNextDate = () => {
-    setDate((prevDate) => {
-      const newDate = new Date(prevDate);
-      newDate.setDate(newDate.getDate() + 1);
-      return newDate > new Date() ? prevDate : newDate;
-    });
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
+    setDate(newDate > new Date() ? date : newDate);
   };
 
+  const handleChange = async (value: string) => {
+    setViewType(value);
+    setLoading(true);
+    try {
+      const res = await getChartData(value === "daily" ? "hours" : value, date);
+      const convertResponse = convertToChartData(res);
+      setData(convertResponse);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (graphData.length <= 0) return;
   return (
     <Card className="w-full bg-[#1c1c1c] text-white">
       <CardHeader>
-        {/* <CardTitle>Dashboard</CardTitle>
-        <div className="text-sm font-medium">Active guests: 0</div> */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Button
@@ -74,7 +88,10 @@ export default function GuestActivityChart() {
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
-          <Select value={viewType} onValueChange={setViewType}>
+          <Select
+            value={viewType}
+            onValueChange={(value: string) => handleChange(value)}
+          >
             <SelectTrigger className="w-[100px] bg-[#2a2a2a] text-white border-gray-600">
               <SelectValue placeholder="View" />
             </SelectTrigger>
@@ -94,7 +111,7 @@ export default function GuestActivityChart() {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data}>
+          <BarChart data={graphData}>
             <XAxis
               dataKey="hour"
               stroke="#cccccc"

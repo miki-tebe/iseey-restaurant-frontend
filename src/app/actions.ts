@@ -404,3 +404,25 @@ export async function createTableStand(
     throw new Error("Failed to change plan");
   }
 }
+
+export async function getChartData(type: string, date: Date) {
+  const session = await verifySession();
+  if (!session) return null;
+
+  try {
+    const payload = await fetch(
+      `${API_URL}/api/restaurants/chart-data/${type}?date=${date.toISOString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        },
+      }
+    );
+    const result = await payload.json();
+    if (result.success == true) return result.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch chart data");
+  }
+  // return null;
+}

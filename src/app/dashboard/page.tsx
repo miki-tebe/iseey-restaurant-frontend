@@ -12,6 +12,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import ActiveGuests from "@/components/active-guests";
+import GuestActivityChart from "@/components/charts";
 // import GuestActivityChart from "@/components/charts";
 
 type Customer = {
@@ -35,7 +36,7 @@ export default async function Dashboard() {
         <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
       </div>
       <ActiveGuests sessionToken={token} />
-      {/* <GuestActivityChart /> */}
+      <GuestActivityChart />
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

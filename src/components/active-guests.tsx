@@ -2,6 +2,7 @@
 
 import { getProfile } from "@/app/actions";
 import useDataStore, { DataEntry } from "@/hooks/use-checkout-data";
+import convertToChartData from "@/lib/convertToChartData";
 import { useState, useEffect, useCallback } from "react";
 import io, { Socket } from "socket.io-client";
 
@@ -40,24 +41,18 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
       });
 
       const handleCheckIn = (data: any) => {
-        if (data?.restaurant_id.toString() === restaurantId) {
-          const result: DataEntry[] = Object.entries(data?.hourlyData).map(
-            ([hour, guests]) => ({
-              hour,
-              guests: Number(guests),
-            })
-          );
-          setData(result);
-          setActiveGuests((prev) => prev + 1);
-          console.log("active gusts", activeGuests);
+        if (data) {
+          if (data.restaurant_id.toString() === restaurantId) {
+            setActiveGuests((prev) => prev + 1);
+            console.log("active gusts", activeGuests);
+          }
         }
       };
 
       const handleCheckOut = (data: any) => {
-        console.log("checkout", data);
         if (data?.restaurant_id?.toString() === restaurantId) {
-          console.log("checkout", activeGuests);
-          setData(data?.hourlyData);
+          const result = convertToChartData(data?.hourlyData);
+          setData(result);
           setActiveGuests((prev) => (prev > 0 ? prev - 1 : prev));
         }
       };
