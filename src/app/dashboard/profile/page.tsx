@@ -43,11 +43,11 @@ export default function Profile() {
     async function fetchProfile() {
       const profileData = await getProfile();
       profileForm.reset(profileData);
-      if (profileData.drinkMenu != undefined) {
+      if (profileData?.drinkMenu != undefined) {
         setDrinkURL(true);
         profileForm.setValue("drinkMenu", profileData.drinkMenu);
       }
-      if (profileData.menu != undefined) {
+      if (profileData?.menu != undefined) {
         setMenuURL(true);
         profileForm.setValue("menu", profileData.menu);
       }
