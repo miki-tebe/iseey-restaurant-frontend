@@ -424,5 +424,4 @@ export async function getChartData(type: string, date: Date) {
     console.log(error);
     throw new Error("Failed to fetch chart data");
   }
-  // return null;
 }
