@@ -16,10 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-export const forgotPasswordSchema = z.object({
-  email: z.string().email(),
-});
+import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 
 export default function ForgotPassword() {
   const forgotPasswordForm = useForm<z.infer<typeof forgotPasswordSchema>>({

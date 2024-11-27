@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { z } from "zod";
 
 import Orders from "@/components/pricing/orders";
 import PlanSection from "@/components/pricing/plan";
@@ -8,18 +7,7 @@ import TableStand from "@/components/pricing/table-stand";
 import TableStandSkeleton from "@/components/pricing/table-stand-skeleton";
 import { Separator } from "@/components/ui/separator";
 
-export const changePlanSchema = z.object({
-  plan: z
-    .string()
-    .min(3, {
-      message: "Name must be at least 3 characters long",
-    })
-    .max(255)
-    .optional(),
-  priceId: z.string().max(500).optional(),
-});
-
-export default function Component() {
+export default async function Component() {
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
       {/* Warning Banner */}

@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9003:9003"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped

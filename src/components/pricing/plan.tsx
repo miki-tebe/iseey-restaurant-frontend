@@ -8,14 +8,10 @@ import SubscribeButton from "@/components/subscribe-button";
 import { getPlans, getProfile } from "@/app/actions";
 
 export default async function PlanSection() {
-  const plans = await getPlans();
-  const profile = await getProfile();
+  const [plans, profile] = await Promise.all([getPlans(), getProfile()]);
 
-  if (!plans?.prices || plans?.prices.length === 0) {
+  if (!plans || !plans.prices || plans.prices.length === 0 || !profile)
     return <p className="mt-4 text-gray-400">No data available.</p>;
-  }
-
-  console.log("profile", profile);
 
   return (
     <>

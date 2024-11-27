@@ -6,14 +6,15 @@ import { revalidatePath } from "next/cache";
 
 import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
-import { profileFormSchema } from "@/app/dashboard/profile/page";
-import { offerFormSchema } from "@/app/dashboard/offers/add/page";
-import { editOfferFormSchema } from "@/app/dashboard/offers/edit/[id]/page";
-import { signupValidationSchema } from "@/app/signup/page";
-import { forgotPasswordSchema } from "@/app/forgot-password/page";
 import { ITableStand, Price, Product } from "@/types/type";
-import { changePlanSchema } from "@/app/dashboard/pricing/page";
 import { createTableStandSchema } from "@/schema/table-stand.schema";
+import { offerFormSchema } from "@/schema/offerFormSchema";
+import { editOfferFormSchema } from "@/schema/offerEditSchema";
+import { changePlanSchema } from "@/schema/changePlanSchema";
+import { profileFormSchema } from "@/schema/profileSchema";
+import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
+import { signupValidationSchema } from "@/schema/signUpSchema";
+import { toast } from "sonner";
 
 const API_URL = process.env.API_URL;
 
@@ -59,7 +60,6 @@ export async function logout() {
 export async function getProfile() {
   const session = await verifySession();
   if (!session) return null;
-  console.log("----->", session.token);
   try {
     const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
       headers: {
@@ -67,10 +67,10 @@ export async function getProfile() {
       },
     });
     const result = await payload.json();
-    // console.log("result_____", result);
     if (result.success == true) return result.data;
   } catch (e) {
     console.log(e);
+    return { message: "Failed to fetch user profile" };
   }
   return null;
 }
@@ -298,10 +298,9 @@ export async function resetPassword(data: {
 
 // plans actions
 export async function getPlans() {
+  const session = await verifySession();
+  if (!session) return null;
   try {
-    const session = await verifySession();
-    if (!session) return null;
-
     const response = await fetch(`${API_URL}/api/stripe/getPrices`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -310,13 +309,13 @@ export async function getPlans() {
 
     if (!response.ok) {
       console.error(`Failed to fetch prices: ${response.statusText}`);
-      return null;
+      throw new Error("Failed to fetch prices");
     }
 
     const result = await response.json();
     if (!result.success) {
       console.error("Failed to fetch prices:", result);
-      return null;
+      throw new Error("Failed to fetch prices");
     }
 
     const products: Product[] = result.data;
@@ -341,7 +340,7 @@ export async function getPlans() {
     return { prices, tableStands };
   } catch (error) {
     console.error("Error in getPlans:", error);
-    return null;
+    return { message: "Failed to fetch prices" };
   }
 }
 
@@ -369,14 +368,18 @@ export async function fetchOrders() {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/stripe/orders`, {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const result = await payload.json();
-  if (result.success == true) return result.data;
-  return null;
+  try {
+    const payload = await fetch(`${API_URL}/api/stripe/orders`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const result = await payload.json();
+    if (result.success == true) return result.data;
+  } catch (error) {
+    console.log(error);
+    return { message: "Failed to fetch orders" };
+  }
 }
 
 export async function createTableStand(

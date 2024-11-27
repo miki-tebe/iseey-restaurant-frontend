@@ -10,12 +10,16 @@ const API_URL = process.env.API_URL;
 
 export const verifySession = cache(async () => {
   const cookie = cookies().get("session")?.value;
-  const session = await decrypt(cookie);
-
-  if (!session?.token) {
-    redirect("/login");
+  const session = await decrypt(cookie as string);
+  try {
+    if (!session?.token) {
+      redirect("/login");
+    }
+    return { isAuth: true, token: session.token };
+  } catch (error) {
+    console.log(`Failed to verify session: ${error}`);
+    return { isAuth: false, token: "" };
   }
-  return { isAuth: true, token: session.token };
 });
 
 export const getUser = cache(async () => {

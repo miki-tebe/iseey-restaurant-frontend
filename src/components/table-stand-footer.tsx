@@ -13,7 +13,7 @@ interface ITableStandFooter {
 
 function TableStandFooter({ tableStand }: ITableStandFooter) {
   const [quantity, setQuantity] = React.useState(1);
-  const total_price = (quantity * tableStand.unit_amount).toFixed(2);
+  const total_price = quantity * tableStand.unit_amount;
   const { onOpen } = usePurchaseTableStand();
   return (
     <CardFooter className="flex flex-col space-y-4">

@@ -7,9 +7,8 @@ import { getPlans } from "@/app/actions";
 export default async function TableStand() {
   const plans = await getPlans();
 
-  if (!plans?.tableStands || !plans?.tableStands.unit_amount) {
+  if (!plans || !plans.tableStands)
     return <p className="mt-4 text-gray-400">No data available.</p>;
-  }
   return (
     <>
       <h2 className="text-4xl font-bold text-center mb-12">table stand</h2>
