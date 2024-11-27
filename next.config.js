@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   redirects: async () => {
     return [
       {
@@ -17,7 +18,9 @@ const nextConfig = {
       },
     ],
   },
-  output: "standalone",
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

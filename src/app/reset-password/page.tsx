@@ -17,18 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-const resetPasswordSchema = z
-  .object({
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters long"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+import { resetPasswordSchema } from "@/schema/resetPasswordSchema";
 
 export default function ResetPassword() {
   const searchParams = useSearchParams();

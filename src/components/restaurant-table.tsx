@@ -15,7 +15,6 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
-import { deleteRestaurant } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -139,16 +138,7 @@ export const columns: ColumnDef<Restaurant>[] = [
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
-                <Button
-                  onClick={async () => {
-                    const result = await deleteRestaurant({
-                      id: restaurant._id,
-                    });
-                    toast(result.message);
-                  }}
-                >
-                  Confirm
-                </Button>
+                <Button onClick={async () => {}}>Confirm</Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>

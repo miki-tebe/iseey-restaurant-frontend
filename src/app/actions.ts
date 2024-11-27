@@ -6,14 +6,14 @@ import { revalidatePath } from "next/cache";
 
 import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
-import { profileFormSchema } from "@/app/dashboard/profile/page";
-import { offerFormSchema } from "@/app/dashboard/offers/add/page";
-import { editOfferFormSchema } from "@/app/dashboard/offers/edit/[id]/page";
-import { signupValidationSchema } from "@/app/signup/page";
-import { forgotPasswordSchema } from "@/app/forgot-password/page";
 import { ITableStand, Price, Product } from "@/types/type";
-import { changePlanSchema } from "@/app/dashboard/pricing/page";
 import { createTableStandSchema } from "@/schema/table-stand.schema";
+import { offerFormSchema } from "@/schema/offerFormSchema";
+import { editOfferFormSchema } from "@/schema/offerEditSchema";
+import { changePlanSchema } from "@/schema/changePlanSchema";
+import { profileFormSchema } from "@/schema/profileSchema";
+import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
+import { signupValidationSchema } from "@/schema/signUpSchema";
 
 const API_URL = process.env.API_URL;
 
