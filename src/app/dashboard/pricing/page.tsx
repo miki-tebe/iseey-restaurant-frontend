@@ -7,6 +7,8 @@ import TableStand from "@/components/pricing/table-stand";
 import TableStandSkeleton from "@/components/pricing/table-stand-skeleton";
 import { Separator } from "@/components/ui/separator";
 
+export const dynamic = "force-dynamic";
+
 export default function Component() {
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
