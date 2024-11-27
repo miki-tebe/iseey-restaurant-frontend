@@ -20,7 +20,21 @@ import {
 } from "@/components/ui/form";
 import { resetPasswordSchema } from "@/schema/resetPasswordSchema";
 
+<<<<<<< HEAD
 export const dynamic = "force-dynamic";
+=======
+export default function ResetPassword() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
+
+function ResetPasswordForm() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+>>>>>>> 56657882f4502028b70a26468aa29024d435080d
 
 function ResetPasswordForm({ token }: { token: string | null }) {
   const resetPasswordForm = useForm<z.infer<typeof resetPasswordSchema>>({

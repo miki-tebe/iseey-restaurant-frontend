@@ -7,7 +7,13 @@ import TableStand from "@/components/pricing/table-stand";
 import TableStandSkeleton from "@/components/pricing/table-stand-skeleton";
 import { Separator } from "@/components/ui/separator";
 
+<<<<<<< HEAD
 export default async function Component() {
+=======
+export const dynamic = "force-dynamic";
+
+export default function Component() {
+>>>>>>> 56657882f4502028b70a26468aa29024d435080d
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
       {/* Warning Banner */}

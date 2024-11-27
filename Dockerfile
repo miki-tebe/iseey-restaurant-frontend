@@ -54,4 +54,4 @@ ENV PORT 9003
 ENV HOSTNAME "0.0.0.0"
 
 # Start the server
-CMD ["node", "dev"]
+CMD ["node", "server.js"]
