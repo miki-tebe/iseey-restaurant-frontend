@@ -45,5 +45,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 EXPOSE 9003
 
-ENTRYPOINT ["./entrypoint.sh"]
+# ENTRYPOINT ["./entrypoint.sh"]
 CMD ["bun", "server.js", "--port", "9003", "--hostname", "0.0.0.0"]
