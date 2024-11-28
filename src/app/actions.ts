@@ -27,15 +27,15 @@ export async function login(data: { email: string; password: string }) {
       body: JSON.stringify(data),
     });
     const result = await payload.json();
-    if (result.data?.token) {
-      await createSession(result.data.token);
-      redirect("/dashboard");
+    if (result.data?.token === undefined) {
+      return result;
     }
-    return result;
+    await createSession(result.data.token);
   } catch (error) {
     console.error("Error in login:", error);
     return { message: "Failed to login" };
   }
+  redirect("/dashboard");
 }
 
 export async function signup(data: z.infer<typeof signupValidationSchema>) {
@@ -50,15 +50,15 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
       body: JSON.stringify(data),
     });
     const result = await payload.json();
-    if (result.data?.token) {
-      await createSession(result.data.token);
-      redirect("/dashboard");
+    if (result.data?.token === undefined) {
+      return result;
     }
-    return result;
+    await createSession(result.data.token);
   } catch (error) {
     console.error("Error in signup:", error);
     return { message: "Failed to signup" };
   }
+  redirect("/dashboard");
 }
 
 export async function logout() {
