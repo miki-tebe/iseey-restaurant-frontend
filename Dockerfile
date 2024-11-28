@@ -19,6 +19,9 @@ RUN bun run build
 FROM base AS runner
 WORKDIR /app
 
+RUN mkdir -p .next/static
+RUN chown -R nobody:nobody .next/static
+
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV PORT 9003
@@ -29,6 +32,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/package.json ./package.json
+
+USER nobody
 
 EXPOSE 9003
 CMD ["bun", "server.js", "--port", "9003", "--hostname", "0.0.0.0"]
