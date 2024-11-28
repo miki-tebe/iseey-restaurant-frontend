@@ -8,7 +8,7 @@ COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 
 # Create a separate directory for static files
-RUN mkdir -p /app/static-files
+# RUN mkdir -p /app/static-files
 
 # Stage 2: Build the application
 FROM base AS builder
@@ -33,15 +33,15 @@ COPY --from=builder /app/public ./public
 # Set the correct permission for prerender cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static /app/static-files
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Create .next/static directory for the volume mount
-RUN mkdir -p .next/static
+# RUN mkdir -p .next/static
 
 # Add an entrypoint script to copy files
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+# COPY entrypoint.sh .
+# RUN chmod +x entrypoint.sh
 
 EXPOSE 9003
 
