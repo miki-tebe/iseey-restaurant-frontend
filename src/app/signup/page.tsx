@@ -23,6 +23,14 @@ import { signupValidationSchema } from "@/schema/signUpSchema";
 export default function Signup() {
   const form = useForm<z.infer<typeof signupValidationSchema>>({
     resolver: zodResolver(signupValidationSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phoneNumber: "",
+      address: "",
+    },
   });
 
   function handleSubmit(data: z.infer<typeof signupValidationSchema>) {

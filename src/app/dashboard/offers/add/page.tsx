@@ -35,6 +35,16 @@ export default function AddOffer() {
 
   const form = useForm<z.infer<typeof offerFormSchema>>({
     resolver: zodResolver(offerFormSchema),
+    defaultValues: {
+      name: "",
+      discount: 0,
+      start_date: "",
+      end_date: "",
+      currency: "",
+      code: "",
+      photo: "",
+      description: "",
+    },
   });
 
   async function onSubmit(values: z.infer<typeof offerFormSchema>) {

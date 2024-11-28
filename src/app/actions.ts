@@ -14,42 +14,51 @@ import { changePlanSchema } from "@/schema/changePlanSchema";
 import { profileFormSchema } from "@/schema/profileSchema";
 import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 import { signupValidationSchema } from "@/schema/signUpSchema";
-import { toast } from "sonner";
 
 const API_URL = process.env.API_URL;
 
 export async function login(data: { email: string; password: string }) {
-  const payload = await fetch(`${API_URL}/api/restaurants/login/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  const result = await payload.json();
-  if (result.data?.token) {
-    await createSession(result.data.token);
-    redirect("/dashboard");
+  try {
+    const payload = await fetch(`${API_URL}/api/restaurants/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await payload.json();
+    if (result.data?.token) {
+      await createSession(result.data.token);
+      redirect("/dashboard");
+    }
+    return result;
+  } catch (error) {
+    console.error("Error in login:", error);
+    return { message: "Failed to login" };
   }
-  return result;
 }
 
 export async function signup(data: z.infer<typeof signupValidationSchema>) {
-  data.lat = "1.3521";
-  data.lng = "103.8198";
-  const payload = await fetch(`${API_URL}/api/restaurants/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  const result = await payload.json();
-  if (result.data?.token) {
-    await createSession(result.data.token);
-    redirect("/dashboard");
+  try {
+    data.lat = "1.3521";
+    data.lng = "103.8198";
+    const payload = await fetch(`${API_URL}/api/restaurants/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await payload.json();
+    if (result.data?.token) {
+      await createSession(result.data.token);
+      redirect("/dashboard");
+    }
+    return result;
+  } catch (error) {
+    console.error("Error in signup:", error);
+    return { message: "Failed to signup" };
   }
-  return result;
 }
 
 export async function logout() {
@@ -79,15 +88,20 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${session.token}`,
-    },
-    body: JSON.stringify(data),
-  });
-  return await payload.json();
+  try {
+    const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return await payload.json();
+  } catch (error) {
+    console.error("Error in updateProfile:", error);
+    return { message: "Failed to update profile" };
+  }
 }
 
 export async function getGuests() {
@@ -112,76 +126,101 @@ export async function getGuest(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/customers/get/${data.id}`, {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const result = await payload.json();
-  if (result.success == true) return result.data;
-  return null;
+  try {
+    const payload = await fetch(`${API_URL}/api/customers/get/${data.id}`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const result = await payload.json();
+    if (result.success == true) return result.data;
+    return null;
+  } catch (error) {
+    console.error("Error in getGuest:", error);
+    return { message: "Failed to fetch guest" };
+  }
 }
 
 export async function deleteUser(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(
-    `http://localhost:8090/api/admin/users/delete/${data.id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-    }
-  );
-  revalidatePath("/dashboard/users");
-  return await payload.json();
+  try {
+    const payload = await fetch(
+      `${API_URL}/api/admin/users/delete/${data.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        },
+      }
+    );
+    revalidatePath("/dashboard/users");
+    return await payload.json();
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    return { message: "Failed to delete user" };
+  }
 }
 
 export async function getOffers() {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/offers/`, {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const result = await payload.json();
-  if (result.success == true) return result.data;
-  return null;
+  try {
+    const payload = await fetch(`${API_URL}/api/offers/`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const result = await payload.json();
+    if (result.success == true) return result.data;
+    return null;
+  } catch (error) {
+    console.error("Error in getOffers:", error);
+    return { message: "Failed to fetch offers" };
+  }
 }
 
 export async function getOffer(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const result = await payload.json();
-  if (result.success == true) return result.data;
-  return null;
+  try {
+    const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const result = await payload.json();
+    if (result.success == true) return result.data;
+    return null;
+  } catch (error) {
+    console.error("Error in getOffer:", error);
+    return { message: "Failed to fetch offer" };
+  }
 }
 
 export async function addOffer(data: z.infer<typeof offerFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/offers`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${session.token}`,
-    },
-    body: JSON.stringify(data),
-  });
-  const result = await payload.json();
-  revalidatePath("/dashboard/offers");
-  return result;
+  try {
+    const payload = await fetch(`${API_URL}/api/offers`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await payload.json();
+    revalidatePath("/dashboard/offers");
+    return result;
+  } catch (error) {
+    console.error("Error in addOffer:", error);
+    return { message: "Failed to add offer" };
+  }
 }
 
 export async function updateOffer(
@@ -191,92 +230,122 @@ export async function updateOffer(
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/offers/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${session.token}`,
-    },
-    body: JSON.stringify(data),
-  });
-  revalidatePath("/dashboard/offers");
-  return await payload.json();
+  try {
+    const payload = await fetch(`${API_URL}/api/offers/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    revalidatePath("/dashboard/offers");
+    return await payload.json();
+  } catch (error) {
+    console.error("Error in updateOffer:", error);
+    return { message: "Failed to update offer" };
+  }
 }
 
 export async function deleteOffer(data: { id: string }) {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  revalidatePath("/dashboard/offers");
-  return await payload.json();
+  try {
+    const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    revalidatePath("/dashboard/offers");
+    return await payload.json();
+  } catch (error) {
+    console.error("Error in deleteOffer:", error);
+    return { message: "Failed to delete offer" };
+  }
 }
 
 export async function getNewsletters() {
   const session = await verifySession();
   if (!session) return null;
 
-  const payload = await fetch(`${API_URL}/api/newsletters/`, {
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-  });
-  const result = await payload.json();
+  try {
+    const payload = await fetch(`${API_URL}/api/newsletters/`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    const result = await payload.json();
 
-  if (result.success == true) return result.data.newsletters;
-  return null;
+    if (result.success == true) return result.data.newsletters;
+    return null;
+  } catch (error) {
+    console.error("Error in getNewsletters:", error);
+    return { message: "Failed to fetch newsletters" };
+  }
 }
 
 export async function uploadOfferPhoto(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
-  const payload = await fetch(`${API_URL}/api/upload/offer`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-    body: data,
-  });
-  const result = await payload.json();
-  if (result.success == true) {
-    return { message: "Offer photo uploaded", url: result.data.url };
-  } else return { message: "Failed to upload offer photo" };
+  try {
+    const payload = await fetch(`${API_URL}/api/upload/offer`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: data,
+    });
+    const result = await payload.json();
+    if (result.success == true) {
+      return { message: "Offer photo uploaded", url: result.data.url };
+    } else return { message: "Failed to upload offer photo" };
+  } catch (error) {
+    console.error("Error in uploadOfferPhoto:", error);
+    return { message: "Failed to upload offer photo" };
+  }
 }
 
 export async function uploadRestaurantMenus(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
-  const payload = await fetch(`${API_URL}/api/upload/menu`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-    },
-    body: data,
-  });
-  const result = await payload.json();
-  if (result.success == true) {
-    return { message: "Restaurant menu uploaded", url: result.data.url };
-  } else return { message: "Failed to upload restaurant menu" };
+
+  try {
+    const payload = await fetch(`${API_URL}/api/upload/menu`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: data,
+    });
+    const result = await payload.json();
+    if (result.success == true) {
+      return { message: "Restaurant menu uploaded", url: result.data.url };
+    } else return { message: "Failed to upload restaurant menu" };
+  } catch (error) {
+    console.error("Error in uploadRestaurantMenus:", error);
+    return { message: "Failed to upload restaurant menu" };
+  }
 }
 
 export async function forgotPassword(
   data: z.infer<typeof forgotPasswordSchema>
 ) {
-  const payload = await fetch(`${API_URL}/api/restaurants/forgot-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  const result = await payload.json();
-  console.log(result);
-  return result;
+  try {
+    const payload = await fetch(`${API_URL}/api/restaurants/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await payload.json();
+    return result;
+  } catch (error) {
+    console.error("Error in forgotPassword:", error);
+    return { message: "Failed to send reset password email" };
+  }
 }
 
 export async function resetPassword(data: {
@@ -284,16 +353,20 @@ export async function resetPassword(data: {
   confirmPassword: string;
   token: string;
 }) {
-  const payload = await fetch(`${API_URL}/api/restaurants/reset-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  const result = await payload.json();
-  console.log(result);
-  return result;
+  try {
+    const payload = await fetch(`${API_URL}/api/restaurants/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await payload.json();
+    return result;
+  } catch (error) {
+    console.error("Error in resetPassword:", error);
+    return { message: "Failed to reset password" };
+  }
 }
 
 // plans actions
