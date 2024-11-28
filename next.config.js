@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  server: {
+    port: 9003,
+    host: "0.0.0.0",
+  },
   images: {
     // Optional: use a different optimization service
     // loader: 'custom',

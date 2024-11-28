@@ -17,9 +17,11 @@ RUN bun run build
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+ENV HOSTNAME "0.0.0.0"
+ENV PORT 9003
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 9003
-CMD ["bun", "run", "server.js"]
+CMD ["bun", "server.js", "--port", "9003", "--hostname", "0.0.0.0"]
