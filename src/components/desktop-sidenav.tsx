@@ -1,15 +1,10 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { Home, ForkKnife, User, Users, LogOut, Gem } from "lucide-react";
 
 import { logout } from "@/app/actions";
 
 export default function DesktopSideBar() {
-  const pathname = usePathname();
-
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-5">
@@ -30,65 +25,53 @@ export default function DesktopSideBar() {
           <nav className="grid items-start px-2 text-lg font-medium lg:px-4 gap-5">
             <Link
               href="/dashboard"
-              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname === "/dashboard" ? "text-primary" : ""
-              }`}
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
             >
               <Home className="h-6 w-6" />
               Dashboard
             </Link>
             <Link
               href="/dashboard/offers"
-              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname.startsWith("/dashboard/offers") ? "text-primary" : ""
-              }`}
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
             >
               <ForkKnife className="h-6 w-6" />
               Angebote
             </Link>
             <Link
               href="/dashboard/pricing"
-              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname.startsWith("/dashboard/pricing") ? "text-primary" : ""
-              }`}
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
             >
               <Gem className="h-6 w-6" />
               Preise
             </Link>
             <Link
               href="/dashboard/guests"
-              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname.startsWith("/dashboard/guests") ? "text-primary" : ""
-              }`}
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
             >
               <Users className="h-6 w-6" />
               Gäste
             </Link>
             <Link
               href="/dashboard/newsletter"
-              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname === "/dashboard/newsletter" ? "text-primary" : ""
-              }`}
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
             >
               <User className="h-6 w-6" />
               NewsLetter
             </Link>
             <Link
               href="/dashboard/profile"
-              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-                pathname === "/dashboard/profile" ? "text-primary" : ""
-              }`}
+              className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
             >
               <User className="h-6 w-6" />
               Mein Profil
             </Link>
-            <a
-              onClick={() => logout()}
+            <form
+              action={logout}
               className="flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground"
             >
               <LogOut className="h-6 w-6" />
-              Logout
-            </a>
+              <button type="submit">Logout</button>
+            </form>
           </nav>
         </div>
       </div>

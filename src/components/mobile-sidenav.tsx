@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { Home, Menu, ForkKnife, User, Users, LogOut, Gem } from "lucide-react";
 
 import { logout } from "@/app/actions";
@@ -10,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function MobileSideBar() {
-  const pathname = usePathname();
-
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -35,65 +30,53 @@ export default function MobileSideBar() {
           </Link>
           <Link
             href="/dashboard"
-            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname === "/dashboard" ? "text-primary" : ""
-            }`}
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground`}
           >
             <Home className="h-5 w-5" />
             Dashboard
           </Link>
           <Link
             href="/dashboard/offers"
-            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname.startsWith("/dashboard/offers") ? "text-primary" : ""
-            }`}
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground`}
           >
             <ForkKnife className="h-5 w-5" />
             Angebote
           </Link>
           <Link
             href="/dashboard/pricing"
-            className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground ${
-              pathname.startsWith("/dashboard/pricing") ? "text-primary" : ""
-            }`}
+            className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
           >
             <Gem className="h-6 w-6" />
             Preise
           </Link>
           <Link
             href="/dashboard/guests"
-            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname.startsWith("/dashboard/guests") ? "text-primary" : ""
-            }`}
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground`}
           >
             <Users className="h-5 w-5" />
             Gäste
           </Link>
           <Link
             href="/dashboard/newsletter"
-            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname === "/dashboard/newsletter" ? "text-primary" : ""
-            }`}
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground`}
           >
             <User className="h-5 w-5" />
             NewsLetter
           </Link>
           <Link
             href="/dashboard/profile"
-            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
-              pathname === "/dashboard/profile" ? "text-primary" : ""
-            }`}
+            className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground`}
           >
             <User className="h-5 w-5" />
             Mein Profil
           </Link>
-          <a
-            onClick={() => logout()}
+          <form
+            action={logout}
             className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
           >
             <LogOut className="h-5 w-5" />
-            Logout
-          </a>
+            <button type="submit">Logout</button>
+          </form>
         </nav>
       </SheetContent>
     </Sheet>
