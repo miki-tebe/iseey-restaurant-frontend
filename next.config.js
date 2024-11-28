@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  basePath: "/restaurants",
+  assetPrefix: "/restaurants/",
   server: {
     port: 9003,
     host: "0.0.0.0",
