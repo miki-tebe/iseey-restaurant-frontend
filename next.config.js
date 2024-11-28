@@ -1,29 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
-  redirects: async () => {
-    return [
-      {
-        source: "/login",
-        destination: "/",
-        permanent: true,
-      },
-    ];
-  },
   images: {
+    // Optional: use a different optimization service
+    // loader: 'custom',
+    // loaderFile: './image-loader.ts',
+    //
+    // We're defaulting to optimizing images with
+    // Sharp, which is built-into `next start`
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "images.unsplash.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  compress: false,
 };
 
 module.exports = nextConfig;
