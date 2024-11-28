@@ -2,13 +2,13 @@
 # copy-static.sh
 
 # Stop any running containers
-docker-compose down
+docker compose down
 
 # Remove old static files
 sudo rm -rf /var/www/next-static/*
 
 # Build and start the container
-docker-compose up -d
+docker compose -f docker-compose.yml up --build --remove-orphans
 
 # Wait for container to start
 sleep 5
