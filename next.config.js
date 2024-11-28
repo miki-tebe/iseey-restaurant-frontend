@@ -21,6 +21,8 @@ const nextConfig = {
       },
     ],
   },
+  basePath: "/restaurants",
+  assetPrefix: "/restaurants",
   eslint: {
     ignoreDuringBuilds: true,
   },
