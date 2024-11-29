@@ -26,11 +26,11 @@ ENV PORT 9003
 ENV HOSTNAME "0.0.0.0"
 
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/_next/standalone ./
-COPY --from=builder /app/_next/static /app/static-files
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static /app/static-files
 
 # Create _next/static directory for the volume mount
-RUN mkdir -p _next/static
+RUN mkdir -p .next/static
 
 # Add an entrypoint script to copy files
 COPY entrypoint.sh .
