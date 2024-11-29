@@ -30,7 +30,7 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static /app/static-files
 
 # Create _next/static directory for the volume mount
-RUN mkdir -p .next/static
+RUN mkdir -p _next/static
 
 # Add an entrypoint script to copy files
 COPY entrypoint.sh .
