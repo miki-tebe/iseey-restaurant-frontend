@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # volumes:
-    #   - /var/www/next-static:/app/.next/static
+    volumes:
+      - /var/www/next-static:/app/.next/static
     ports:
       - "9003:9003"
     environment:
