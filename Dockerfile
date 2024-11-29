@@ -25,9 +25,16 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ENV PORT 9003
 ENV HOSTNAME "0.0.0.0"
 
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static /app/static-files
+
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static  /app/static-files
+
+USER nextjs
 
 # Create .next/static directory for the volume mount
 RUN mkdir -p .next/static
