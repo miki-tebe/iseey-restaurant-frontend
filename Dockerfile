@@ -36,8 +36,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static  /app/static-files
 
 USER nextjs
 
-# Create _next/static directory for the volume mount
-RUN mkdir -p _next/static
+# Create .next/static directory for the volume mount
+RUN mkdir -p .next/static
 
 # Add an entrypoint script to copy files
 COPY entrypoint.sh .
