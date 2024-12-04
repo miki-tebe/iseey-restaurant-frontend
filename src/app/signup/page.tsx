@@ -45,7 +45,7 @@ export default function Signup() {
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
       <div className="hidden bg-muted lg:flex lg:items-center lg:justify-center">
         <Image
-          src="/images/logo4.png"
+          src="/restaurants/images/logo4.png"
           alt="ISSEY Logo"
           width={1590}
           height={900}

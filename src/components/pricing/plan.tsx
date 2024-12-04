@@ -22,7 +22,7 @@ export default async function PlanSection() {
           <CardHeader>
             <div className="h-12 mb-4">
               <Image
-                src="/images/logo4.png"
+                src="/restaurants/images/logo4.png"
                 alt="ISSEY Logo"
                 width={180}
                 height={180}
@@ -68,7 +68,7 @@ export default async function PlanSection() {
             <CardHeader>
               <div className="h-12 mb-4">
                 <Image
-                  src="/images/logo4.png"
+                  src="/restaurants/images/logo4.png"
                   alt="ISSEY Logo"
                   width={180}
                   height={180}

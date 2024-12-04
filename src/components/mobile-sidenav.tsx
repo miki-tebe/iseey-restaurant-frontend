@@ -22,7 +22,7 @@ export default function MobileSideBar() {
             className="flex items-center gap-2 font-semibold lg:px-5"
           >
             <Image
-              src="/images/logo4.png"
+              src="/restaurants/images/logo4.png"
               alt="ISSEY Logo"
               width={180}
               height={180}
