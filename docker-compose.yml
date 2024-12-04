@@ -11,4 +11,5 @@ services:
       - "9003:9003"
     environment:
       - NODE_ENV=production
+      - BASE_PATH=restaurants
     restart: unless-stopped

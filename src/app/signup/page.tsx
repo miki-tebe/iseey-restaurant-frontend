@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { signupValidationSchema } from "@/schema/signUpSchema";
+import { getAssetPath } from "@/lib/utils";
 
 export default function Signup() {
   const form = useForm<z.infer<typeof signupValidationSchema>>({
@@ -45,7 +46,7 @@ export default function Signup() {
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
       <div className="hidden bg-muted lg:flex lg:items-center lg:justify-center">
         <Image
-          src="/restaurants/images/logo4.png"
+          src={getAssetPath("/images/logo4.png")}
           alt="ISSEY Logo"
           width={1590}
           height={900}

@@ -6,6 +6,7 @@ WORKDIR /app
 
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
+RUN bun add sharp
 
 # Create a separate directory for static files
 RUN mkdir -p /app/static-files
@@ -21,6 +22,7 @@ RUN bun run build
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV production
+ENV BASE_PATH restaurants
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV PORT 9003
 ENV HOSTNAME "0.0.0.0"

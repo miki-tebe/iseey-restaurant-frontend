@@ -5,6 +5,7 @@ import { Home, Menu, ForkKnife, User, Users, LogOut, Gem } from "lucide-react";
 import { logout } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { getAssetPath } from "@/lib/utils";
 
 export default function MobileSideBar() {
   return (
@@ -22,7 +23,7 @@ export default function MobileSideBar() {
             className="flex items-center gap-2 font-semibold lg:px-5"
           >
             <Image
-              src="/restaurants/images/logo4.png"
+              src={getAssetPath("/images/logo4.png")}
               alt="ISSEY Logo"
               width={180}
               height={180}

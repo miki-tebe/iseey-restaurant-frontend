@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Card, CardHeader } from "@/components/ui/card";
 import TableStandFooter from "@/components/table-stand-footer";
 import { getPlans } from "@/app/actions";
+import { getAssetPath } from "@/lib/utils";
 
 export default async function TableStand() {
   const plans = await getPlans();
@@ -16,7 +17,7 @@ export default async function TableStand() {
         <CardHeader>
           <div className="h-12 mb-4">
             <Image
-              src="/restaurants/images/logo4.png"
+              src={getAssetPath("/images/logo4.png")}
               alt="ISSEY Logo"
               width={180}
               height={180}

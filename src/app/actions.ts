@@ -14,12 +14,11 @@ import { changePlanSchema } from "@/schema/changePlanSchema";
 import { profileFormSchema } from "@/schema/profileSchema";
 import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 import { signupValidationSchema } from "@/schema/signUpSchema";
-
-const API_URL = process.env.API_URL;
+import { getApiUrl } from "@/lib/utils";
 
 export async function login(data: { email: string; password: string }) {
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/login/`, {
+    const payload = await fetch(getApiUrl("/restaurants/login"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +41,7 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
   try {
     data.lat = "1.3521";
     data.lng = "103.8198";
-    const payload = await fetch(`${API_URL}/api/restaurants/signup`, {
+    const payload = await fetch(getApiUrl("/restaurants/signup"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +69,7 @@ export async function getProfile() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+    const payload = await fetch(getApiUrl("/restaurants/profile"), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -89,7 +88,7 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+    const payload = await fetch(getApiUrl("/restaurants/profile"), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +107,7 @@ export async function getGuests() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/customers/list`, {
+    const payload = await fetch(getApiUrl("/customers/list"), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -127,7 +126,7 @@ export async function getGuest(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/customers/get/${data.id}`, {
+    const payload = await fetch(getApiUrl(`/customers/get/${data.id}`), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -146,15 +145,12 @@ export async function deleteUser(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(
-      `${API_URL}/api/admin/users/delete/${data.id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-        },
-      }
-    );
+    const payload = await fetch(getApiUrl(`/admin/users/delete/${data.id}`), {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
     revalidatePath("/dashboard/users");
     return await payload.json();
   } catch (error) {
@@ -168,7 +164,7 @@ export async function getOffers() {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/`, {
+    const payload = await fetch(getApiUrl("/offers"), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -187,7 +183,7 @@ export async function getOffer(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+    const payload = await fetch(getApiUrl(`/offers/${data.id}`), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -206,7 +202,7 @@ export async function addOffer(data: z.infer<typeof offerFormSchema>) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers`, {
+    const payload = await fetch(getApiUrl("/offers"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -231,7 +227,7 @@ export async function updateOffer(
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/${id}`, {
+    const payload = await fetch(getApiUrl(`/offers/${id}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -252,7 +248,7 @@ export async function deleteOffer(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+    const payload = await fetch(getApiUrl(`/offers/${data.id}`), {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -271,7 +267,7 @@ export async function getNewsletters() {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/newsletters/`, {
+    const payload = await fetch(getApiUrl("/newsletters/"), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -290,7 +286,7 @@ export async function uploadOfferPhoto(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/upload/offer`, {
+    const payload = await fetch(getApiUrl("/upload/offer"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -312,7 +308,7 @@ export async function uploadRestaurantMenus(data: FormData) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/upload/menu`, {
+    const payload = await fetch(getApiUrl("/upload/menu"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -333,7 +329,7 @@ export async function forgotPassword(
   data: z.infer<typeof forgotPasswordSchema>
 ) {
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/forgot-password`, {
+    const payload = await fetch(getApiUrl("/restaurants/forgot-password"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -354,7 +350,7 @@ export async function resetPassword(data: {
   token: string;
 }) {
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/reset-password`, {
+    const payload = await fetch(getApiUrl("/restaurants/reset-password"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -374,7 +370,7 @@ export async function getPlans() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const response = await fetch(`${API_URL}/api/stripe/getPrices`, {
+    const response = await fetch(getApiUrl("/stripe/getPrices"), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -421,7 +417,7 @@ export async function changePlan(data: z.infer<typeof changePlanSchema>) {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/stripe/change_plan`, {
+    const payload = await fetch(getApiUrl("/stripe/change_plan"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -442,7 +438,7 @@ export async function fetchOrders() {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/stripe/orders`, {
+    const payload = await fetch(getApiUrl("/stripe/orders"), {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -463,7 +459,7 @@ export async function createTableStand(
   if (!session) return null;
   try {
     const payload = await fetch(
-      `${API_URL}/api/stripe/session/purchaseTableStand`,
+      getApiUrl("/stripe/session/purchaseTableStand"),
       {
         method: "POST",
         headers: {
@@ -487,7 +483,7 @@ export async function getChartData(type: string, date: Date) {
 
   try {
     const payload = await fetch(
-      `${API_URL}/api/restaurants/chart-data/${type}?date=${date.toISOString()}`,
+      getApiUrl(`/restaurants/chart-data/${type}?date=${date.toISOString()}`),
       {
         headers: {
           Authorization: `Bearer ${session.token}`,

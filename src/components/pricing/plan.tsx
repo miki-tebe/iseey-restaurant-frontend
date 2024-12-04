@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import SubscribeButton from "@/components/subscribe-button";
 
 import { getPlans, getProfile } from "@/app/actions";
+import { getAssetPath } from "@/lib/utils";
 
 export default async function PlanSection() {
   const [plans, profile] = await Promise.all([getPlans(), getProfile()]);
@@ -22,7 +23,7 @@ export default async function PlanSection() {
           <CardHeader>
             <div className="h-12 mb-4">
               <Image
-                src="/restaurants/images/logo4.png"
+                src={getAssetPath("/images/logo4.png")}
                 alt="ISSEY Logo"
                 width={180}
                 height={180}
@@ -68,7 +69,7 @@ export default async function PlanSection() {
             <CardHeader>
               <div className="h-12 mb-4">
                 <Image
-                  src="/restaurants/images/logo4.png"
+                  src={getAssetPath("/images/logo4.png")}
                   alt="ISSEY Logo"
                   width={180}
                   height={180}

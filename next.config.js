@@ -1,18 +1,25 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === "production";
+
+function getBasePath() {
+  if (isProd) {
+    return "/restaurants";
+  }
+  return "";
+}
+
 const nextConfig = {
-  basePath: "/restaurants",
+  basePath: getBasePath(),
   output: "standalone",
   server: {
     port: 9003,
     host: "0.0.0.0",
   },
+  publicRuntimeConfig: {
+    basePath: getBasePath(),
+    apiBaseUrl: isProd ? "https://iseey.app" : "http://localhost:5002",
+  },
   images: {
-    // Optional: use a different optimization service
-    // loader: 'custom',
-    // loaderFile: './image-loader.ts',
-    //
-    // We're defaulting to optimizing images with
-    // Sharp, which is built-into `next start`
     remotePatterns: [
       {
         protocol: "https",

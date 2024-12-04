@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Home, ForkKnife, User, Users, LogOut, Gem } from "lucide-react";
 
 import { logout } from "@/app/actions";
+import { getAssetPath } from "@/lib/utils";
 
 export default function DesktopSideBar() {
   return (
@@ -14,7 +15,7 @@ export default function DesktopSideBar() {
             className="flex items-center gap-2 font-semibold lg:px-5"
           >
             <Image
-              src="/restaurants/images/logo4.png"
+              src={getAssetPath("/images/logo4.png")}
               alt="ISSEY Logo"
               width={180}
               height={180}
