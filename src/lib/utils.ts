@@ -4,12 +4,8 @@ const isProd = process.env.NODE_ENV === "production";
 
 export const getBaseConfig = () => {
   const basePath = isProd ? "/restaurants" : "";
-  const apiBaseUrl = isProd ? "https://iseey.app" : "http://localhost:9003";
 
-  return {
-    basePath,
-    apiBaseUrl,
-  };
+  return basePath;
 };
 
 // For client-side usage
@@ -28,18 +24,11 @@ export const getClientConfig = () => {
   return getBaseConfig();
 };
 
-// Helper for API URLs
-export const getApiUrl = (path: string) => {
-  const config = getClientConfig();
-  const cleanPath = path.startsWith("/") ? path.substring(1) : path;
-  return `${config.apiBaseUrl}${config.basePath}/api/${cleanPath}`;
-};
-
 // Helper for asset URLs
 export const getAssetPath = (path: string) => {
   const config = getClientConfig();
   const cleanPath = path.startsWith("/") ? path.substring(1) : path;
-  return `${config.basePath}/${cleanPath}`;
+  return `${config}/${cleanPath}`;
 };
 
 export function cn(...inputs: ClassValue[]) {
