@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: "/restaurants",
   output: "standalone",
   server: {
     port: 9003,
