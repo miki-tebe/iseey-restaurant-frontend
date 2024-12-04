@@ -1,22 +1,46 @@
 import { twMerge } from "tailwind-merge";
 import { clsx, type ClassValue } from "clsx";
-import getConfig from "next/config";
+const isProd = process.env.NODE_ENV === "production";
 
-const { publicRuntimeConfig } = getConfig();
+export const getBaseConfig = () => {
+  const basePath = isProd ? "/restaurants" : "";
+  const apiBaseUrl = isProd ? "https://iseey.app" : "http://localhost:9003";
 
-export const getApiUrl = (path: string) => {
-  const baseUrl = publicRuntimeConfig.apiBaseUrl;
-  const basePath = publicRuntimeConfig.basePath;
-
-  const cleanPath = path.startsWith("/") ? path.substring(1) : path;
-
-  return `${baseUrl}${basePath}/api/${cleanPath}`;
+  return {
+    basePath,
+    apiBaseUrl,
+  };
 };
 
-export function getAssetPath(path: string) {
-  const { publicRuntimeConfig } = getConfig();
-  return `${publicRuntimeConfig.basePath || ""}${path}`;
-}
+// For client-side usage
+export const getClientConfig = () => {
+  try {
+    // Only try to get Next.js config on client side
+    if (typeof window !== "undefined") {
+      const getConfig = require("next/config").default;
+      const { publicRuntimeConfig } = getConfig() || {};
+      return publicRuntimeConfig || getBaseConfig();
+    }
+  } catch (e) {
+    console.warn("Unable to get client config, falling back to base config");
+  }
+
+  return getBaseConfig();
+};
+
+// Helper for API URLs
+export const getApiUrl = (path: string) => {
+  const config = getClientConfig();
+  const cleanPath = path.startsWith("/") ? path.substring(1) : path;
+  return `${config.apiBaseUrl}${config.basePath}/api/${cleanPath}`;
+};
+
+// Helper for asset URLs
+export const getAssetPath = (path: string) => {
+  const config = getClientConfig();
+  const cleanPath = path.startsWith("/") ? path.substring(1) : path;
+  return `${config.basePath}/${cleanPath}`;
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
