@@ -16,9 +16,7 @@ import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 import { signupValidationSchema } from "@/schema/signUpSchema";
 const isProd = process.env.NODE_ENV === "production";
 
-const API_URL = isProd
-  ? "https://iseey.app/restaurants"
-  : "http://localhost:9003";
+const API_URL = "https://iseey.app/restaurants";
 
 export async function login(data: { email: string; password: string }) {
   try {
