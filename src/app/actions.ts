@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import axios from "axios";
 
 import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
@@ -20,14 +21,15 @@ const API_URL = "https://iseey.app/restaurants";
 
 export async function login(data: { email: string; password: string }) {
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/login/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await payload.json();
+    // const payload = await fetch(`${API_URL}/api/restaurants/login/`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // });
+    const payload = await axios.post(`${API_URL}/api/restaurants/login/`, data);
+    const result = await payload.data();
     if (result.data?.token === undefined) {
       return result;
     }
