@@ -9,6 +9,8 @@ interface NodeFetchOptions extends RequestInit {
 const isProd = process.env.NODE_ENV === "production";
 const isServer = typeof window === "undefined";
 
+console.log("=====================================>", isProd, isServer);
+
 const getBaseUrl = () => {
   if (isProd) {
     return "https://iseey.app/restaurants";
