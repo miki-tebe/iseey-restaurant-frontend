@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import axios from "axios";
 
 import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
@@ -15,21 +14,21 @@ import { changePlanSchema } from "@/schema/changePlanSchema";
 import { profileFormSchema } from "@/schema/profileSchema";
 import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 import { signupValidationSchema } from "@/schema/signUpSchema";
+import customFetch from "@/lib/custom-fetch";
 const isProd = process.env.NODE_ENV === "production";
 
 const API_URL = "https://iseey.app/restaurants";
 
 export async function login(data: { email: string; password: string }) {
   try {
-    // const payload = await fetch(`${API_URL}/api/restaurants/login/`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-    const payload = await axios.post(`${API_URL}/api/restaurants/login/`, data);
-    const result = await payload.data();
+    const payload = await customFetch(`${API_URL}/api/restaurants/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await payload.json();
     if (result.data?.token === undefined) {
       return result;
     }
