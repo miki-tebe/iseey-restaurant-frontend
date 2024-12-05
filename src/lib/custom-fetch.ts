@@ -11,9 +11,9 @@ const isServer = typeof window === "undefined";
 
 const getBaseUrl = () => {
   if (isProd) {
-    return "https://iseey.app";
+    return "https://iseey.app/restaurants";
   }
-  return "http://localhost:9003";
+  return "http://localhost:5002";
 };
 
 const createHttpsAgent = () => {

@@ -17,11 +17,12 @@ import { signupValidationSchema } from "@/schema/signUpSchema";
 import customFetch from "@/lib/custom-fetch";
 const isProd = process.env.NODE_ENV === "production";
 
-const API_URL = "https://iseey.app/restaurants";
+// const API_URL = "https://iseey.app/restaurants";
+const API_URL = "http://localhost:5002";
 
 export async function login(data: { email: string; password: string }) {
   try {
-    const payload = await customFetch(`${API_URL}/api/restaurants/login/`, {
+    const payload = await customFetch(`/api/restaurants/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
