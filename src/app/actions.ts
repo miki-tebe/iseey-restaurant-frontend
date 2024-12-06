@@ -15,10 +15,6 @@ import { profileFormSchema } from "@/schema/profileSchema";
 import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 import { signupValidationSchema } from "@/schema/signUpSchema";
 import customFetch from "@/lib/custom-fetch";
-const isProd = process.env.NODE_ENV === "production";
-
-// const API_URL = "https://iseey.app/restaurants";
-const API_URL = "http://localhost:5002";
 
 export async function login(data: { email: string; password: string }) {
   try {
@@ -45,7 +41,7 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
   try {
     data.lat = "1.3521";
     data.lng = "103.8198";
-    const payload = await fetch(`${API_URL}/api/restaurants/signup`, {
+    const payload = await fetch(`/api/restaurants/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +69,7 @@ export async function getProfile() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+    const payload = await fetch(`/api/restaurants/profile`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -92,7 +88,7 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+    const payload = await fetch(`/api/restaurants/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -111,7 +107,7 @@ export async function getGuests() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/customers/list`, {
+    const payload = await fetch(`/api/customers/list`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -130,7 +126,7 @@ export async function getGuest(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/customers/get/${data.id}`, {
+    const payload = await fetch(`/api/customers/get/${data.id}`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -149,15 +145,12 @@ export async function deleteUser(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(
-      `${API_URL}/api/admin/users/delete/${data.id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-        },
-      }
-    );
+    const payload = await fetch(`/api/admin/users/delete/${data.id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
     revalidatePath("/dashboard/users");
     return await payload.json();
   } catch (error) {
@@ -171,7 +164,7 @@ export async function getOffers() {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/`, {
+    const payload = await fetch(`/api/offers/`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -190,7 +183,7 @@ export async function getOffer(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+    const payload = await fetch(`/api/offers/${data.id}`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -209,7 +202,7 @@ export async function addOffer(data: z.infer<typeof offerFormSchema>) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers`, {
+    const payload = await fetch(`/api/offers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -234,7 +227,7 @@ export async function updateOffer(
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/${id}`, {
+    const payload = await fetch(`/api/offers/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -255,7 +248,7 @@ export async function deleteOffer(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/offers/${data.id}`, {
+    const payload = await fetch(`/api/offers/${data.id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -274,7 +267,7 @@ export async function getNewsletters() {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/newsletters/`, {
+    const payload = await fetch(`/api/newsletters/`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -293,7 +286,7 @@ export async function uploadOfferPhoto(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/upload/offer`, {
+    const payload = await fetch(`/api/upload/offer`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -315,7 +308,7 @@ export async function uploadRestaurantMenus(data: FormData) {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/upload/menu`, {
+    const payload = await fetch(`/api/upload/menu`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.token}`,
@@ -336,7 +329,7 @@ export async function forgotPassword(
   data: z.infer<typeof forgotPasswordSchema>
 ) {
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/forgot-password`, {
+    const payload = await fetch(`/api/restaurants/forgot-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -357,7 +350,7 @@ export async function resetPassword(data: {
   token: string;
 }) {
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/reset-password`, {
+    const payload = await fetch(`/api/restaurants/reset-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -377,7 +370,7 @@ export async function getPlans() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const response = await fetch(`${API_URL}/api/stripe/getPrices`, {
+    const response = await fetch(`/api/stripe/getPrices`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -424,7 +417,7 @@ export async function changePlan(data: z.infer<typeof changePlanSchema>) {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(`${API_URL}/api/stripe/change_plan`, {
+    const payload = await fetch(`/api/stripe/change_plan`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -445,7 +438,7 @@ export async function fetchOrders() {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/stripe/orders`, {
+    const payload = await fetch(`/api/stripe/orders`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
@@ -465,17 +458,14 @@ export async function createTableStand(
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await fetch(
-      `${API_URL}/api/stripe/session/purchaseTableStand`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.token}`,
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const payload = await fetch(`/api/stripe/session/purchaseTableStand`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    });
     const result = await payload.json();
     return result.data;
   } catch (error) {
@@ -490,7 +480,7 @@ export async function getChartData(type: string, date: Date) {
 
   try {
     const payload = await fetch(
-      `${API_URL}/api/restaurants/chart-data/${type}?date=${date.toISOString()}`,
+      `/api/restaurants/chart-data/${type}?date=${date.toISOString()}`,
       {
         headers: {
           Authorization: `Bearer ${session.token}`,

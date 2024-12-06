@@ -5,8 +5,7 @@ interface NodeFetchOptions extends RequestInit {
 const isProd = process.env.NODE_ENV === "production";
 
 const getBaseUrl = () => {
-  // Always use the nginx proxy, which handles SSL
-  return "https://iseey.app/restaurants";
+  return isProd ? "https://iseey.app/restaurants" : "http://localhost:5002";
 };
 
 const customFetch = async <T = any>(
@@ -15,7 +14,7 @@ const customFetch = async <T = any>(
 ): Promise<T> => {
   try {
     const { baseUrl = getBaseUrl(), ...fetchOptions } = options;
-    const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
+    const url = `${baseUrl}${path}`;
 
     const headers = new Headers(fetchOptions.headers || {});
     if (!headers.has("Content-Type")) {
