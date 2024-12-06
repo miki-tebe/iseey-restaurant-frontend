@@ -14,34 +14,63 @@ const customFetch = async <T = any>(
 ): Promise<T> => {
   try {
     const { baseUrl = getBaseUrl(), ...fetchOptions } = options;
-    const url = `${baseUrl}${path}`;
+    const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
 
     const headers = new Headers(fetchOptions.headers || {});
     if (!headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
 
-    // In production server-side, disable SSL verification since we're going through nginx
+    // Temporarily disable SSL verification for server-side requests
     if (isProd && typeof window === "undefined") {
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     }
 
     try {
+      console.log("Fetching:", url);
+      console.log("Options:", {
+        ...fetchOptions,
+        headers: Object.fromEntries(headers.entries()),
+      });
+
       const response = await fetch(url, {
         ...fetchOptions,
         headers,
       });
 
+      // Log response details
+      console.log("Response status:", response.status);
+      console.log(
+        "Response headers:",
+        Object.fromEntries(response.headers.entries())
+      );
+
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `HTTP error! Status: ${response.status}, Body: ${errorText}`
-        );
+        let errorMessage;
+        try {
+          const errorData = await response.text();
+          errorMessage = `HTTP error! Status: ${response.status}, Body: ${errorData}`;
+        } catch (e) {
+          errorMessage = `HTTP error! Status: ${response.status}`;
+        }
+        throw new Error(errorMessage);
       }
 
       const contentType = response.headers.get("content-type");
+
+      // Safe JSON parsing
       if (contentType?.includes("application/json")) {
-        return response.json() as Promise<T>;
+        try {
+          const text = await response.text();
+          // Handle empty response
+          if (!text) {
+            return {} as T;
+          }
+          return JSON.parse(text) as T;
+        } catch (e) {
+          console.error("JSON parsing error:", e);
+          throw new Error("Failed to parse JSON response");
+        }
       }
 
       return response.text() as Promise<T>;
@@ -53,6 +82,10 @@ const customFetch = async <T = any>(
     }
   } catch (error) {
     console.error(`Fetch error for ${path}:`, error);
+    // Add more context to the error
+    if (error instanceof Error) {
+      error.message = `API Request Failed: ${error.message}`;
+    }
     throw error;
   }
 };
