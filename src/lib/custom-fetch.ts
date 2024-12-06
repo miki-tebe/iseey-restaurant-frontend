@@ -1,5 +1,4 @@
 import https from "node:https";
-import { readFileSync } from "node:fs";
 
 interface NodeFetchOptions extends RequestInit {
   agent?: https.Agent;
@@ -9,43 +8,33 @@ interface NodeFetchOptions extends RequestInit {
 const isProd = process.env.NODE_ENV === "production";
 const isServer = typeof window === "undefined";
 
+// Initialize root CAs at the module level
+if (isServer) {
+  try {
+    const sslRootCAs = require("ssl-root-cas/latest");
+    sslRootCAs.inject().addFile("/app/ssl/iseey_app.ca-bundle");
+  } catch (error) {
+    console.error("Failed to inject SSL certificates:", error);
+  }
+}
+
 const getBaseUrl = () => {
   return isProd ? "https://iseey.app/restaurants" : "http://localhost:5002";
 };
 
 const createHttpsAgent = () => {
   if (isServer && isProd) {
-    try {
-      // Load all certificates
-      const caBundle = readFileSync("/app/ssl/iseey_app.ca-bundle", "utf8")
-        .split("-----END CERTIFICATE-----")
-        .filter((cert) => cert.trim().length > 0)
-        .map((cert) => cert + "-----END CERTIFICATE-----");
+    return new https.Agent({
+      rejectUnauthorized: true,
+    });
+  }
 
-      const clientCa = readFileSync("/app/ssl/ca-bundle-client.crt", "utf8")
-        .split("-----END CERTIFICATE-----")
-        .filter((cert) => cert.trim().length > 0)
-        .map((cert) => cert + "-----END CERTIFICATE-----");
-
-      // Combine all certificates
-      const certs = [...caBundle, ...clientCa];
-
-      return new https.Agent({
-        ca: certs,
-        rejectUnauthorized: true,
-      });
-    } catch (error) {
-      console.error("SSL Certificate loading error:", error);
-      // In production with error, still try with system certificates
-      return new https.Agent({
-        rejectUnauthorized: true,
-      });
-    }
-  } else if (isServer && !isProd) {
+  if (isServer && !isProd) {
     return new https.Agent({
       rejectUnauthorized: false,
     });
   }
+
   return undefined;
 };
 
@@ -58,7 +47,10 @@ const customFetch = async <T = any>(
     const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
 
     if (isServer) {
-      fetchOptions.agent = createHttpsAgent();
+      const agent = createHttpsAgent();
+      if (agent) {
+        fetchOptions.agent = agent;
+      }
     }
 
     const headers = new Headers(fetchOptions.headers || {});
