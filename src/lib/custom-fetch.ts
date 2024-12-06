@@ -8,6 +8,16 @@ const getBaseUrl = () => {
   return isProd ? "https://iseey.app/restaurants" : "http://localhost:5002";
 };
 
+const parseResponse = async (response: Response) => {
+  const text = await response.text();
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch (e) {
+    console.error("Failed to parse response:", text);
+    throw new Error("Invalid JSON response");
+  }
+};
+
 const customFetch = async <T = any>(
   path: string,
   options: NodeFetchOptions = {}
@@ -21,71 +31,35 @@ const customFetch = async <T = any>(
       headers.set("Content-Type", "application/json");
     }
 
-    // Temporarily disable SSL verification for server-side requests
     if (isProd && typeof window === "undefined") {
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     }
 
     try {
-      console.log("Fetching:", url);
-      console.log("Options:", {
-        ...fetchOptions,
-        headers: Object.fromEntries(headers.entries()),
-      });
-
       const response = await fetch(url, {
         ...fetchOptions,
         headers,
       });
 
-      // Log response details
-      console.log("Response status:", response.status);
-      console.log(
-        "Response headers:",
-        Object.fromEntries(response.headers.entries())
-      );
+      // Always parse as JSON for API endpoints
+      const data = await parseResponse(response);
 
       if (!response.ok) {
-        let errorMessage;
-        try {
-          const errorData = await response.text();
-          errorMessage = `HTTP error! Status: ${response.status}, Body: ${errorData}`;
-        } catch (e) {
-          errorMessage = `HTTP error! Status: ${response.status}`;
-        }
-        throw new Error(errorMessage);
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${JSON.stringify(
+            data
+          )}`
+        );
       }
 
-      const contentType = response.headers.get("content-type");
-
-      // Safe JSON parsing
-      if (contentType?.includes("application/json")) {
-        try {
-          const text = await response.text();
-          // Handle empty response
-          if (!text) {
-            return {} as T;
-          }
-          return JSON.parse(text) as T;
-        } catch (e) {
-          console.error("JSON parsing error:", e);
-          throw new Error("Failed to parse JSON response");
-        }
-      }
-
-      return response.text() as Promise<T>;
+      return data as T;
     } finally {
-      // Reset SSL verification
       if (isProd && typeof window === "undefined") {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
       }
     }
   } catch (error) {
-    console.error(`Fetch error for ${path}:`, error);
-    // Add more context to the error
-    if (error instanceof Error) {
-      error.message = `API Request Failed: ${error.message}`;
-    }
+    console.error(`API Request Failed:`, error);
     throw error;
   }
 };
