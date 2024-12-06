@@ -18,14 +18,13 @@ import customFetch from "@/lib/custom-fetch";
 
 export async function login(data: { email: string; password: string }) {
   try {
-    const payload = await customFetch(`/api/restaurants/login`, {
+    const result = await customFetch(`/api/restaurants/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    const result = await payload.json();
     if (result.data?.token === undefined) {
       return result;
     }
@@ -41,14 +40,14 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
   try {
     data.lat = "1.3521";
     data.lng = "103.8198";
-    const payload = await customFetch(`/api/restaurants/signup`, {
+    const result = await customFetch(`/api/restaurants/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    const result = await payload.json();
+
     if (result.data?.token === undefined) {
       return result;
     }
@@ -69,12 +68,12 @@ export async function getProfile() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await customFetch(`/api/restaurants/profile`, {
+    const result = await customFetch(`/api/restaurants/profile`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
+
     if (result.success == true) return result.data;
   } catch (e) {
     console.log(e);
@@ -88,7 +87,7 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/restaurants/profile`, {
+    const result = await customFetch(`/api/restaurants/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -96,7 +95,7 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
       },
       body: JSON.stringify(data),
     });
-    return await payload.json();
+    return await result;
   } catch (error) {
     console.error("Error in updateProfile:", error);
     return { message: "Failed to update profile" };
@@ -107,12 +106,12 @@ export async function getGuests() {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await customFetch(`/api/customers/list`, {
+    const result = await customFetch(`/api/customers/list`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
+
     if (result.success == true) return result.data.customers;
   } catch (e) {
     console.log(e);
@@ -126,12 +125,12 @@ export async function getGuest(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/customers/get/${data.id}`, {
+    const result = await customFetch(`/api/customers/get/${data.id}`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
+
     if (result.success == true) return result.data;
     return null;
   } catch (error) {
@@ -145,14 +144,14 @@ export async function deleteUser(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/admin/users/delete/${data.id}`, {
+    const result = await customFetch(`/api/admin/users/delete/${data.id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
     revalidatePath("/dashboard/users");
-    return await payload.json();
+    return await result;
   } catch (error) {
     console.error("Error in deleteUser:", error);
     return { message: "Failed to delete user" };
@@ -164,12 +163,12 @@ export async function getOffers() {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/offers/`, {
+    const result = await customFetch(`/api/offers/`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
+
     if (result.success == true) return result.data;
     return null;
   } catch (error) {
@@ -183,12 +182,12 @@ export async function getOffer(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/offers/${data.id}`, {
+    const result = await customFetch(`/api/offers/${data.id}`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
+
     if (result.success == true) return result.data;
     return null;
   } catch (error) {
@@ -202,7 +201,7 @@ export async function addOffer(data: z.infer<typeof offerFormSchema>) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/offers`, {
+    const result = await customFetch(`/api/offers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -210,7 +209,7 @@ export async function addOffer(data: z.infer<typeof offerFormSchema>) {
       },
       body: JSON.stringify(data),
     });
-    const result = await payload.json();
+
     revalidatePath("/dashboard/offers");
     return result;
   } catch (error) {
@@ -227,7 +226,7 @@ export async function updateOffer(
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/offers/${id}`, {
+    const result = await customFetch(`/api/offers/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -236,7 +235,7 @@ export async function updateOffer(
       body: JSON.stringify(data),
     });
     revalidatePath("/dashboard/offers");
-    return await payload.json();
+    return await result;
   } catch (error) {
     console.error("Error in updateOffer:", error);
     return { message: "Failed to update offer" };
@@ -248,14 +247,14 @@ export async function deleteOffer(data: { id: string }) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/offers/${data.id}`, {
+    const result = await customFetch(`/api/offers/${data.id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
     revalidatePath("/dashboard/offers");
-    return await payload.json();
+    return await result;
   } catch (error) {
     console.error("Error in deleteOffer:", error);
     return { message: "Failed to delete offer" };
@@ -267,12 +266,11 @@ export async function getNewsletters() {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/newsletters/`, {
+    const result = await customFetch(`/api/newsletters/`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
 
     if (result.success == true) return result.data.newsletters;
     return null;
@@ -286,14 +284,14 @@ export async function uploadOfferPhoto(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await customFetch(`/api/upload/offer`, {
+    const result = await customFetch(`/api/upload/offer`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
       body: data,
     });
-    const result = await payload.json();
+
     if (result.success == true) {
       return { message: "Offer photo uploaded", url: result.data.url };
     } else return { message: "Failed to upload offer photo" };
@@ -308,14 +306,14 @@ export async function uploadRestaurantMenus(data: FormData) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/upload/menu`, {
+    const result = await customFetch(`/api/upload/menu`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
       body: data,
     });
-    const result = await payload.json();
+
     if (result.success == true) {
       return { message: "Restaurant menu uploaded", url: result.data.url };
     } else return { message: "Failed to upload restaurant menu" };
@@ -329,14 +327,14 @@ export async function forgotPassword(
   data: z.infer<typeof forgotPasswordSchema>
 ) {
   try {
-    const payload = await customFetch(`/api/restaurants/forgot-password`, {
+    const result = await customFetch(`/api/restaurants/forgot-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    const result = await payload.json();
+
     return result;
   } catch (error) {
     console.error("Error in forgotPassword:", error);
@@ -350,14 +348,14 @@ export async function resetPassword(data: {
   token: string;
 }) {
   try {
-    const payload = await customFetch(`/api/restaurants/reset-password`, {
+    const result = await customFetch(`/api/restaurants/reset-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    const result = await payload.json();
+
     return result;
   } catch (error) {
     console.error("Error in resetPassword:", error);
@@ -381,13 +379,12 @@ export async function getPlans() {
       throw new Error("Failed to fetch prices");
     }
 
-    const result = await response.json();
-    if (!result.success) {
-      console.error("Failed to fetch prices:", result);
+    if (!response.success) {
+      console.error("Failed to fetch prices:", response);
       throw new Error("Failed to fetch prices");
     }
 
-    const products: Product[] = result.data;
+    const products: Product[] = response.data;
     const prices: Price[] = [];
     let tableStands: ITableStand | undefined;
 
@@ -417,7 +414,7 @@ export async function changePlan(data: z.infer<typeof changePlanSchema>) {
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await customFetch(`/api/stripe/change_plan`, {
+    const result = await customFetch(`/api/stripe/change_plan`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -425,7 +422,7 @@ export async function changePlan(data: z.infer<typeof changePlanSchema>) {
       },
       body: JSON.stringify(data),
     });
-    const result = await payload.json();
+
     return result;
   } catch (error) {
     console.error("Error in changePlan:", error);
@@ -438,12 +435,12 @@ export async function fetchOrders() {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(`/api/stripe/orders`, {
+    const result = await customFetch(`/api/stripe/orders`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
+
     if (result.success == true) return result.data;
   } catch (error) {
     console.log(error);
@@ -458,18 +455,15 @@ export async function createTableStand(
   const session = await verifySession();
   if (!session) return null;
   try {
-    const payload = await customFetch(
-      `/api/stripe/session/purchaseTableStand`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.token}`,
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    const result = await payload.json();
+    const result = await customFetch(`/api/stripe/session/purchaseTableStand`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
     return result.data;
   } catch (error) {
     console.error("Error in creating Table Stand:", error);
@@ -482,7 +476,7 @@ export async function getChartData(type: string, date: Date) {
   if (!session) return null;
 
   try {
-    const payload = await customFetch(
+    const result = await customFetch(
       `/api/restaurants/chart-data/${type}?date=${date.toISOString()}`,
       {
         headers: {
@@ -490,7 +484,7 @@ export async function getChartData(type: string, date: Date) {
         },
       }
     );
-    const result = await payload.json();
+
     if (result.success == true) return result.data;
   } catch (error) {
     console.log(error);
