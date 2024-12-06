@@ -2,14 +2,12 @@ import https from "node:https";
 import { readFileSync } from "node:fs";
 
 interface NodeFetchOptions extends RequestInit {
-  agent?: https.Agent; // Add the 'agent' property for Node.js
+  agent?: https.Agent;
   baseUrl?: string;
 }
 
 const isProd = process.env.NODE_ENV === "production";
 const isServer = typeof window === "undefined";
-
-console.log("=====================================>", isProd, isServer);
 
 const getBaseUrl = () => {
   if (isProd) {
@@ -21,20 +19,32 @@ const getBaseUrl = () => {
 const createHttpsAgent = () => {
   if (isServer && isProd) {
     try {
+      // Load both the CA bundle and the client certificate
+      const ca = readFileSync("/app/ssl/iseey_app.ca-bundle");
+      const cert = readFileSync("/app/ssl/iseey_app.crt");
+
       return new https.Agent({
-        ca: readFileSync("/app/ssl/iseey_app.ca-bundle"),
+        ca: [ca, cert], // Include both certificates in the chain
+        cert: cert, // Include the client certificate
+        rejectUnauthorized: true,
       });
     } catch (error) {
       console.warn(
-        "Failed to load SSL certificate, falling back to default agent:",
+        "Failed to load SSL certificates, falling back to default agent:",
         error
       );
+      // In production, we still want to verify certificates
       return new https.Agent({
-        rejectUnauthorized: isProd,
+        rejectUnauthorized: true,
       });
     }
+  } else if (isServer && !isProd) {
+    // In development, optionally disable certificate verification
+    return new https.Agent({
+      rejectUnauthorized: false,
+    });
   }
-  return undefined;
+  return undefined; // Client-side doesn't need an agent
 };
 
 const customFetch = async <T = any>(
@@ -47,13 +57,25 @@ const customFetch = async <T = any>(
 
     // Add HTTPS agent for server-side requests
     if (isServer) {
-      fetchOptions.agent = createHttpsAgent();
+      const agent = createHttpsAgent();
+      if (agent) {
+        fetchOptions.agent = agent;
+      }
     }
 
     // Default headers
     const headers = new Headers(fetchOptions.headers || {});
     if (!headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
+    }
+
+    // Log request details in development
+    if (!isProd) {
+      console.log("Making request to:", url);
+      console.log("With options:", {
+        ...fetchOptions,
+        agent: fetchOptions.agent ? "HTTPS Agent" : "None",
+      });
     }
 
     const response = await fetch(url, {
@@ -63,7 +85,10 @@ const customFetch = async <T = any>(
 
     // Handle different response types
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Body: ${errorText}`
+      );
     }
 
     const contentType = response.headers.get("content-type");
@@ -74,6 +99,10 @@ const customFetch = async <T = any>(
     return response.text() as Promise<T>;
   } catch (error) {
     console.error(`Fetch error for ${path}:`, error);
+    // Add more detailed error information
+    if (error instanceof Error) {
+      error.message = `Fetch error for ${path}: ${error.message}`;
+    }
     throw error;
   }
 };
