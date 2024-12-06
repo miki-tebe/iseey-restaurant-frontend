@@ -31,7 +31,6 @@ ENV HOSTNAME "0.0.0.0"
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static /app/static-files
-COPY --from=builder /app/node_modules/ssl-root-cas ./node_modules/ssl-root-cas
 
 # Create .next/static directory for the volume mount
 RUN mkdir -p .next/static
