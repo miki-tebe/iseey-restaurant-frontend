@@ -1,55 +1,12 @@
-import https from "node:https";
-import { readFileSync } from "node:fs";
-
 interface NodeFetchOptions extends RequestInit {
-  agent?: https.Agent;
   baseUrl?: string;
 }
 
 const isProd = process.env.NODE_ENV === "production";
-const isServer = typeof window === "undefined";
 
 const getBaseUrl = () => {
-  return isProd ? "https://iseey.app/restaurants" : "http://localhost:5002";
-};
-
-const loadCertificates = () => {
-  if (!isServer || !isProd) return null;
-
-  try {
-    // Load your certificates
-    const caBundle = readFileSync("/app/ssl/iseey_app.ca-bundle", "utf8");
-
-    // Split the bundle into individual certificates
-    const certificates = caBundle
-      .split(/(?=-----BEGIN CERTIFICATE-----)/g)
-      .filter((cert) => cert.trim().length > 0);
-
-    return certificates;
-  } catch (error) {
-    console.error("Failed to load certificates:", error);
-    return null;
-  }
-};
-
-const createHttpsAgent = () => {
-  if (isServer && isProd) {
-    const certificates = loadCertificates();
-    if (certificates) {
-      return new https.Agent({
-        ca: certificates,
-        rejectUnauthorized: true,
-      });
-    }
-  }
-
-  if (isServer && !isProd) {
-    return new https.Agent({
-      rejectUnauthorized: false,
-    });
-  }
-
-  return undefined;
+  // Always use the nginx proxy, which handles SSL
+  return "https://iseey.app/restaurants";
 };
 
 const customFetch = async <T = any>(
@@ -60,36 +17,41 @@ const customFetch = async <T = any>(
     const { baseUrl = getBaseUrl(), ...fetchOptions } = options;
     const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
 
-    if (isServer) {
-      const agent = createHttpsAgent();
-      if (agent) {
-        fetchOptions.agent = agent;
-      }
-    }
-
     const headers = new Headers(fetchOptions.headers || {});
     if (!headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
 
-    const response = await fetch(url, {
-      ...fetchOptions,
-      headers,
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `HTTP error! Status: ${response.status}, Body: ${errorText}`
-      );
+    // In production server-side, disable SSL verification since we're going through nginx
+    if (isProd && typeof window === "undefined") {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     }
 
-    const contentType = response.headers.get("content-type");
-    if (contentType?.includes("application/json")) {
-      return response.json() as Promise<T>;
-    }
+    try {
+      const response = await fetch(url, {
+        ...fetchOptions,
+        headers,
+      });
 
-    return response.text() as Promise<T>;
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (contentType?.includes("application/json")) {
+        return response.json() as Promise<T>;
+      }
+
+      return response.text() as Promise<T>;
+    } finally {
+      // Reset SSL verification
+      if (isProd && typeof window === "undefined") {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
+      }
+    }
   } catch (error) {
     console.error(`Fetch error for ${path}:`, error);
     throw error;
