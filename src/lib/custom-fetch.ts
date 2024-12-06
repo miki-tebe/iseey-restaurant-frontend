@@ -1,4 +1,5 @@
 import https from "node:https";
+import { readFileSync } from "node:fs";
 
 interface NodeFetchOptions extends RequestInit {
   agent?: https.Agent;
@@ -8,25 +9,38 @@ interface NodeFetchOptions extends RequestInit {
 const isProd = process.env.NODE_ENV === "production";
 const isServer = typeof window === "undefined";
 
-// Initialize root CAs at the module level
-if (isServer) {
-  try {
-    const sslRootCAs = require("ssl-root-cas/latest");
-    sslRootCAs.inject().addFile("/app/ssl/iseey_app.ca-bundle");
-  } catch (error) {
-    console.error("Failed to inject SSL certificates:", error);
-  }
-}
-
 const getBaseUrl = () => {
   return isProd ? "https://iseey.app/restaurants" : "http://localhost:5002";
 };
 
+const loadCertificates = () => {
+  if (!isServer || !isProd) return null;
+
+  try {
+    // Load your certificates
+    const caBundle = readFileSync("/app/ssl/iseey_app.ca-bundle", "utf8");
+
+    // Split the bundle into individual certificates
+    const certificates = caBundle
+      .split(/(?=-----BEGIN CERTIFICATE-----)/g)
+      .filter((cert) => cert.trim().length > 0);
+
+    return certificates;
+  } catch (error) {
+    console.error("Failed to load certificates:", error);
+    return null;
+  }
+};
+
 const createHttpsAgent = () => {
   if (isServer && isProd) {
-    return new https.Agent({
-      rejectUnauthorized: true,
-    });
+    const certificates = loadCertificates();
+    if (certificates) {
+      return new https.Agent({
+        ca: certificates,
+        rejectUnauthorized: true,
+      });
+    }
   }
 
   if (isServer && !isProd) {

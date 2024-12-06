@@ -6,7 +6,6 @@ WORKDIR /app
 
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
-RUN bun add ssl-root-cas
 RUN bun add sharp
 
 # Create a separate directory for static files
