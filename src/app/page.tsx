@@ -99,15 +99,7 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Passwort</FormLabel>
-                      <Link
-                        href="/forgot-password"
-                        className="ml-auto inline-block text-sm underline"
-                      >
-                        Passwort vergessen?
-                      </Link>
-                    </div>
+                    <FormLabel>Passwort</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
@@ -128,6 +120,12 @@ export default function Login() {
                             <EyeIcon className="h-5 w-5 text-gray-500" />
                           )}
                         </button>
+                        <Link
+                          href="/forgot-password"
+                          className="ml-auto inline-block text-sm underline float-end"
+                        >
+                          Passwort vergessen?
+                        </Link>
                       </div>
                     </FormControl>
                     <FormMessage />
