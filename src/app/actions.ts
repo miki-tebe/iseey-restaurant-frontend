@@ -31,7 +31,10 @@ export async function login(data: { email: string; password: string }) {
     await createSession(result.data.token);
   } catch (error) {
     console.error("Error in login:", error);
-    return { message: "Failed to login" };
+    if (error instanceof Error) {
+      return { message: error.message };
+    }
+    return { message: "Failed to login!" };
   }
   redirect("/dashboard");
 }
@@ -54,7 +57,10 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
     await createSession(result.data.token);
   } catch (error) {
     console.error("Error in signup:", error);
-    return { message: "Failed to signup" };
+    if (error instanceof Error) {
+      return { message: error.message };
+    }
+    return { message: "Failed to signup!" };
   }
   redirect("/dashboard");
 }
