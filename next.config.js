@@ -41,7 +41,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  compress: false,
+  compress: true,
 };
 
 module.exports = nextConfig;
