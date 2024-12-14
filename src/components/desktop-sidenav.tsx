@@ -11,7 +11,7 @@ export default function DesktopSideBar() {
       <div className="flex h-full max-h-screen flex-col gap-5">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link
-            href="/dashboard"
+            href="/dashboard/index"
             className="flex items-center gap-2 font-semibold lg:px-5"
           >
             <Image
@@ -25,7 +25,7 @@ export default function DesktopSideBar() {
         <div className="flex-1">
           <nav className="grid items-start px-2 text-lg font-medium lg:px-4 gap-5">
             <Link
-              href="/dashboard"
+              href="/dashboard/index"
               className={`flex items-center gap-4 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground`}
             >
               <Home className="h-6 w-6" />

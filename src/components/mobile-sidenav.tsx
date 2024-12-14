@@ -19,7 +19,7 @@ export default function MobileSideBar() {
       <SheetContent side="left" className="flex flex-col">
         <nav className="grid gap-2 text-lg font-medium">
           <Link
-            href="/dashboard"
+            href="/dashboard/index"
             className="flex items-center gap-2 font-semibold lg:px-5"
           >
             <Image
@@ -30,7 +30,7 @@ export default function MobileSideBar() {
             />
           </Link>
           <Link
-            href="/dashboard"
+            href="/dashboard/index"
             className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground`}
           >
             <Home className="h-5 w-5" />
