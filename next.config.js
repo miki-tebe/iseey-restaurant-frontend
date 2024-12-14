@@ -19,6 +19,15 @@ const nextConfig = {
     basePath: getBasePath(),
     apiBaseUrl: isProd ? "https://iseey.app" : "http://localhost:5002",
   },
+  redirects: async () => {
+    return [
+      {
+        source: "/login",
+        destination: "/restaurants",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
@@ -32,7 +41,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  compress: false,
+  compress: true,
 };
 
 module.exports = nextConfig;
