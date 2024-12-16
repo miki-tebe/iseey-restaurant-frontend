@@ -36,7 +36,7 @@ export async function login(data: { email: string; password: string }) {
     }
     return { message: "Failed to login!" };
   }
-  redirect("/dashboard");
+  redirect("/dashboard/index");
 }
 
 export async function signup(data: z.infer<typeof signupValidationSchema>) {
@@ -62,7 +62,7 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
     }
     return { message: "Failed to signup!" };
   }
-  redirect("/dashboard");
+  redirect("/dashboard/index");
 }
 
 export async function logout() {

@@ -28,23 +28,54 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
     fetchData();
 
     if (!socket) {
-      socket = io(API_URL, {
-        query: { token: sessionToken },
-      });
+      const socketOptions = {
+        path: "/restaurants/socket.io/",
+        rejectUnauthorized: false,
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 20000,
+        autoConnect: true,
+        query: {
+          token: sessionToken,
+        },
+      };
+
+      socket = io(API_URL, socketOptions);
 
       socket.on("connect", () => {
-        console.log("Connected to socket server");
+        console.log("Connected to restaurant socket");
       });
 
-      socket.on("disconnect", () => {
-        console.log("Disconnected from socket server");
+      socket.on("disconnect", (reason) => {
+        console.log("Disconnected from restaurant socket:", reason);
+      });
+
+      socket.on("connect_error", (error) => {
+        console.log("Restaurant socket connection error:");
+      });
+
+      // Debug events
+      socket.onAny((event, ...args) => {
+        console.log("Restaurant Socket Event:", event, args);
+      });
+
+      // Error events
+      socket.on("error", (error) => {
+        console.log("Restaurant socket error:", error);
+      });
+
+      // Auth events
+      socket.on("unauthorized", (error) => {
+        console.log("Restaurant socket unauthorized:", error);
       });
 
       const handleCheckIn = (data: any) => {
         if (data) {
           if (data.restaurant_id.toString() === restaurantId) {
             setActiveGuests((prev) => prev + 1);
-            console.log("active gusts", activeGuests);
+            console.log("active guests", activeGuests);
           }
         }
       };
