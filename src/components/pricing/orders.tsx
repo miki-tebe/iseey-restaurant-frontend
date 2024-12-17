@@ -9,7 +9,7 @@ export default async function Orders() {
     return (
       <>
         <h1 className="text-4xl font-bold text-center mb-12">orders</h1>
-        <Card className="bg-zinc-800 border-zinc-700 transition-all duration-300 mx-6 mb-16">
+        <Card className="border-zinc-700 transition-all duration-300 mx-6 mb-16">
           <CardContent>
             <p className="text-center text-zinc-400">No orders found.</p>
           </CardContent>
@@ -20,7 +20,7 @@ export default async function Orders() {
   return (
     <>
       <h1 className="text-4xl font-bold text-center mb-12">orders</h1>
-      <Card className="bg-zinc-800 border-zinc-700 transition-all duration-300 mx-6 mb-16">
+      <Card className="border-zinc-700 transition-all duration-300 mx-6 mb-16">
         <CardContent>
           <OrdersTable orders={orders} />
         </CardContent>

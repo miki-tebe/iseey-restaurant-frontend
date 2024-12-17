@@ -19,7 +19,7 @@ export default async function PlanSection() {
       <h1 className="text-4xl font-bold text-center mb-12">Pricing</h1>
       <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
         {/* Monthly Plan */}
-        <Card className="bg-zinc-800 border-zinc-700 text-white transition-all duration-300 hover:border-orange-500">
+        <Card className="border-zinc-700 text-white transition-all duration-300 hover:border-orange-500">
           <CardHeader>
             <div className="h-12 mb-4">
               <Image
@@ -65,7 +65,7 @@ export default async function PlanSection() {
 
         {/* Annual Plan */}
         {plans.prices[1] && (
-          <Card className="bg-zinc-800 border-zinc-700 text-white transition-all duration-300 hover:border-orange-500">
+          <Card className="border-zinc-700 text-white transition-all duration-300 hover:border-orange-500">
             <CardHeader>
               <div className="h-12 mb-4">
                 <Image

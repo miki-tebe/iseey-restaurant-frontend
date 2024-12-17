@@ -10,7 +10,7 @@ import { UserProfileSkeleton } from "@/components/user-profile-skeleton";
 
 async function Header() {
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[100px] lg:px-6">
       <MobileSideBar />
       <div className="ml-auto flex items-center gap-2"></div>
       <Suspense fallback={<UserProfileSkeleton />}>

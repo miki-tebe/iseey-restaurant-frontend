@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default async function Component() {
   return (
-    <div className="min-h-screen bg-zinc-900 text-white">
+    <div className="min-h-screen text-white">
       {/* Warning Banner */}
       {/* <Alert className="rounded-none bg-red-700 text-white border-none">
         <AlertDescription>

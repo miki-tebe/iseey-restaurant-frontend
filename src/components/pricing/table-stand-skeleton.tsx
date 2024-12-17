@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TableStandSkeleton() {
   return (
-    <Card className="bg-zinc-800 border-zinc-700 max-w-sm mx-auto">
+    <Card className="border-zinc-700 max-w-sm mx-auto">
       <CardHeader>
         <Skeleton className="h-12 w-24 bg-zinc-700 mb-4" />
         <Skeleton className="h-6 w-28 bg-zinc-700 mb-2" />
