@@ -26,6 +26,7 @@ import { getAssetPath } from "@/lib/utils";
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof signupValidationSchema>>({
     resolver: zodResolver(signupValidationSchema),
@@ -40,11 +41,16 @@ export default function Signup() {
   });
 
   function handleSubmit(data: z.infer<typeof signupValidationSchema>) {
-    signup(data).then((result) => {
-      if (result) {
-        toast.error(result.message);
-      }
-    });
+    setIsLoading(true);
+    signup(data)
+      .then((result) => {
+        if (result) {
+          toast.error(result.message);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -214,8 +220,8 @@ export default function Signup() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Registrieren
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Registrieren"}
               </Button>
               <div className="text-center mt-4 text-sm">
                 Bereits ein Konto?{" "}
