@@ -4,6 +4,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useLayoutEffect, useState } from "react";
+import Autocomplete from "react-google-autocomplete";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -132,7 +133,36 @@ export default function Profile() {
                       <FormItem>
                         <FormLabel>Address</FormLabel>
                         <FormControl>
-                          <Input placeholder="Address" {...field} />
+                          <Autocomplete
+                            apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
+                            onPlaceSelected={(place) => {
+                              if (place && place.geometry) {
+                                const { lat, lng } = place.geometry.location;
+                                const formatted_address =
+                                  place.formatted_address;
+
+                                profileForm.setValue("lat", lat().toString());
+                                profileForm.setValue("lng", lng().toString());
+                                profileForm.setValue(
+                                  "address",
+                                  formatted_address || ""
+                                );
+                              }
+                            }}
+                            options={{
+                              types: ["establishment"],
+                            }}
+                            value={field.value || ""}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              const value = e.target.value;
+                              profileForm.setValue("address", value, {
+                                shouldValidate: true,
+                              });
+                            }}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

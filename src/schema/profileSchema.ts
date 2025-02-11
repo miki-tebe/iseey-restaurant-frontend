@@ -8,6 +8,8 @@ export const profileFormSchema = z.object({
     })
     .max(255),
   address: z.string().max(255).optional(),
+  lat: z.string().optional(),
+  lng: z.string().optional(),
   email: z.string().email().optional(),
   phoneNumber: z.string().optional(),
   number_of_tables: z.union([

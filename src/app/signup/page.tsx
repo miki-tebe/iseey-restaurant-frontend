@@ -22,10 +22,12 @@ import {
 } from "@/components/ui/form";
 import { signupValidationSchema } from "@/schema/signUpSchema";
 import { getAssetPath } from "@/lib/utils";
+import Autocomplete from "react-google-autocomplete";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof signupValidationSchema>>({
     resolver: zodResolver(signupValidationSchema),
@@ -40,16 +42,21 @@ export default function Signup() {
   });
 
   function handleSubmit(data: z.infer<typeof signupValidationSchema>) {
-    signup(data).then((result) => {
-      if (result) {
-        toast.error(result.message);
-      }
-    });
+    setIsLoading(true);
+    signup(data)
+      .then((result) => {
+        if (result) {
+          toast.error(result.message);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="hidden bg-muted lg:flex lg:items-center lg:justify-center">
+    <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
+      <div className="hidden lg:flex lg:items-center lg:justify-center bg-muted h-screen">
         <Image
           src={getAssetPath("/images/logo4.png")}
           alt="ISSEY Logo"
@@ -202,20 +209,37 @@ export default function Signup() {
                   <FormItem>
                     <FormLabel>Adresse</FormLabel>
                     <FormControl>
-                      <Input
-                        id="address"
-                        type="text"
-                        placeholder="Address"
-                        required
-                        {...field}
+                      <Autocomplete
+                        apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
+                        onPlaceSelected={(place) => {
+                          if (place && place.geometry) {
+                            const { lat, lng } = place.geometry.location;
+                            const formatted_address = place.formatted_address;
+
+                            form.setValue("lat", lat().toString());
+                            form.setValue("lng", lng().toString());
+                            form.setValue("address", formatted_address || "");
+                          }
+                        }}
+                        options={{
+                          types: ["establishment"],
+                        }}
+                        value={field.value || ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const value = e.target.value;
+                          form.setValue("address", value, {
+                            shouldValidate: true,
+                          });
+                        }}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Registrieren
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Registrieren"}
               </Button>
               <div className="text-center mt-4 text-sm">
                 Bereits ein Konto?{" "}

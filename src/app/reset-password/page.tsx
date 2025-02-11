@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +23,7 @@ import { resetPasswordSchema } from "@/schema/resetPasswordSchema";
 export const dynamic = "force-dynamic";
 
 function ResetPasswordForm({ token }: { token: string | null }) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const resetPasswordForm = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
   });
@@ -34,10 +35,16 @@ function ResetPasswordForm({ token }: { token: string | null }) {
       toast.error("Invalid or missing token");
       return;
     }
-    const result = await resetPassword({ ...data, token });
-    if (result) {
-      toast.message(result.message);
-    }
+    setIsLoading(true);
+    resetPassword({ ...data, token })
+      .then((result) => {
+        if (result) {
+          toast.message(result.message);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -84,8 +91,8 @@ function ResetPasswordForm({ token }: { token: string | null }) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Passwort zurücksetzen
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Loading..." : "Passwort zurücksetzen"}
         </Button>
       </form>
     </Form>

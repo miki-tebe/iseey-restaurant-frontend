@@ -1,6 +1,9 @@
+import { Suspense } from "react";
+
 import { getOffers } from "@/app/actions";
 import OfferTable from "@/components/offer-table";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import TableSkeleton from "@/components/table-skeleton";
 
 export default async function Offers() {
   const data = await getOffers();
@@ -11,7 +14,9 @@ export default async function Offers() {
           <CardTitle>Angebotsliste</CardTitle>
         </CardHeader>
         <CardContent>
-          <OfferTable offers={data ?? []} />
+          <Suspense fallback={<TableSkeleton />}>
+            <OfferTable offers={data ?? []} />
+          </Suspense>
         </CardContent>
       </Card>
     </main>

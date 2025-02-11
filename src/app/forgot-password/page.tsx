@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { toast } from "sonner";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -19,18 +20,23 @@ import {
 import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 
 export default function ForgotPassword() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const forgotPasswordForm = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  async function handleForgotPassword(
-    data: z.infer<typeof forgotPasswordSchema>
-  ) {
-    await forgotPassword(data).then((result) => {
-      if (result) {
-        toast.message(result.message);
-      }
-    });
+  function handleForgotPassword(data: z.infer<typeof forgotPasswordSchema>) {
+    setIsLoading(true);
+    forgotPassword(data)
+      .then((result) => {
+        if (result) {
+          toast.message(result.message);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -66,8 +72,8 @@ export default function ForgotPassword() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Passwort zurücksetzen
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Loading..." : "Passwort zurücksetzen"}
             </Button>
           </form>
         </Form>

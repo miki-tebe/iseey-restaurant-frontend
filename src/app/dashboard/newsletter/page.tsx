@@ -1,4 +1,7 @@
+import { Suspense } from "react";
+
 import { getNewsletters } from "@/app/actions";
+import TableSkeleton from "@/components/table-skeleton";
 import NewsletterTable from "@/components/newsletter-table";
 
 export default async function NewsLetter() {
@@ -9,7 +12,9 @@ export default async function NewsLetter() {
         <h1 className="text-lg font-semibold md:text-2xl">NewsLetter</h1>
       </div>
       <div className="grid gap-4 col-span-2"></div>
-      <NewsletterTable newsletters={data ?? []} />
+      <Suspense fallback={<TableSkeleton />}>
+        <NewsletterTable newsletters={data ?? []} />
+      </Suspense>
     </main>
   );
 }

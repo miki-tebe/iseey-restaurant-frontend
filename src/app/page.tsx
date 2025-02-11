@@ -29,6 +29,7 @@ const formSchema = z.object({
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,11 +40,16 @@ export default function Login() {
   });
 
   function handleSubmit(data: z.infer<typeof formSchema>) {
-    login(data).then((result) => {
-      if (result) {
-        toast.error(result.message);
-      }
-    });
+    setIsLoading(true);
+    login(data)
+      .then((result) => {
+        if (result) {
+          toast.error(result.message);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   const togglePasswordVisibility = () => {
@@ -132,8 +138,8 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Anmelden
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Anmelden"}
               </Button>
               <div className="text-center mt-4 text-sm">
                 Noch kein Konto?{" "}
