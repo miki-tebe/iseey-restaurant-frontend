@@ -41,7 +41,7 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
           token: sessionToken,
         },
       };
-
+      console.log("Connecting to restaurant socket -->", API_URL);
       socket = io(API_URL, socketOptions);
 
       socket.on("connect", () => {
@@ -53,7 +53,7 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
       });
 
       socket.on("connect_error", (error) => {
-        console.log("Restaurant socket connection error:");
+        console.log("Restaurant socket connection error:", error);
       });
 
       // Debug events

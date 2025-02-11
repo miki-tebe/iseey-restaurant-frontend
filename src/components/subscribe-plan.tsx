@@ -26,7 +26,7 @@ export default function SubscribePlan() {
       }
       setLoading(false);
     } catch (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
       setLoading(false);
     } finally {
       setLoading(false);

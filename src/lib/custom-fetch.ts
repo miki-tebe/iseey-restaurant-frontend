@@ -5,7 +5,10 @@ interface NodeFetchOptions extends RequestInit {
 const isProd = process.env.NODE_ENV === "production";
 
 const getBaseUrl = () => {
-  return isProd ? "https://iseey.app/restaurants" : "http://localhost:5002";
+  return isProd
+    ? "https://iseey.app/restaurants"
+    : "https://iseey.app/restaurants";
+  // return isProd ? "https://iseey.app/restaurants" : "http://localhost:5002";
 };
 
 const customFetch = async <T = any>(
@@ -25,7 +28,8 @@ const customFetch = async <T = any>(
     if (isProd && typeof window === "undefined") {
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     }
-
+    // remove this part
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     try {
       console.log("Fetching:", url);
       console.log("Options:", {

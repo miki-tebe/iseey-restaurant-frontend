@@ -51,8 +51,8 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="hidden bg-muted lg:flex lg:items-center lg:justify-center">
+    <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
+      <div className="hidden lg:flex lg:items-center lg:justify-center bg-muted h-screen">
         <Image
           src={getAssetPath("/images/logo4.png")}
           alt="ISSEY Logo"
