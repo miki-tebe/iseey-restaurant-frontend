@@ -91,7 +91,7 @@ export async function getProfile() {
 export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
   const session = await verifySession();
   if (!session) return null;
-
+  console.log("data coming", data);
   try {
     const result = await customFetch(`/api/restaurants/profile`, {
       method: "PUT",
@@ -310,17 +310,19 @@ export async function uploadOfferPhoto(data: FormData) {
 export async function uploadRestaurantMenus(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
-
+  // console.log("session", session.token);
   try {
     const result = await customFetch(`/api/upload/menu`, {
       method: "POST",
       headers: {
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${session.token}`,
       },
       body: data,
     });
 
     if (result.success == true) {
+      console.log("result of image posting", result);
       return { message: "Restaurant menu uploaded", url: result.data.url };
     } else return { message: "Failed to upload restaurant menu" };
   } catch (error) {
@@ -496,4 +498,10 @@ export async function getChartData(type: string, date: Date) {
     console.log(error);
     throw new Error("Failed to fetch chart data");
   }
+}
+
+export async function getToken() {
+  const session = await verifySession();
+  if (!session) return null;
+  return session.token;
 }

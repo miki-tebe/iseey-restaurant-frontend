@@ -214,11 +214,9 @@ export default function Signup() {
                         onPlaceSelected={(place) => {
                           if (place && place.geometry) {
                             const { lat, lng } = place.geometry.location;
-                            const formatted_address = place.formatted_address;
 
                             form.setValue("lat", lat().toString());
                             form.setValue("lng", lng().toString());
-                            form.setValue("address", formatted_address || "");
                           }
                         }}
                         options={{

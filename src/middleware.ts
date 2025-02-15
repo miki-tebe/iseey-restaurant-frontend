@@ -19,7 +19,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (isPublicRoute && session?.token && !path.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard/index", req.nextUrl));
   }
 
   return NextResponse.next();
