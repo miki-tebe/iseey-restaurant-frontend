@@ -14,7 +14,7 @@ interface FileInputProps<T extends FieldValues> {
   name: Path<T>;
   label: string;
   isUrl: boolean;
-  type: ["food", "drink", "restaurant"];
+  type: "food" | "drink" | "restaurant";
 }
 
 export const FileInput = <T extends FieldValues>({

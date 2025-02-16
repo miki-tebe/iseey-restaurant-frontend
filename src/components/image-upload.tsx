@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 
 interface ImageUploadProps {
   onUploadComplete: (imageUrl: string) => void;
-  type: ["food", "drink", "restaurant"];
+  type: "food" | "drink" | "restaurant";
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({

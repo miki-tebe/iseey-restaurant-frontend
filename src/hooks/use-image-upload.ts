@@ -18,10 +18,11 @@ export const useImageUpload = () => {
   });
 
   const uploadImage = useCallback(
-    async (file: File, type: ["food", "drink", "restaurant"]) => {
-      const url = type[2]
-        ? "/api/upload/restaurant"
-        : `/api/upload/menu?menuType=${type}`;
+    async (file: File, type: "food" | "drink" | "restaurant") => {
+      const url =
+        type === "restaurant"
+          ? "http://localhost:5002/api/upload/restaurant"
+          : `http://localhost:5002/api/upload/menu?menuType=${type}`;
       setUploadState({ progress: 0, error: null, uploading: true });
       const token = await getToken();
 
