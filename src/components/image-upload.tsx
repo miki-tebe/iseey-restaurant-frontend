@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { useCallback } from "react";
+import React from "react";
 import { useImageUpload } from "@/hooks/use-image-upload";
 import ProgressBar from "@/components/progress-bar";
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const { uploadImage, progress, error, uploading } = useImageUpload();
 
-  const handleFileChange = useCallback(
+  const handleFileChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       if (file) {

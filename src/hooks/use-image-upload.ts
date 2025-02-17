@@ -35,6 +35,7 @@ export const useImageUpload = () => {
         const response = await axios.post(url, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round(

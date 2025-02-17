@@ -33,6 +33,7 @@ export const getUser = cache(async () => {
       },
     });
     const result = await payload.json();
+    console.log("user come", result, session, API_URL);
     return result.data;
   } catch (e) {
     console.log(e);

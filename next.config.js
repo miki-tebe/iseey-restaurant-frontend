@@ -32,7 +32,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
+        hostname: "iseey.eu-central-1.linodeobjects.com",
         port: "",
         pathname: "/**",
       },

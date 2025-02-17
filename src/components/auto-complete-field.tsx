@@ -38,8 +38,6 @@ export const AutocompleteField = <T extends FieldValues>({
               apiKey={apiKey}
               onPlaceSelected={(place) => {
                 if (place && place.geometry) {
-                  // const { lat, lng } = place.geometry.location;
-                  // field.onChange(place.formatted_address);
                   onPlaceSelected(place);
                 }
               }}
