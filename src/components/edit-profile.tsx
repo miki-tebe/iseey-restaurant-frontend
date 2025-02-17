@@ -58,7 +58,6 @@ function EditProfile({ profile }: any) {
       }
     });
 
-    console.log("data", data);
     updateProfile(data).then((result) => {
       toast(result.message);
     });

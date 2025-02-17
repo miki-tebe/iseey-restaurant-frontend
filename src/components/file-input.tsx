@@ -37,7 +37,6 @@ export const FileInput = <T extends FieldValues>({
             ) : (
               <ImageUpload
                 onUploadComplete={(imageUrl) => {
-                  console.log("Image uploaded:", imageUrl);
                   field.onChange(imageUrl);
                 }}
                 type={type}

@@ -21,8 +21,8 @@ export const useImageUpload = () => {
     async (file: File, type: "food" | "drink" | "restaurant") => {
       const url =
         type === "restaurant"
-          ? "http://localhost:5002/api/upload/restaurant"
-          : `http://localhost:5002/api/upload/menu?menuType=${type}`;
+          ? "https://iseey.app/restaurants/api/upload/restaurant"
+          : `https://iseey.app/restaurants/api/upload/menu?menuType=${type}`;
       setUploadState({ progress: 0, error: null, uploading: true });
       const token = await getToken();
 
