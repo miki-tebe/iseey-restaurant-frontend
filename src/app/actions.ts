@@ -11,7 +11,7 @@ import { createTableStandSchema } from "@/schema/table-stand.schema";
 import { OfferFormType } from "@/schema/offerFormSchema";
 import { EditOfferFormType } from "@/schema/offerEditSchema";
 import { changePlanSchema } from "@/schema/changePlanSchema";
-import { profileFormSchema } from "@/schema/profileSchema";
+import { ProfileFormValues } from "@/schema/profileSchema";
 import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 import { signupValidationSchema } from "@/schema/signUpSchema";
 import customFetch from "@/lib/custom-fetch";
@@ -88,7 +88,7 @@ export async function getProfile() {
   return null;
 }
 
-export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
+export async function updateProfile(data: ProfileFormValues) {
   const session = await verifySession();
   if (!session) return null;
   console.log("data coming", data);
@@ -104,7 +104,8 @@ export async function updateProfile(data: z.infer<typeof profileFormSchema>) {
     return await result;
   } catch (error) {
     console.error("Error in updateProfile:", error);
-    return { message: "Failed to update profile" };
+    throw error;
+    // return { message: "Failed to update profile" };
   }
 }
 

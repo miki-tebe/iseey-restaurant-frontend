@@ -48,3 +48,43 @@ export type Offer = {
   updated: number; // timestamp
   __v: number;
 };
+
+export type RestaurantProfile = {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  email_verified: string;
+  lat: number;
+  lng: number;
+  address: string;
+  active: string;
+  deleted: string;
+  number_of_tables: number;
+  facebook: string;
+  instagram: string;
+  website: string;
+  place_id: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  loc: [number, number];
+  __v: number;
+  bio: string;
+  drinkMenu: string;
+  image: string;
+  menu: string;
+  stripe_customer_id: string;
+  drinkMenuType: string;
+  menuType: string;
+  restaurant_image: {
+    source: string;
+    location: string;
+  };
+  reviews: {
+    author_name: string;
+    rating: number;
+    text: string;
+  }[];
+  ratings: number;
+  restaurantReviewCount: number;
+};

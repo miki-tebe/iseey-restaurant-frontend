@@ -15,10 +15,9 @@ export const profileFormSchema = z.object({
   lng: z.number().optional(),
   email: z.string().email().optional(),
   phoneNumber: z
-    .string({
-      message: "Invalid phone number",
-      invalid_type_error: "Invalid phone number",
-    })
+    .string()
+    .trim()
+    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format")
     .optional(),
   number_of_tables: z.union([
     z.string().optional(),

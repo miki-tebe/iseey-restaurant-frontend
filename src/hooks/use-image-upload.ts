@@ -24,8 +24,8 @@ export const useImageUpload = () => {
     ) => {
       const url =
         type === "food" || type === "drink"
-          ? `http://localhost:5002/api/upload/menu?menuType=${type}`
-          : `http://localhost:5002/api/upload/${type}`;
+          ? `https://iseey.app/admin/api/upload/menu?menuType=${type}`
+          : `https://iseey.app/admin/api/upload/${type}`;
       setUploadState({ progress: 0, error: null, uploading: true });
       const token = await getToken();
 

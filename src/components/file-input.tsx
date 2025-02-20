@@ -15,6 +15,7 @@ interface FileInputProps<T extends FieldValues> {
   label: string;
   isUrl: boolean;
   type: "food" | "drink" | "restaurant";
+  disabled: boolean;
 }
 
 export const FileInput = <T extends FieldValues>({
@@ -23,6 +24,7 @@ export const FileInput = <T extends FieldValues>({
   label,
   isUrl,
   type,
+  disabled,
 }: FileInputProps<T>) => {
   return (
     <Controller
@@ -40,6 +42,7 @@ export const FileInput = <T extends FieldValues>({
                   field.onChange(imageUrl);
                 }}
                 type={type}
+                disabled={disabled}
               />
             )}
           </FormControl>

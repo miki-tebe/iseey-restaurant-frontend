@@ -8,6 +8,7 @@ interface SwitchFieldProps {
   onCheckedChange: (checked: boolean) => void;
   label: string;
   onClick?: () => void;
+  disabled: boolean;
 }
 
 export const SwitchField = ({
@@ -16,6 +17,7 @@ export const SwitchField = ({
   onCheckedChange,
   label,
   onClick,
+  disabled,
 }: SwitchFieldProps) => {
   return (
     <div className="flex items-center space-x-2">
@@ -24,6 +26,7 @@ export const SwitchField = ({
         checked={checked}
         onCheckedChange={onCheckedChange}
         onClick={onClick}
+        disabled={disabled}
       />
       <Label htmlFor={id}>{label}</Label>
     </div>
