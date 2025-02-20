@@ -30,3 +30,21 @@ export type Price = {
   type: string; // e.g., "recurring"
   __v: number;
 };
+
+export type Offer = {
+  _id: string;
+  restaurant_id: string;
+  name: string;
+  discount: number;
+  code: string;
+  start_date: number; // timestamp
+  end_date: number; // timestamp
+  image: string;
+  description: string;
+  offer_type: string; // e.g., "percentage"
+  currency: string;
+  deleted: string; // e.g., "N"
+  created: number; // timestamp
+  updated: number; // timestamp
+  __v: number;
+};

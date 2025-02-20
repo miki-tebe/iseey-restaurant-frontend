@@ -8,10 +8,11 @@ export const editOfferFormSchema = z.object({
     .optional(),
   description: z.string().max(500).optional(),
   image: z.string().optional(),
-  photo: z.string().optional(), // required for file upload
   code: z.string().max(50).optional(),
   discount: z.union([z.string(), z.number().min(1).max(100)]),
-  offer_type: z.enum(["percentage", "fixed"]).optional(),
+  offer_type: z.enum(["percentage", "flat"]).optional(),
   start_date: z.union([z.string(), z.number()]),
   end_date: z.union([z.string(), z.number()]),
 });
+
+export type EditOfferFormType = z.infer<typeof editOfferFormSchema>;

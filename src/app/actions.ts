@@ -9,7 +9,7 @@ import { createSession, destroySession } from "@/lib/session";
 import { ITableStand, Price, Product } from "@/types/type";
 import { createTableStandSchema } from "@/schema/table-stand.schema";
 import { OfferFormType } from "@/schema/offerFormSchema";
-import { editOfferFormSchema } from "@/schema/offerEditSchema";
+import { EditOfferFormType } from "@/schema/offerEditSchema";
 import { changePlanSchema } from "@/schema/changePlanSchema";
 import { profileFormSchema } from "@/schema/profileSchema";
 import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
@@ -225,10 +225,7 @@ export async function addOffer(data: Partial<OfferFormType>) {
   }
 }
 
-export async function updateOffer(
-  data: z.infer<typeof editOfferFormSchema>,
-  id: string
-) {
+export async function updateOffer(data: EditOfferFormType, id: string) {
   const session = await verifySession();
   if (!session) return null;
 
@@ -245,7 +242,8 @@ export async function updateOffer(
     return await result;
   } catch (error) {
     console.error("Error in updateOffer:", error);
-    return { message: "Failed to update offer" };
+    // return { message: "Failed to update offer" };
+    throw error;
   }
 }
 
