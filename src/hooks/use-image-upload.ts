@@ -18,11 +18,14 @@ export const useImageUpload = () => {
   });
 
   const uploadImage = useCallback(
-    async (file: File, type: "food" | "drink" | "restaurant") => {
+    async (
+      file: File,
+      type: "food" | "drink" | "restaurant" | "user" | "offer"
+    ) => {
       const url =
-        type === "restaurant"
-          ? "https://iseey.app/restaurants/api/upload/restaurant"
-          : `https://iseey.app/restaurants/api/upload/menu?menuType=${type}`;
+        type === "food" || type === "drink"
+          ? `http://localhost:5002/api/upload/menu?menuType=${type}`
+          : `http://localhost:5002/api/upload/${type}`;
       setUploadState({ progress: 0, error: null, uploading: true });
       const token = await getToken();
 

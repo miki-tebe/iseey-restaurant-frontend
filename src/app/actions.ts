@@ -8,7 +8,7 @@ import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
 import { ITableStand, Price, Product } from "@/types/type";
 import { createTableStandSchema } from "@/schema/table-stand.schema";
-import { offerFormSchema } from "@/schema/offerFormSchema";
+import { OfferFormType } from "@/schema/offerFormSchema";
 import { editOfferFormSchema } from "@/schema/offerEditSchema";
 import { changePlanSchema } from "@/schema/changePlanSchema";
 import { profileFormSchema } from "@/schema/profileSchema";
@@ -202,7 +202,7 @@ export async function getOffer(data: { id: string }) {
   }
 }
 
-export async function addOffer(data: z.infer<typeof offerFormSchema>) {
+export async function addOffer(data: Partial<OfferFormType>) {
   const session = await verifySession();
   if (!session) return null;
 
@@ -220,7 +220,8 @@ export async function addOffer(data: z.infer<typeof offerFormSchema>) {
     return result;
   } catch (error) {
     console.error("Error in addOffer:", error);
-    return { message: "Failed to add offer" };
+    // return { message: "Failed to add offer" };
+    throw error;
   }
 }
 
@@ -286,26 +287,26 @@ export async function getNewsletters() {
   }
 }
 
-export async function uploadOfferPhoto(data: FormData) {
-  const session = await verifySession();
-  if (!session) return null;
-  try {
-    const result = await customFetch(`/api/upload/offer`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-      body: data,
-    });
+// export async function uploadOfferPhoto(data: FormData) {
+//   const session = await verifySession();
+//   if (!session) return null;
+//   try {
+//     const result = await customFetch(`/api/upload/offer`, {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${session.token}`,
+//       },
+//       body: data,
+//     });
 
-    if (result.success == true) {
-      return { message: "Offer photo uploaded", url: result.data.url };
-    } else return { message: "Failed to upload offer photo" };
-  } catch (error) {
-    console.error("Error in uploadOfferPhoto:", error);
-    return { message: "Failed to upload offer photo" };
-  }
-}
+//     if (result.success == true) {
+//       return { message: "Offer photo uploaded", url: result.data.url };
+//     } else return { message: "Failed to upload offer photo" };
+//   } catch (error) {
+//     console.error("Error in uploadOfferPhoto:", error);
+//     return { message: "Failed to upload offer photo" };
+//   }
+// }
 
 export async function uploadRestaurantMenus(data: FormData) {
   const session = await verifySession();

@@ -20,6 +20,7 @@ interface FormFieldProps<T extends FieldValues> {
   render?: (field: any) => React.ReactNode;
   min?: number;
   max?: number;
+  disabled: boolean;
 }
 
 export const FormFieldComponent = <T extends FieldValues>({
@@ -31,6 +32,7 @@ export const FormFieldComponent = <T extends FieldValues>({
   render,
   min,
   max,
+  disabled,
 }: FormFieldProps<T>) => {
   return (
     <Controller
@@ -49,6 +51,7 @@ export const FormFieldComponent = <T extends FieldValues>({
                 max={max}
                 placeholder={placeholder}
                 {...field}
+                disabled={disabled}
               />
             )}
           </FormControl>

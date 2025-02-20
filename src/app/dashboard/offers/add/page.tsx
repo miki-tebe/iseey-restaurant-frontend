@@ -1,15 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 
-import { addOffer, uploadOfferPhoto } from "@/app/actions";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormField,
@@ -26,51 +21,38 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { useRef } from "react";
-import { offerFormSchema } from "@/schema/offerFormSchema";
+import { offerFormSchema, OfferFormType } from "@/schema/offerFormSchema";
+import ImageUpload from "@/components/image-upload";
+import { useAddOffer } from "@/hooks/use-add-offer";
+import { FormFieldComponent } from "@/components/form-field";
 
 export default function AddOffer() {
-  const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const mutation = useAddOffer();
 
   const form = useForm<z.infer<typeof offerFormSchema>>({
     resolver: zodResolver(offerFormSchema),
     defaultValues: {
       name: "",
-      discount: 0,
+      discount: "",
       start_date: "",
       end_date: "",
       currency: "",
       code: "",
-      photo: "",
+      image: "",
       description: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof offerFormSchema>) {
+  async function onSubmit(values: OfferFormType) {
+    Object.keys(values).forEach((key) => {
+      const typedKey = key as keyof typeof values;
+      if (values[typedKey] === "" || values[typedKey] === undefined) {
+        delete values[typedKey];
+      }
+    });
     values.start_date = new Date(values.start_date).getTime();
     values.end_date = new Date(values.end_date).getTime();
-    const result = await addOffer(values);
-    toast(result.message);
-    if (result.success == true) {
-      router.push("/dashboard/offers");
-    }
-  }
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("picture", file);
-      uploadOfferPhoto(formData).then((result) => {
-        form.setValue("image", result?.url ?? "");
-        toast(result ? result.message : "Failed to upload offer file");
-      });
-    }
-  }
-
-  function handleEditClick() {
-    fileInputRef.current?.click();
+    mutation.mutate(values);
   }
 
   return (
@@ -83,65 +65,38 @@ export default function AddOffer() {
           <Form {...form}>
             <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-4">
-                <FormField
+                <FormFieldComponent<OfferFormType>
                   control={form.control}
                   name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Offer Name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Name"
+                  placeholder="Offer Name"
+                  type="text"
+                  disabled={mutation.isPending}
                 />
-                <FormField
+                <FormFieldComponent<OfferFormType>
                   control={form.control}
                   name="discount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Discount</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Discount Amount"
-                          min={1}
-                          max={100}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Discount"
+                  placeholder="Discount Amount"
+                  type="number"
+                  disabled={mutation.isPending}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <FormField
+                <FormFieldComponent<OfferFormType>
                   control={form.control}
                   name="start_date"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start Date</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Start Date"
+                  type="date"
+                  disabled={mutation.isPending}
                 />
-                <FormField
+
+                <FormFieldComponent<OfferFormType>
                   control={form.control}
                   name="end_date"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>End Date</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="End Date"
+                  type="date"
+                  disabled={mutation.isPending}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -151,66 +106,54 @@ export default function AddOffer() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Offer Type</FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select offer type" />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="percentage">
-                              Percentage
-                            </SelectItem>
-                            <SelectItem value="flat">Flat</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="percentage">Percentage</SelectItem>
+                          <SelectItem value="flat">Flat</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
+                <FormFieldComponent<OfferFormType>
                   control={form.control}
                   name="currency"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Currency</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Currency" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Currency"
+                  type="text"
+                  disabled={mutation.isPending}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <FormField
+                <FormFieldComponent<OfferFormType>
                   control={form.control}
                   name="code"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Code</FormLabel>
-                      <FormControl>
-                        <Input placeholder="offer code" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Code"
+                  type="text"
+                  disabled={mutation.isPending}
                 />
+
                 <FormField
-                  control={form.control}
-                  name="photo"
-                  render={({ field }) => (
+                  name="image"
+                  render={() => (
                     <FormItem>
-                      <FormLabel>Image</FormLabel>
+                      <FormLabel>Restaurant Logo</FormLabel>
                       <FormControl>
-                        <Input
-                          type="file"
-                          {...field}
-                          onChange={handleFileChange}
-                          onClick={handleEditClick}
+                        <ImageUpload
+                          onUploadComplete={(imageUrl) => {
+                            console.log("Image uploaded:", imageUrl);
+                            form.setValue("image", imageUrl);
+                          }}
+                          type="offer"
+                          disabled={mutation.isPending}
                         />
                       </FormControl>
                       <FormMessage />
@@ -218,21 +161,17 @@ export default function AddOffer() {
                   )}
                 />
               </div>
-              <FormField
+              <FormFieldComponent<OfferFormType>
                 control={form.control}
                 name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Description" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Description"
+                type="text"
+                disabled={mutation.isPending}
               />
 
-              <Button type="submit">Submit</Button>
+              <Button disabled={mutation.isPending} type="submit">
+                Submit
+              </Button>
             </form>
           </Form>
         </CardContent>

@@ -7,12 +7,16 @@ import { Input } from "@/components/ui/input";
 
 interface ImageUploadProps {
   onUploadComplete: (imageUrl: string) => void;
-  type: "food" | "drink" | "restaurant";
+  type: "food" | "drink" | "restaurant" | "offer";
+  disabled: boolean;
+  className?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onUploadComplete,
   type,
+  disabled,
+  className,
 }) => {
   const { uploadImage, progress, error, uploading } = useImageUpload();
 
@@ -37,7 +41,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         type="file"
         accept="image/*"
         onChange={handleFileChange}
-        disabled={uploading}
+        disabled={uploading || disabled}
+        className={className}
       />
       {uploading && <ProgressBar progress={progress} />}
       {error && <p className="text-red-500">{error}</p>}
