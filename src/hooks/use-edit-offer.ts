@@ -27,7 +27,10 @@ export function useEditOffer() {
     },
     onError: (error) => {
       console.log("error is", error);
-      toast.error(`Failed to update offer`);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update Offer";
+
+      toast.error(errorMessage);
     },
   });
 

@@ -20,8 +20,11 @@ export function useAddOffer() {
       // navigation({ to: "/transactions" });
     },
     onError: (error) => {
-      console.log("faild to create offer", error);
-      toast.error(`Failed to create offer`);
+      console.log("error is", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create offer";
+
+      toast.error(errorMessage);
     },
   });
 

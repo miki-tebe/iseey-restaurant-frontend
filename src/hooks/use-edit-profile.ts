@@ -15,7 +15,10 @@ export function useEditProfile() {
     },
     onError: (error) => {
       console.log("error is", error);
-      toast.error(`Failed to update profile`);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create restaurant";
+
+      toast.error(errorMessage);
     },
   });
 

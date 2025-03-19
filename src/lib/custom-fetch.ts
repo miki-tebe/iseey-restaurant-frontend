@@ -49,15 +49,21 @@ const customFetch = async <T = any>(
         Object.fromEntries(response.headers.entries())
       );
 
+      // if (!response.ok) {
+      //   let errorMessage;
+      //   try {
+      //     const errorData = await response.text();
+      //     errorMessage = `HTTP error! Status: ${response.status}, Body: ${errorData}`;
+      //   } catch (e) {
+      //     errorMessage = `HTTP error! Status: ${response.status}`;
+      //   }
+      //   throw new Error(errorMessage);
+      // }
+
       if (!response.ok) {
-        let errorMessage;
-        try {
-          const errorData = await response.text();
-          errorMessage = `HTTP error! Status: ${response.status}, Body: ${errorData}`;
-        } catch (e) {
-          errorMessage = `HTTP error! Status: ${response.status}`;
-        }
-        throw new Error(errorMessage);
+        const errorData = await response.json(); // Get error details
+        console.log("--------------------------", errorData?.message);
+        throw new Error(errorData?.message || "Something went wrong");
       }
 
       const contentType = response.headers.get("content-type");
@@ -88,7 +94,7 @@ const customFetch = async <T = any>(
     console.error(`Fetch error for ${path}:`, error);
     // Add more context to the error
     if (error instanceof Error) {
-      error.message = `API Request Failed: ${error.message}`;
+      error.message = `${error.message}`;
     }
     throw error;
   }

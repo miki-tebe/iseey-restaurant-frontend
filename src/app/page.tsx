@@ -45,6 +45,7 @@ export default function Login() {
       .then((result) => {
         if (result) {
           toast.error(result.message);
+          setIsLoading(false);
         }
       })
       .finally(() => {
