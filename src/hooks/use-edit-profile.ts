@@ -14,9 +14,9 @@ export function useEditProfile() {
       console.log("data", data);
     },
     onError: (error) => {
-      console.log("error is", error);
+      console.log("error is", error.message);
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to create restaurant";
+        error instanceof Error ? error.message : "Failed to update restaurant";
 
       toast.error(errorMessage);
     },

@@ -91,7 +91,6 @@ export async function getProfile() {
 export async function updateProfile(data: ProfileFormValues) {
   const session = await verifySession();
   if (!session) return null;
-  console.log("data coming", data);
   try {
     const result = await customFetch(`/api/restaurants/profile`, {
       method: "PUT",
@@ -105,6 +104,10 @@ export async function updateProfile(data: ProfileFormValues) {
   } catch (error) {
     console.error("Error in updateProfile:", error);
     throw error;
+    // const errorMessage =
+    //   error instanceof Error ? error.message : "Failed to update profile";
+    // return errorMessage;
+    // throw errorMessage;
     // return { message: "Failed to update profile" };
   }
 }

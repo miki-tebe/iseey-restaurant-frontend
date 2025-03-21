@@ -7,6 +7,7 @@ import EditProfileForm from "@/components/profile/edit-profile-form";
 
 export default async function EditProfile() {
   const restaurantProfile: RestaurantProfile = await getProfile();
+  console.log("profile is--------------", restaurantProfile);
 
   if (!restaurantProfile) {
     return (
