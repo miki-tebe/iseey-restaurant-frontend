@@ -62,7 +62,7 @@ const customFetch = async <T = any>(
 
       if (!response.ok) {
         const errorData = await response.json(); // Get error details
-        console.log("--------------------------", errorData?.message);
+        console.log("--------------------------", errorData);
         throw new Error(errorData?.message || "Something went wrong");
       }
 

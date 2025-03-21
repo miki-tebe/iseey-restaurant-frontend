@@ -13,19 +13,23 @@ export function useAddOffer() {
       return response;
     },
     onSuccess: (data) => {
-      toast.success("Offer created successfully");
-      console.log("created offer", data);
-      router.push("/dashboard/offers");
+      if (data.isError) {
+        toast.error(data.errorMessage);
+      } else {
+        toast.success("Offer created successfully");
+        console.log("created offer", data);
+        router.push("/dashboard/offers");
+      }
       // queryClient.invalidateQueries({ queryKey: ["transactions"] });
       // navigation({ to: "/transactions" });
     },
-    onError: (error) => {
-      console.log("error is", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to create offer";
+    // onError: (error) => {
+    //   console.log("error is", error);
+    //   const errorMessage =
+    //     error instanceof Error ? error.message : "Failed to create offer";
 
-      toast.error(errorMessage);
-    },
+    //   toast.error(errorMessage);
+    // },
   });
 
   return mutation;

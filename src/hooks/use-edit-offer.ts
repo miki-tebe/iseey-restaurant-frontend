@@ -19,19 +19,24 @@ export function useEditOffer() {
       return response;
     },
     onSuccess: (data) => {
-      toast.success("Offer updated successfully");
-      console.log("data", data);
-      router.push("/dashboard/offers");
+      if (data.isError) {
+        toast.error(data.errorMessage);
+      } else {
+        toast.success("Offer updated successfully");
+        console.log("data", data);
+        router.push("/dashboard/offers");
+      }
+
       // queryClient.invalidateQueries({ queryKey: ["transactions"] });
       // navigation({ to: "/transactions" });
     },
-    onError: (error) => {
-      console.log("error is", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to update Offer";
+    // onError: (error) => {
+    //   console.log("error is", error);
+    //   const errorMessage =
+    //     error instanceof Error ? error.message : "Failed to update Offer";
 
-      toast.error(errorMessage);
-    },
+    //   toast.error(errorMessage);
+    // },
   });
 
   return mutation;

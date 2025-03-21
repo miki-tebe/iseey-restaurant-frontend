@@ -109,7 +109,6 @@ export default function AddOffer() {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        // value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>

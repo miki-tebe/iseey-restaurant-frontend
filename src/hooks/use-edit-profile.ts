@@ -1,3 +1,5 @@
+// "use client";
+
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { updateProfile } from "@/app/actions";
@@ -10,16 +12,21 @@ export function useEditProfile() {
       return response;
     },
     onSuccess: (data) => {
-      toast.success("Profile updated successfully");
-      console.log("data", data);
+      if (data.isError) {
+        toast.error(data.errorMessage);
+      } else {
+        toast.success("Profile updated successfully");
+        console.log("data", data);
+      }
     },
-    onError: (error) => {
-      console.log("error is", error.message);
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to update restaurant";
+    // onError: (error) => {
+    //   console.log("error is", error.message);
+    //   // console.log("error digest", error.digest);
+    //   const errorMessage =
+    //     error instanceof Error ? error.message : "Failed to update profile";
 
-      toast.error(errorMessage);
-    },
+    //   toast.error(errorMessage);
+    // },
   });
 
   return mutation;

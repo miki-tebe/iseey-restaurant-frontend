@@ -101,14 +101,11 @@ export async function updateProfile(data: ProfileFormValues) {
       body: JSON.stringify(data),
     });
     return await result;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in updateProfile:", error);
-    throw error;
-    // const errorMessage =
-    //   error instanceof Error ? error.message : "Failed to update profile";
-    // return errorMessage;
-    // throw errorMessage;
-    // return { message: "Failed to update profile" };
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to update profile";
+    return { errorMessage, isError: true };
   }
 }
 
@@ -220,12 +217,15 @@ export async function addOffer(data: Partial<OfferFormType>) {
       body: JSON.stringify(data),
     });
 
-    revalidatePath("/dashboard/offers");
+    // revalidatePath("/dashboard/offers");
     return result;
   } catch (error) {
     console.error("Error in addOffer:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to add Offers";
+    return { errorMessage, isError: true };
     // return { message: "Failed to add offer" };
-    throw error;
+    // throw error;
   }
 }
 
@@ -246,8 +246,11 @@ export async function updateOffer(data: EditOfferFormType, id: string) {
     return await result;
   } catch (error) {
     console.error("Error in updateOffer:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to update Offers";
+    return { errorMessage, isError: true };
     // return { message: "Failed to update offer" };
-    throw error;
+    // throw error;
   }
 }
 
