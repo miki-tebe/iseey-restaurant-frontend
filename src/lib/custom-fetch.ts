@@ -31,11 +31,11 @@ const customFetch = async <T = any>(
     // remove this part
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
     try {
-      console.log("Fetching:", url);
-      console.log("Options:", {
-        ...fetchOptions,
-        headers: Object.fromEntries(headers.entries()),
-      });
+      // console.log("Fetching:", url);
+      // console.log("Options:", {
+      //   ...fetchOptions,
+      //   headers: Object.fromEntries(headers.entries()),
+      // });
 
       const response = await fetch(url, {
         ...fetchOptions,
@@ -43,11 +43,11 @@ const customFetch = async <T = any>(
       });
 
       // Log response details
-      console.log("Response status:", response.status);
-      console.log(
-        "Response headers:",
-        Object.fromEntries(response.headers.entries())
-      );
+      // console.log("Response status:", response.status);
+      // console.log(
+      //   "Response headers:",
+      //   Object.fromEntries(response.headers.entries())
+      // );
 
       // if (!response.ok) {
       //   let errorMessage;
@@ -62,7 +62,7 @@ const customFetch = async <T = any>(
 
       if (!response.ok) {
         const errorData = await response.json(); // Get error details
-        console.log("--------------------------", errorData);
+        // console.log("--------------------------", errorData);
         throw new Error(errorData?.message || "Something went wrong");
       }
 
@@ -78,7 +78,7 @@ const customFetch = async <T = any>(
           }
           return JSON.parse(text) as T;
         } catch (e) {
-          console.error("JSON parsing error:", e);
+          // console.error("JSON parsing error:", e);
           throw new Error("Failed to parse JSON response");
         }
       }
