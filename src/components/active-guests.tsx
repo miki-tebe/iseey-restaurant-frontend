@@ -45,7 +45,7 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
         "Connecting to restaurant socket -->",
         API_URL + "/restaurants"
       );
-      socket = io(API_URL + "/restaurants", socketOptions);
+      socket = io(API_URL + "restaurants", socketOptions);
 
       socket.on("connect", () => {
         console.log("Connected to restaurant socket");
