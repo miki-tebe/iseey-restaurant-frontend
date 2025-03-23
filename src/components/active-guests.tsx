@@ -29,7 +29,7 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
 
     if (!socket) {
       const socketOptions = {
-        path: "/socket.io/", // Match the backend path
+        path: "/restaurants/socket.io/",
         rejectUnauthorized: false,
         transports: ["websocket", "polling"],
         reconnection: true,
@@ -41,11 +41,8 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
           token: sessionToken,
         },
       };
-      console.log(
-        "Connecting to restaurant socket -->",
-        API_URL + "/restaurants"
-      );
-      socket = io(API_URL + "restaurants", socketOptions);
+      console.log("Connecting to restaurant socket -->", API_URL);
+      socket = io(API_URL, socketOptions);
 
       socket.on("connect", () => {
         console.log("Connected to restaurant socket");
