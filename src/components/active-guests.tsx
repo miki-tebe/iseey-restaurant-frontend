@@ -29,7 +29,7 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
 
     if (!socket) {
       const socketOptions = {
-        path: "/socket.io/",
+        path: "/restaurants/socket.io/",
         rejectUnauthorized: false,
         transports: ["websocket", "polling"],
         reconnection: true,
@@ -38,7 +38,6 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
         timeout: 20000,
         autoConnect: true,
         query: {
-          app: "restaurant",
           token: sessionToken,
         },
       };
