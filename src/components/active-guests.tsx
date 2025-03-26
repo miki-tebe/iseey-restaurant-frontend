@@ -28,9 +28,6 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
     fetchData();
 
     if (!socket) {
-      const baseUrl = API_URL
-        ? API_URL.replace(/\/+$/, "")
-        : "https://iseey.app";
       const socketOptions = {
         path: "/restaurants/socket.io/",
         rejectUnauthorized: false,
@@ -45,7 +42,7 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
         },
       };
       console.log("Connecting to restaurant socket -->", API_URL);
-      socket = io(baseUrl, socketOptions);
+      socket = io(API_URL, socketOptions);
 
       socket.on("connect", () => {
         console.log("Connected to restaurant socket");
