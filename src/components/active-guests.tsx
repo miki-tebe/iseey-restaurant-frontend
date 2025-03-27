@@ -1,7 +1,7 @@
 "use client";
 
 import { getProfile } from "@/app/actions";
-import useDataStore, { DataEntry } from "@/hooks/use-checkout-data";
+import useDataStore from "@/hooks/use-checkout-data";
 import convertToChartData from "@/lib/convertToChartData";
 import { useState, useEffect, useCallback } from "react";
 import io, { Socket } from "socket.io-client";
