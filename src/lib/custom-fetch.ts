@@ -91,7 +91,7 @@ const customFetch = async <T = any>(
       }
     }
   } catch (error) {
-    console.error(`Fetch error for ${path}:`, error);
+    // console.error(`Fetch error for ${path}:`, error);
     // Add more context to the error
     if (error instanceof Error) {
       error.message = `${error.message}`;
