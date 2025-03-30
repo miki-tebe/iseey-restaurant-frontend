@@ -7,7 +7,7 @@ run:
 	docker-compose up --build --remove-orphans
 
 run-d:
-	docker-compose up --build --remove-orphans -d
+	docker compose up --build --remove-orphans -d
 
 stop:
 	docker-compose stop
