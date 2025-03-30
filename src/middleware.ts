@@ -56,7 +56,8 @@ export default function middleware(req: NextRequest) {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/", nextUrl));
+    console.log("Not logged in", nextUrl.pathname);
+    return Response.redirect(new URL("/restaurants", nextUrl));
   }
 
   return null;
