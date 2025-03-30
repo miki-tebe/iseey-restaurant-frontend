@@ -59,9 +59,9 @@ export default function middleware(req: NextRequest) {
     console.log("Not logged in", nextUrl.pathname);
     console.log(
       "next routing",
-      NextResponse.redirect(new URL("/restaurants/auth/login", nextUrl))
+      NextResponse.redirect(new URL("/auth/login", nextUrl))
     );
-    return NextResponse.redirect(new URL("/restaurants/auth/login", nextUrl));
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
 
   return null;
