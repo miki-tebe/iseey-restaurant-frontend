@@ -13,7 +13,7 @@ export const verifySession = cache(async () => {
   const session = await decrypt(cookie as string);
   try {
     if (!session?.token) {
-      redirect("/login");
+      redirect("/");
     }
     return { isAuth: true, token: session.token };
   } catch (error) {
