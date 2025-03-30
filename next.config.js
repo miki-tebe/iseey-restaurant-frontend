@@ -22,7 +22,7 @@ const nextConfig = {
   redirects: async () => {
     return [
       {
-        source: "/login",
+        source: "/auth/login",
         destination: "/restaurants",
         permanent: true,
       },
