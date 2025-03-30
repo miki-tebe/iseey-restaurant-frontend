@@ -1,7 +1,7 @@
 // import { cookies } from "next/headers";
 // import { NextRequest, NextResponse } from "next/server";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { publicRoutes, DEFAULT_LOGIN_REDIRECT, authRoutes } from "../routes";
 import { cookies } from "next/headers";
 
@@ -50,7 +50,7 @@ export default function middleware(req: NextRequest) {
   console.log("isLoggedIn", isLoggedIn);
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     return null;
   }
@@ -59,9 +59,9 @@ export default function middleware(req: NextRequest) {
     console.log("Not logged in", nextUrl.pathname);
     console.log(
       "next routing",
-      NextResponse.redirect(new URL("/auth/login", nextUrl))
+      Response.redirect(new URL("/auth/login", nextUrl))
     );
-    return NextResponse.redirect(new URL("/auth/login", nextUrl));
+    return Response.redirect(new URL("/auth/login", nextUrl));
   }
 
   return null;
