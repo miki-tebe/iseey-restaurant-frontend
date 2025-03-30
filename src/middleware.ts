@@ -1,7 +1,7 @@
 // import { cookies } from "next/headers";
 // import { NextRequest, NextResponse } from "next/server";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { publicRoutes, DEFAULT_LOGIN_REDIRECT, authRoutes } from "../routes";
 import { cookies } from "next/headers";
 
