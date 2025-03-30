@@ -57,6 +57,10 @@ export default function middleware(req: NextRequest) {
 
   if (!isLoggedIn && !isPublicRoute) {
     console.log("Not logged in", nextUrl.pathname);
+    console.log(
+      "next routing",
+      NextResponse.redirect(new URL("/auth/login", nextUrl))
+    );
     return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
 
