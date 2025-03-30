@@ -25,7 +25,7 @@ import { cookies } from "next/headers";
 //   console.log("--------------", session);
 //   if (isProtectedRoute && !session?.token) {
 //     console.log("I am in protected route", path);
-//     return NextResponse.redirect(new URL("/", req.nextUrl));
+//     return NextResponse.redirect(new URL("/login", req.nextUrl));
 //   }
 
 //   if (isPublicRoute && session?.token && !path.startsWith("/dashboard")) {
@@ -57,7 +57,7 @@ export default function middleware(req: NextRequest) {
 
   if (!isLoggedIn && !isPublicRoute) {
     console.log("Not logged in", nextUrl.pathname);
-    return NextResponse.redirect(new URL("/", nextUrl));
+    return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
   return null;
