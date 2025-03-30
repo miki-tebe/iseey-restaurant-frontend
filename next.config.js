@@ -19,15 +19,15 @@ const nextConfig = {
     basePath: getBasePath(),
     apiBaseUrl: isProd ? "https://iseey.app" : "http://localhost:5002",
   },
-  // redirects: async () => {
-  //   return [
-  //     {
-  //       source: "/auth/login",
-  //       destination: "/restaurants",
-  //       permanent: true,
-  //     },
-  //   ];
-  // },
+  redirects: async () => {
+    return [
+      {
+        source: "/login",
+        destination: "/restaurants",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
