@@ -2,7 +2,7 @@
  * These routes do not require authentication.
  * @type {string[]}
  */
-export const publicRoutes = ["/public", "/dashboard/index"];
+export const publicRoutes = ["/public"];
 
 /**
  * An array of routes that are used for authentication.
@@ -10,7 +10,7 @@ export const publicRoutes = ["/public", "/dashboard/index"];
  * @type {string[]}
  */
 export const authRoutes = [
-  "/login",
+  "/auth/login",
   "/register",
   "/forgot-password",
   "/reset-password",
@@ -23,4 +23,4 @@ export const apiAuthPrefix = "/api/auth";
  * The default redirect path after a successful login.
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
+export const DEFAULT_LOGIN_REDIRECT = "/dashboard/index";

@@ -57,7 +57,7 @@ export default function middleware(req: NextRequest) {
 
   if (!isLoggedIn && !isPublicRoute) {
     console.log("Not logged in", nextUrl.pathname);
-    return NextResponse.redirect(new URL("/login", nextUrl));
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
 
   return null;
