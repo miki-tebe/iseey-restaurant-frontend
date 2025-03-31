@@ -101,8 +101,7 @@ export async function updateProfile(data: ProfileFormValues) {
       body: JSON.stringify(data),
     });
     return await result;
-  } catch (error: any) {
-    console.error("Error in updateProfile:", error);
+  } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Failed to update profile";
     return { errorMessage, isError: true };

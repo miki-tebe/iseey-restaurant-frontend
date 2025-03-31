@@ -11,7 +11,7 @@ import AuthGuard from "@/components/auth-guard";
 
 async function Header() {
   return (
-    <header className="flex h-14 items-center gap-4 px-4 lg:h-[100px] lg:px-6">
+    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[100px] lg:px-6">
       <MobileSideBar />
       <div className="ml-auto flex items-center gap-2"></div>
       <Suspense fallback={<UserProfileSkeleton />}>
@@ -43,18 +43,12 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="grid min-h-screen md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <div className="grid max-h-screen overflow-y-scroll w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
         <DesktopSideBar />
-        {/* <div className="flex flex-col pb-20 h-screen">
-        <Header />
-        {children}
-      </div> */}
-        <main className="flex-1 flex flex-col h-screen overflow-hidden border-l">
-          <div className="flex flex-col h-20 gap-4 border-b bg-muted/40 px-4 lg:h-[100px] lg:px-6">
-            <Header />
-          </div>
+        <div className="flex flex-col pb-20">
+          <Header />
           {children}
-        </main>
+        </div>
       </div>
     </AuthGuard>
   );
