@@ -7,6 +7,7 @@ import DesktopSideBar from "@/components/desktop-sidenav";
 import { Suspense } from "react";
 import UserProfile from "@/components/user-profile";
 import { UserProfileSkeleton } from "@/components/user-profile-skeleton";
+import AuthGuard from "@/components/auth-guard";
 
 async function Header() {
   return (
@@ -41,12 +42,14 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid max-h-screen overflow-y-scroll w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <DesktopSideBar />
-      <div className="flex flex-col">
-        <Header />
-        {children}
+    <AuthGuard>
+      <div className="grid max-h-screen overflow-y-scroll w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+        <DesktopSideBar />
+        <div className="flex flex-col">
+          <Header />
+          {children}
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }
