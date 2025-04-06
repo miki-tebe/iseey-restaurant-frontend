@@ -4,13 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Breadcrumbs } from "@/components/bread-crumbs";
 
 export default async function ViewUser({ params }: { params: { id: string } }) {
   const { id } = params;
   const user = await getGuest({ id });
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+    <main className="flex flex-1 flex-col overflow-y-scroll gap-4 p-4 lg:gap-6 lg:p-6">
+      <Breadcrumbs />
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Guest Information</h1>
       </div>

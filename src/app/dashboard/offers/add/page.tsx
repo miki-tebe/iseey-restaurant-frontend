@@ -25,6 +25,7 @@ import { offerFormSchema, OfferFormType } from "@/schema/offerFormSchema";
 import ImageUpload from "@/components/image-upload";
 import { useAddOffer } from "@/hooks/use-add-offer";
 import { FormFieldComponent } from "@/components/form-field";
+import { Breadcrumbs } from "@/components/bread-crumbs";
 
 export default function AddOffer() {
   const mutation = useAddOffer();
@@ -56,7 +57,8 @@ export default function AddOffer() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+    <main className="flex flex-1 flex-col overflow-y-scroll gap-4 p-4 lg:gap-6 lg:p-6">
+      <Breadcrumbs />
       <Card>
         <CardHeader>
           <CardTitle>Add Offer</CardTitle>

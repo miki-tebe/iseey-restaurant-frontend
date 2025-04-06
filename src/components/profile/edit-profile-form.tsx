@@ -21,12 +21,15 @@ import {
 } from "@/components/ui/form";
 import ImageUpload from "@/components/image-upload";
 import { useEditProfile } from "@/hooks/use-edit-profile";
+import { CountryCodeInput } from "../country-code-input";
+import { useStore } from "@/hooks/use-edit-profile-store";
 
 export default function EditProfileForm({
   restaurantProfile,
 }: {
   restaurantProfile: RestaurantProfile;
 }) {
+  const {countryCode} = useStore()
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -40,8 +43,8 @@ export default function EditProfileForm({
       website: restaurantProfile.website,
       resImage: restaurantProfile.restaurant_image.location,
       image: restaurantProfile.image,
-      lat: undefined,
-      lng: undefined,
+      lat: restaurantProfile.lat,
+      lng: restaurantProfile.lng,
       menu: restaurantProfile.menu,
       menuType:
         restaurantProfile.menuType === "url" ||
@@ -59,12 +62,31 @@ export default function EditProfileForm({
     },
   });
 
+  // console.log("first", restaurantProfile)
+
+  // React.useEffect(() => {
+  //   if(restaurantProfile.phoneNumber.country_code) {
+  //     const country = countries.filter((country) => {
+  //       return country.dial_code === '+' + restaurantData.phoneNumber.country_code.toString() })
+  //     if(country.length > 0) {
+  //       updateCountryCode(country[0])
+  //     }
+  //   }
+  // },[])
+
   const mutation = useEditProfile();
 
   const [menuType, setMenuType] = React.useState(false);
   const [drinkType, setDrinkType] = React.useState(false);
 
   function onSubmit(data: Partial<ProfileFormValues>) {
+    if(data["lat"] === undefined || data["lng"] === undefined) {
+        profileForm.setError("address", {
+              type: "manual",
+              message: "Address is required",
+              });
+        return
+      }
     // delete object property if empty
     Object.keys(data).forEach((key) => {
       const typedKey = key as keyof typeof data;
@@ -73,11 +95,11 @@ export default function EditProfileForm({
       }
     });
 
-    mutation.mutate({ values: data });
+    if (data.phoneNumber){
+      data.phoneNumber = countryCode.dial_code + data.phoneNumber;
+    }
 
-    // updateProfile(data).then((result) => {
-    //   toast(result.message);
-    // });
+    mutation.mutate({ values: data });
   }
   return (
     <Form {...profileForm}>
@@ -162,12 +184,10 @@ export default function EditProfileForm({
             disabled={mutation.isPending}
           />
 
-          <FormFieldComponent<ProfileFormValues>
+          <CountryCodeInput<ProfileFormValues> 
             control={profileForm.control}
             name="phoneNumber"
-            label="Phone Number"
             placeholder="phonenumber"
-            type="text"
             disabled={mutation.isPending}
           />
         </div>

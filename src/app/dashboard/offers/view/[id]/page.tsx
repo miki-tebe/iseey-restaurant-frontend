@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import { Breadcrumbs } from "@/components/bread-crumbs";
 
 export default async function ViewOffer({
   params,
@@ -14,7 +15,8 @@ export default async function ViewOffer({
   const offer = await getOffer({ id });
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+    <main className="flex flex-1 flex-col overflow-y-scroll gap-4 p-4 lg:gap-6 lg:p-6">
+      <Breadcrumbs />
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Offer Details</h1>
       </div>
