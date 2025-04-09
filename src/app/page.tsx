@@ -74,7 +74,7 @@ export default function Login() {
               Willkommen im Restaurant-Portal
             </h1>
             <p className="text-balance text-muted-foreground">
-              Melden Sie sich an
+              Einloggen
             </p>
           </div>
           <Form {...form}>
@@ -140,9 +140,9 @@ export default function Login() {
                 )}
               />
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Loading..." : "Anmelden"}
+                {isLoading ? "Loading..." : "Einloggen"}
               </Button>
-              <div className="text-center mt-4 text-sm">
+              {/* <div className="text-center mt-4 text-sm">
                 Noch kein Konto?{" "}
                 <Link
                   href="/signup"
@@ -150,7 +150,7 @@ export default function Login() {
                 >
                   Registrieren
                 </Link>
-              </div>
+              </div> */}
             </form>
           </Form>
         </div>
