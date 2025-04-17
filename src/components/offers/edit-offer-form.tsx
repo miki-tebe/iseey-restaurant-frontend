@@ -144,7 +144,7 @@ export default function EditOfferForm({ offer }: { offer: Offer }) {
                 <FormControl>
                   <ImageUpload
                     onUploadComplete={(imageUrl) => {
-                      console.log("Image uploaded:", imageUrl);
+                      // console.log("Image uploaded:", imageUrl);
                       form.setValue("image", imageUrl);
                     }}
                     type="offer"

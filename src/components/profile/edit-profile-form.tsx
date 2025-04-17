@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { RestaurantProfile } from "@/types/type";
 import { Controller, useForm } from "react-hook-form";
@@ -23,25 +23,26 @@ import ImageUpload from "@/components/image-upload";
 import { useEditProfile } from "@/hooks/use-edit-profile";
 import { CountryCodeInput } from "../country-code-input";
 import { useStore } from "@/hooks/use-edit-profile-store";
+import { countries } from "@/lib/countries-data";
 
 export default function EditProfileForm({
   restaurantProfile,
 }: {
   restaurantProfile: RestaurantProfile;
 }) {
-  const {countryCode} = useStore()
+  const {countryCode, updateCountryCode} = useStore()
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       name: restaurantProfile.name,
       address: restaurantProfile.address,
       email: restaurantProfile.email,
-      phoneNumber: restaurantProfile.phoneNumber,
+      phoneNumber: restaurantProfile.phoneNumber.number,
       number_of_tables: restaurantProfile.number_of_tables,
       facebook: restaurantProfile.facebook,
       instagram: restaurantProfile.instagram,
       website: restaurantProfile.website,
-      resImage: restaurantProfile.restaurant_image.location,
+      resImage: restaurantProfile.restaurant_image?.location,
       image: restaurantProfile.image,
       lat: restaurantProfile.lat,
       lng: restaurantProfile.lng,
@@ -62,17 +63,17 @@ export default function EditProfileForm({
     },
   });
 
-  // console.log("first", restaurantProfile)
 
-  // React.useEffect(() => {
-  //   if(restaurantProfile.phoneNumber.country_code) {
-  //     const country = countries.filter((country) => {
-  //       return country.dial_code === '+' + restaurantData.phoneNumber.country_code.toString() })
-  //     if(country.length > 0) {
-  //       updateCountryCode(country[0])
-  //     }
-  //   }
-  // },[])
+  useEffect(() => {
+    if(restaurantProfile.phoneNumber.country_code) {
+      const country = countries.filter((country) => {
+        return country.dial_code === '+' + restaurantProfile.phoneNumber.country_code.toString() })
+      if(country.length > 0) {
+        updateCountryCode(country[0])
+      }
+    }
+  },[])
+
 
   const mutation = useEditProfile();
 
@@ -125,7 +126,7 @@ export default function EditProfileForm({
                     <FormControl>
                       <ImageUpload
                         onUploadComplete={(imageUrl) => {
-                          console.log("Image uploaded:", imageUrl);
+                          // console.log("Image uploaded:", imageUrl);
                           profileForm.setValue("resImage", imageUrl);
                           field.onChange(imageUrl);
                         }}
@@ -148,7 +149,7 @@ export default function EditProfileForm({
                 <FormControl>
                   <ImageUpload
                     onUploadComplete={(imageUrl) => {
-                      console.log("Image uploaded:", imageUrl);
+                      // console.log("Image uploaded:", imageUrl);
                       profileForm.setValue("image", imageUrl);
                     }}
                     type="restaurant"

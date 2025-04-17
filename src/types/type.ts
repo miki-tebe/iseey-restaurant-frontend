@@ -53,7 +53,12 @@ export type RestaurantProfile = {
   _id: string;
   name: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber: {
+    country_code: number;
+    number: string;
+    original: string;
+    region: string;
+  };
   email_verified: string;
   lat: number;
   lng: number;

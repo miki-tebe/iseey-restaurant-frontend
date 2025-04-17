@@ -327,7 +327,7 @@ export async function uploadRestaurantMenus(data: FormData) {
     });
 
     if (result.success == true) {
-      console.log("result of image posting", result);
+      // console.log("result of image posting", result);
       return { message: "Restaurant menu uploaded", url: result.data.url };
     } else return { message: "Failed to upload restaurant menu" };
   } catch (error) {
@@ -464,7 +464,7 @@ export async function fetchOrders() {
 export async function createTableStand(
   data: z.infer<typeof createTableStandSchema>
 ) {
-  console.log("create Table data", data);
+  // console.log("create Table data", data);
   const session = await verifySession();
   if (!session) return null;
   try {

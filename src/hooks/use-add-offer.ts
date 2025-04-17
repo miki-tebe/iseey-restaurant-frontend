@@ -17,7 +17,7 @@ export function useAddOffer() {
         toast.error(data.errorMessage);
       } else {
         toast.success("Offer created successfully");
-        console.log("created offer", data);
+        // console.log("created offer", data);
         router.push("/dashboard/offers");
       }
       // queryClient.invalidateQueries({ queryKey: ["transactions"] });
