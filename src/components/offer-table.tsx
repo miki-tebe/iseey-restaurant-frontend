@@ -100,7 +100,7 @@ export const columns: ColumnDef<Offer>[] = [
       format(new Date(row.getValue("start_date")).toLocaleDateString(), "PPP"),
   },
   {
-    header: "Endtermin",
+    header: "Enddatum",
     accessorKey: "end_date",
     cell: ({ row }) =>
       format(new Date(row.getValue("end_date")).toLocaleDateString(), "PPP"),
@@ -179,6 +179,8 @@ export default function OfferTable({ offers }: { offers: Offer[] }) {
       columnFilters,
     },
   });
+
+  console.log(offers)
 
   return (
     <div className="grid gap-y-5">

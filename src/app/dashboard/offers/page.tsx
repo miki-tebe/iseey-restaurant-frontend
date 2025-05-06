@@ -14,9 +14,9 @@ export default async function Offers() {
           <CardTitle>Angebotsliste</CardTitle>
         </CardHeader>
         <CardContent>
-          <Suspense fallback={<TableSkeleton />}>
             <OfferTable offers={data ?? []} />
-          </Suspense>
+          {/* <Suspense fallback={<TableSkeleton />}>
+          </Suspense> */}
         </CardContent>
       </Card>
     </main>
