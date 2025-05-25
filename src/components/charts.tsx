@@ -50,7 +50,7 @@ export default function GuestActivityChart() {
       const convertResponse = convertToChartData(res);
       setData(convertResponse);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);

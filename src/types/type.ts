@@ -93,3 +93,20 @@ export type RestaurantProfile = {
   ratings: number;
   restaurantReviewCount: number;
 };
+
+export interface EmailModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  restaurantName?: string;
+}
+
+export interface AttachmentFile {
+  id: string;
+  file: File;
+}
+
+export interface SendEmailRequest {
+  subject: string;
+  content: string;
+  attachments: File[];
+}

@@ -20,7 +20,7 @@ export const useImageUpload = () => {
   const uploadImage = useCallback(
     async (
       file: File,
-      type: "food" | "drink" | "restaurant" | "user" | "offer"
+      type: "food" | "drink" | "restaurant" | "user" | "offer" | "newsletter"
     ) => {
       const url =
         type === "food" || type === "drink"

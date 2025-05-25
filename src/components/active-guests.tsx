@@ -41,41 +41,41 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
           token: sessionToken,
         },
       };
-      console.log("Connecting to restaurant socket -->", API_URL);
+      // console.log("Connecting to restaurant socket -->", API_URL);
       socket = io(API_URL, socketOptions);
 
-      socket.on("connect", () => {
-        console.log("Connected to restaurant socket");
-      });
+      // socket.on("connect", () => {
+      //   console.log("Connected to restaurant socket");
+      // });
 
-      socket.on("disconnect", (reason) => {
-        console.log("Disconnected from restaurant socket:", reason);
-      });
+      // socket.on("disconnect", (reason) => {
+      //   console.log("Disconnected from restaurant socket:", reason);
+      // });
 
-      socket.on("connect_error", (error) => {
-        console.log("Restaurant socket connection error:", error);
-      });
+      // socket.on("connect_error", (error) => {
+      //   console.log("Restaurant socket connection error:", error);
+      // });
 
-      // Debug events
-      socket.onAny((event, ...args) => {
-        console.log("Restaurant Socket Event:", event, args);
-      });
+      // // Debug events
+      // socket.onAny((event, ...args) => {
+      //   console.log("Restaurant Socket Event:", event, args);
+      // });
 
-      // Error events
-      socket.on("error", (error) => {
-        console.log("Restaurant socket error:", error);
-      });
+      // // Error events
+      // socket.on("error", (error) => {
+      //   console.log("Restaurant socket error:", error);
+      // });
 
-      // Auth events
-      socket.on("unauthorized", (error) => {
-        console.log("Restaurant socket unauthorized:", error);
-      });
+      // // Auth events
+      // socket.on("unauthorized", (error) => {
+      //   console.log("Restaurant socket unauthorized:", error);
+      // });
 
       const handleCheckIn = (data: any) => {
         if (data) {
           if (data.restaurant_id.toString() === restaurantId) {
             setActiveGuests((prev) => prev + 1);
-            console.log("active guests", activeGuests);
+            // console.log("active guests", activeGuests);
           }
         }
       };

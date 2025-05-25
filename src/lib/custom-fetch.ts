@@ -20,9 +20,9 @@ const customFetch = async <T = any>(
     const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
 
     const headers = new Headers(fetchOptions.headers || {});
-    if (!headers.has("Content-Type")) {
-      headers.set("Content-Type", "application/json");
-    }
+    // if (!headers.has("Content-Type")) {
+    //   headers.set("Content-Type", "application/json");
+    // }
 
     // Temporarily disable SSL verification for server-side requests
     if (isProd && typeof window === "undefined") {

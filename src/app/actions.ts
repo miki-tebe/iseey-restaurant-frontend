@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 import { verifySession } from "@/lib/dal";
 import { createSession, destroySession } from "@/lib/session";
-import { ITableStand, Price, Product } from "@/types/type";
+import { ITableStand, Price, Product, SendEmailRequest } from "@/types/type";
 import { createTableStandSchema } from "@/schema/table-stand.schema";
 import { OfferFormType } from "@/schema/offerFormSchema";
 import { EditOfferFormType } from "@/schema/offerEditSchema";
@@ -283,7 +283,28 @@ export async function getNewsletters() {
       },
     });
 
-    if (result.success == true) return result.data.newsletters;
+    if (result.success == true) return result.data;
+    return null;
+  } catch (error) {
+    console.error("Error in getNewsletters:", error);
+    return { message: "Failed to fetch newsletters" };
+  }
+}
+
+export async function fetchEmails() {
+  const session = await verifySession();
+  if (!session) return null;
+
+  try {
+    const result = await customFetch(`/api/newsletters/emails/get`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (result.success == true) return result.data[0].emails;
     return null;
   } catch (error) {
     console.error("Error in getNewsletters:", error);
@@ -509,4 +530,27 @@ export async function getToken() {
   const session = await verifySession();
   if (!session) return null;
   return session.token;
+}
+
+export async function sendEmail(emailData: FormData) {
+  const session = await verifySession();
+  // for (let [key, value] of emailData.entries()) {
+  //   console.log(`${key}:`, value);
+  // }
+  if (!session) return null;
+  // console.log("----", emailData);
+  try {
+    const response = await customFetch("/api/newsletters/emails/send", {
+      method: "POST",
+      headers: {
+        // "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${session.token}`,
+      },
+      body: emailData,
+    });
+    if (response.success == true) return response.data;
+  } catch (error) {
+    console.error("Error in sendEmail", error);
+    throw new Error("Failed to send newsletter");
+  }
 }

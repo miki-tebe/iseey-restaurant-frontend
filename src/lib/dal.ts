@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { decrypt } from "@/lib/session";
+import customFetch from "./custom-fetch";
 
 const API_URL = process.env.API_URL;
 
@@ -27,14 +28,12 @@ export const getUser = cache(async () => {
   if (!session) return null;
 
   try {
-    const payload = await fetch(`${API_URL}/api/restaurants/profile`, {
+    const payload = await customFetch(`/api/restaurants/profile`, {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    const result = await payload.json();
-    // console.log("user come", result, session, API_URL);
-    return result.data;
+    return payload.data;
   } catch (e) {
     console.log(e);
   }

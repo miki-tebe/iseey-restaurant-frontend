@@ -23,6 +23,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { User } from "./user-table";
+import { EmailModal } from "./send-newsletter";
 
 export type Newsletter = {
   _id: string;
@@ -62,10 +63,12 @@ export const columns: ColumnDef<Newsletter>[] = [
     accessorKey: "date",
     cell: ({ row }) => {
       const data = row.original as Newsletter;
-      const date = new Date(
-        parseFloat(data.userDetail.dob)
-      ).toLocaleDateString();
-      return format(date, "PPP");
+      if (data.userDetail.dob) {
+        const age =
+          new Date().getFullYear() -
+          new Date(parseFloat(data.userDetail.dob)).getFullYear();
+        return <>{age}</>;
+      }
     },
   },
   {
@@ -81,20 +84,25 @@ export const columns: ColumnDef<Newsletter>[] = [
     accessorKey: "age",
     cell: ({ row }) => {
       const data = row.original as Newsletter;
-      const age =
-        new Date().getFullYear() -
-        new Date(parseFloat(data.userDetail.dob)).getFullYear();
-      return <>{age}</>;
+      if (data.userDetail.dob) {
+        const age =
+          new Date().getFullYear() -
+          new Date(parseFloat(data.userDetail.dob)).getFullYear();
+        return <>{age}</>;
+      }
     },
   },
 ];
 
 export default function NewsletterTable({
   newsletters,
+  token,
 }: {
   newsletters: Newsletter[];
+  token: {};
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const table = useReactTable({
     data: newsletters,
@@ -108,6 +116,11 @@ export default function NewsletterTable({
     },
   });
 
+  const download = () => {
+    const getCSV = `https://iseey.app/restaurants/api/newsletters/download?authorization=${token}`;
+    window.open(getCSV, "__blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="grid gap-y-5">
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
@@ -120,8 +133,10 @@ export default function NewsletterTable({
           className="max-w-sm"
         />
         <div className="justify-self-end space-x-2">
-          <Button>Daten exportieren</Button>
-          <Button>Newsletter senden</Button>
+          <Button onClick={download}>Daten exportieren</Button>
+          <Button onClick={() => setIsModalOpen(true)}>
+            Newsletter senden
+          </Button>
         </div>
       </div>
       <Table>
@@ -184,6 +199,11 @@ export default function NewsletterTable({
           Next
         </Button>
       </div>
+      <EmailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        restaurantName="Restaurant Name"
+      />
     </div>
   );
 }

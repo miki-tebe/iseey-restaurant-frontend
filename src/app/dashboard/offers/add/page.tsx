@@ -151,7 +151,7 @@ export default function AddOffer() {
                       <FormControl>
                         <ImageUpload
                           onUploadComplete={(imageUrl) => {
-                            console.log("Image uploaded:", imageUrl);
+                            // console.log("Image uploaded:", imageUrl);
                             form.setValue("image", imageUrl);
                           }}
                           type="offer"
