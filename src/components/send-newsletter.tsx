@@ -32,6 +32,8 @@ import {
   SendEmailRequest,
 } from "@/types/type";
 import { sendEmailMutation } from "@/hooks/use-send-newsletter";
+import { useGetEmailMutation } from "@/hooks/use-get-emails";
+import { toast } from "sonner";
 
 export function EmailModal({
   isOpen,
@@ -39,10 +41,10 @@ export function EmailModal({
   restaurantName = "Restaurant Name",
 }: EmailModalProps) {
   const mutation = sendEmailMutation();
+  const { mutateAsync, isPending } = useGetEmailMutation();
 
   const [emails, setEmails] = useState<string[]>([]);
   const [isEmailDropdownOpen, setIsEmailDropdownOpen] = useState(false);
-  const [isLoadingEmails, setIsLoadingEmails] = useState(false);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [attachments, setAttachments] = useState<AttachmentFile[]>([]);
@@ -80,17 +82,16 @@ export function EmailModal({
     }
   };
 
-  const loadEmails = async () => {
-    setIsLoadingEmails(true);
+  const fetchEmailsAndSetState = async () => {
     try {
-      const emailList = await fetchEmails();
-      console.log("emailList", emailList);
-      setEmails(emailList ?? []);
-    } catch (error) {
-      // console.error("Failed to load emails:", error);
-      setEmails([]);
-    } finally {
-      setIsLoadingEmails(false);
+      const data = await mutateAsync();
+      if (!data.isError) {
+        setEmails(data.emails);
+      } else {
+        toast.error(data.errorMessage ?? "Failed to fetch emails");
+      }
+    } catch (err) {
+      console.error("Failed to fetch emails:", err);
     }
   };
 
@@ -120,7 +121,7 @@ export function EmailModal({
               onOpenChange={(open) => {
                 setIsEmailDropdownOpen(open);
                 if (open && emails.length === 0) {
-                  loadEmails();
+                  fetchEmailsAndSetState();
                 }
               }}
             >
@@ -138,10 +139,10 @@ export function EmailModal({
               <PopoverContent className="w-full p-0 bg-zinc-800 border-zinc-700">
                 <Command className="bg-zinc-800">
                   <CommandList>
-                    {isLoadingEmails && (
+                    {isPending && (
                       <CommandEmpty>Loading emails...</CommandEmpty>
                     )}
-                    {!isLoadingEmails && emails.length === 0 && (
+                    {!isPending && emails.length === 0 && (
                       <CommandEmpty>No emails available.</CommandEmpty>
                     )}
                     {emails.length > 0 && (
