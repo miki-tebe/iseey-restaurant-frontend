@@ -16,7 +16,7 @@ export function useGetEmailMutation() {
         return [];
       } else {
         console.log("-----", data);
-        return data.emails;
+        return data;
       }
     },
   });

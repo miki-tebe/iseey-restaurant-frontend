@@ -303,6 +303,7 @@ export async function fetchEmails() {
       },
       body: JSON.stringify({}),
     });
+    console.log("result", result);
     if (result.success == true) return result.data;
     return null;
   } catch (error) {
