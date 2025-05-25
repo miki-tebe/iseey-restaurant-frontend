@@ -88,10 +88,12 @@ export function EmailModal({
       if (!data.isError) {
         setEmails(data.emails);
       } else {
+        setEmails([]);
         toast.error(data.errorMessage ?? "Failed to fetch emails");
       }
     } catch (err) {
       console.error("Failed to fetch emails:", err);
+      setEmails([]);
     }
   };
 
