@@ -15,8 +15,8 @@ export function useGetEmailMutation() {
         toast.error(data.errorMessage);
         return [];
       } else {
-        console.log("-----", data);
-        return data;
+        console.log("-----", data.data);
+        return data.data;
       }
     },
   });

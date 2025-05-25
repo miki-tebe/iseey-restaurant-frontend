@@ -85,10 +85,14 @@ export function EmailModal({
   const fetchEmailsAndSetState = async () => {
     try {
       const data = await mutateAsync();
-      setEmails(data.emails);
+      // console.log("-----", data);
+      const datum = data[0];
+      setEmails(datum.emails);
+      // setEmails(data.emails);
     } catch (err) {
-      console.error("Failed to fetch emails:", err);
+      // console.error("Failed to fetch emails:", err);
       setEmails([]);
+      toast.error("we can't fech list of emails");
     }
   };
 

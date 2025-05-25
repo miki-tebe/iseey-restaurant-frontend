@@ -304,7 +304,7 @@ export async function fetchEmails() {
       body: JSON.stringify({}),
     });
     console.log("result", result);
-    if (result.success == true) return result.data;
+    if (result.success == true && result.data) return result.data;
     return null;
   } catch (error) {
     console.error("Error in sendEmail", error);
