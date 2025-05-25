@@ -303,12 +303,11 @@ export async function fetchEmails() {
       },
       body: JSON.stringify({}),
     });
-
-    if (result.success == true) return result.data[0].emails;
+    if (result.success == true) return result.data;
     return null;
   } catch (error) {
-    console.error("Error in getNewsletters:", error);
-    return { message: "Failed to fetch newsletters" };
+    console.error("Error in sendEmail", error);
+    throw new Error("Failed to fetch newsletter");
   }
 }
 
@@ -534,11 +533,7 @@ export async function getToken() {
 
 export async function sendEmail(emailData: FormData) {
   const session = await verifySession();
-  // for (let [key, value] of emailData.entries()) {
-  //   console.log(`${key}:`, value);
-  // }
   if (!session) return null;
-  // console.log("----", emailData);
   try {
     const response = await customFetch("/api/newsletters/emails/send", {
       method: "POST",
