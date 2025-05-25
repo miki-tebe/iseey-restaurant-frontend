@@ -86,6 +86,7 @@ export function EmailModal({
     try {
       const data = await mutateAsync();
       if (!data.isError) {
+        console.log("------", data);
         setEmails(data.emails);
       } else {
         setEmails([]);
