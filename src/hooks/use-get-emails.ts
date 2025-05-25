@@ -10,15 +10,15 @@ export function useGetEmailMutation() {
       const response = await fetchEmails();
       return response;
     },
-    // onSuccess: (data) => {
-    //   if (data.isError) {
-    //     toast.error(data.errorMessage);
-    //     return [];
-    //   } else {
-    //     console.log("-----", data);
-    //     // return data.emails;
-    //   }
-    // },
+    onSuccess: (data) => {
+      if (data.isError) {
+        toast.error(data.errorMessage);
+        return [];
+      } else {
+        console.log("-----", data);
+        return data.emails;
+      }
+    },
   });
 
   return mutation;
