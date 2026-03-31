@@ -10,7 +10,7 @@ export function useRestaurantSocket(token: string) {
     if (!raw) return null;
 
     // IMPORTANT: Strip `/api` or any path. Socket.IO needs the server origin.
-    const origin = new URL(raw).origin;
+    const origin = new URL(raw).toString();
 
     return io(origin, {
       path: "/socket.io",
