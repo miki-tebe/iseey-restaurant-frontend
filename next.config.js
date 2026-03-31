@@ -3,7 +3,7 @@ const isProd = process.env.NODE_ENV === "production";
 
 function getBasePath() {
   if (isProd) {
-    return "/restaurants";
+    return "/restaurant";
   }
   return "";
 }
@@ -23,7 +23,7 @@ const nextConfig = {
     return [
       {
         source: "/login",
-        destination: "/restaurants",
+        destination: "/restaurant",
         permanent: true,
       },
     ];
