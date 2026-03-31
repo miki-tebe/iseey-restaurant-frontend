@@ -10,6 +10,8 @@ export default async function ViewUser({ params }: { params: { id: string } }) {
   const { id } = params;
   const user = await getGuest({ id });
 
+  console.log("user", user);
+
   return (
     <main className="flex flex-1 flex-col overflow-y-scroll gap-4 p-4 lg:gap-6 lg:p-6">
       <Breadcrumbs />
@@ -48,13 +50,15 @@ export default async function ViewUser({ params }: { params: { id: string } }) {
                 <Label>Land</Label>
                 <Input disabled value={user?.country_name} />
               </div>
-              <div className="grid gap-1.5">
-                <Label>Date of Birth</Label>
-                <Input
-                  disabled
-                  value={new Date(parseFloat(user?.dob)).toLocaleDateString()}
-                />
-              </div>
+              {user?.dob && (
+                <div className="grid gap-1.5">
+                  <Label>Date of Birth</Label>
+                  <Input
+                    disabled
+                    value={new Date(parseFloat(user?.dob)).toLocaleDateString()}
+                  />
+                </div>
+              )}
               <div className="grid gap-1.5">
                 <Label>Bio</Label>
                 <Textarea disabled value={user?.bio} />

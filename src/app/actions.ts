@@ -117,7 +117,6 @@ export async function getGuests() {
         Authorization: `Bearer ${session.token}`,
       },
     });
-
     if (result.success == true) return result.data.customers;
   } catch (e) {
     console.log(e);
@@ -358,7 +357,7 @@ export async function uploadRestaurantMenus(data: FormData) {
 }
 
 export async function forgotPassword(
-  data: z.infer<typeof forgotPasswordSchema>
+  data: z.infer<typeof forgotPasswordSchema>,
 ) {
   try {
     const result = await customFetch(`/api/restaurants/forgot-password`, {
@@ -425,7 +424,7 @@ export async function getPlans() {
     products.forEach((product: Product) => {
       if (product.title === "Iseey") {
         const sortedPrices = product.prices.sort(
-          (a, b) => a.unit_amount - b.unit_amount
+          (a, b) => a.unit_amount - b.unit_amount,
         );
         prices.push(...sortedPrices);
       } else if (product.title === "Table Stand" && product.prices.length > 0) {
@@ -483,7 +482,7 @@ export async function fetchOrders() {
 }
 
 export async function createTableStand(
-  data: z.infer<typeof createTableStandSchema>
+  data: z.infer<typeof createTableStandSchema>,
 ) {
   // console.log("create Table data", data);
   const session = await verifySession();
@@ -516,7 +515,7 @@ export async function getChartData(type: string, date: Date) {
         headers: {
           Authorization: `Bearer ${session.token}`,
         },
-      }
+      },
     );
 
     if (result.success == true) return result.data;

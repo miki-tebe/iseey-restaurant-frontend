@@ -49,11 +49,11 @@ export default function DashboardLayout({
         <Header />
         {children}
       </div> */}
-        <main className="flex-1 flex flex-col h-screen overflow-hidden border-l">
-          <div className="flex flex-col h-20 gap-4 border-b bg-muted/40 px-4 lg:h-[100px] lg:px-6">
+        <main className="flex-1 flex flex-col h-screen border-l">
+          <div className="flex-shrink-0 flex flex-col h-20 gap-4 border-b bg-muted/40 px-4 lg:h-[100px] lg:px-6">
             <Header />
           </div>
-          {children}
+          <div className="flex-1 overflow-y-auto">{children}</div>
         </main>
       </div>
     </AuthGuard>

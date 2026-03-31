@@ -36,7 +36,7 @@ export default async function Dashboard() {
         <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
       </div>
       <ActiveGuests sessionToken={token} />
-      <GuestActivityChart />
+      {/* <GuestActivityChart /> */}
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -96,18 +96,18 @@ export default async function Dashboard() {
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {customer?.created
-                        ? format(new Date(customer?.created), "PPP")
+                        ? format(new Date(Number(customer.created)), "PPP")
                         : "N/A"}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {customer?.userDetail?.country_name}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    {/* <TableCell className="hidden md:table-cell">
                       {new Date().getFullYear() -
                         new Date(
-                          parseFloat(customer?.userDetail?.dob)
+                          parseFloat(customer?.userDetail?.dob),
                         ).getFullYear()}
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))
               ) : (
