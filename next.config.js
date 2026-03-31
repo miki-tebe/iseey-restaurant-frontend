@@ -11,6 +11,10 @@ function getBasePath() {
 const nextConfig = {
   basePath: getBasePath(),
   output: "standalone",
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
   server: {
     port: 9003,
     host: "0.0.0.0",
