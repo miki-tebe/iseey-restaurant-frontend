@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { getAssetPath } from "@/lib/utils";
+import router from "next/router";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -61,7 +62,7 @@ export default function Login() {
     <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
       <div className="hidden lg:flex lg:items-center lg:justify-center bg-muted h-screen">
         <Image
-          src={getAssetPath("/images/logo4.png")}
+          src={getAssetPath("/restaurant/images/logo4.png")}
           alt="ISSEY Logo"
           width={1590}
           height={900}
@@ -73,9 +74,7 @@ export default function Login() {
             <h1 className="text-3xl font-bold">
               Willkommen im Restaurant-Portal
             </h1>
-            <p className="text-balance text-muted-foreground">
-              Einloggen
-            </p>
+            <p className="text-balance text-muted-foreground">Einloggen</p>
           </div>
           <Form {...form}>
             <form

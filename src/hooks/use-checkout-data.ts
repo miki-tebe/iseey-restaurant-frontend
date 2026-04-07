@@ -12,6 +12,8 @@ interface DataStore {
   setData: (newData: DataEntry[]) => void; // Set the entire dataset
   getData: () => DataEntry[];
   resetData: () => void; // Reset to initial default state
+  activeGuests: number;
+  setActiveGuests: (newActiveGuests: number) => void;
 }
 
 const initialData: DataEntry[] = [
@@ -48,6 +50,9 @@ const useDataStore = create<DataStore>((set, get) => ({
   resetData: () => set({ graphData: initialData }), // Reset data to default
   date: new Date(),
   setDate: (newDate: Date) => set({ date: newDate }),
+  activeGuests: 0,
+  setActiveGuests: (newActiveGuests: number) =>
+    set({ activeGuests: newActiveGuests }),
 }));
 
 export default useDataStore;

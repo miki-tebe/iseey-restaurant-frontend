@@ -1,18 +1,15 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
 export function useRestaurantSocket(token: string) {
-  const raw = process.env.NEXT_PUBLIC_API_URL;
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const socketRef = useRef<Socket | null>(null);
 
-  const socket: Socket | null = useMemo(() => {
-    if (!raw) return null;
-
-    // IMPORTANT: Strip `/api` or any path. Socket.IO needs the server origin.
-    const origin = new URL(raw).toString();
-
-    return io(origin, {
+  if (!socketRef.current && url) {
+    const origin = new URL(url).origin;
+    socketRef.current = io(origin, {
       path: "/socket.io",
       transports: ["websocket", "polling"],
       auth: { token },
@@ -24,36 +21,37 @@ export function useRestaurantSocket(token: string) {
       timeout: 20000,
       withCredentials: false,
     });
-  }, [raw, token]);
+  }
 
   useEffect(() => {
-    if (!socket) return;
+    if (socketRef.current) {
+      socketRef.current.auth = { token };
+    }
+  }, [token]);
 
-    const onConnect = () => console.log("socket connected", socket.id);
+  useEffect(() => {
+    const s = socketRef.current;
+    if (!s) return;
+
+    const onConnect = () => console.log("socket connected", s.id);
+    const onDisconnect = (reason: string) =>
+      console.log("socket disconnected", reason);
     const onConnectError = (err: any) =>
       console.log("socket connect_error", err?.message || err);
 
-    socket.on("connect", onConnect);
-    socket.on("connect_error", onConnectError);
+    s.on("connect", onConnect);
+    s.on("disconnect", onDisconnect);
+    s.on("connect_error", onConnectError);
 
-    socket.on("NEW_CUSTOMER_CREATED", (payload) => {
-      console.log("NEW_CUSTOMER_CREATED", payload);
-    });
-    socket.on("NEW_CHECK_IN_CREATED", (payload) => {
-      console.log("NEW_CHECK_IN_CREATED", payload);
-    });
-    socket.on("NEW_CHECK_OUT_CREATED", (payload) => {
-      console.log("NEW_CHECK_OUT_CREATED", payload);
-    });
-
-    socket.connect();
+    s.connect();
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("connect_error", onConnectError);
-      socket.disconnect();
+      s.off("connect", onConnect);
+      s.off("disconnect", onDisconnect);
+      s.off("connect_error", onConnectError);
+      s.disconnect();
     };
-  }, [socket]);
+  }, []);
 
-  return socket;
+  return socketRef.current;
 }

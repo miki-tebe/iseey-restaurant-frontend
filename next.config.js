@@ -2,10 +2,10 @@
 const isProd = process.env.NODE_ENV === "production";
 
 function getBasePath() {
-  if (isProd) {
-    return "/restaurant";
-  }
-  return "";
+  // if (isProd) {
+  //   return "/restaurant";
+  // }
+  return "/restaurant";
 }
 
 const nextConfig = {
