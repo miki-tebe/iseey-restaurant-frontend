@@ -70,13 +70,22 @@ export const columns: ColumnDef<Offer>[] = [
     header: "Bild",
     accessorKey: "image",
     cell: ({ row }) => {
+      const imgSrc: string = row.getValue("image");
+      if (!imgSrc) {
+        return (
+          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs">
+            —
+          </div>
+        );
+      }
       return (
         <Image
-          src={row.getValue("image")}
+          src={imgSrc}
           alt={row.getValue("name")}
-          className="h-8 w-8 rounded-full"
+          className="h-8 w-8 rounded-full object-cover"
           width={32}
           height={32}
+          unoptimized
         />
       );
     },

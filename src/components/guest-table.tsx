@@ -57,13 +57,22 @@ export const columns: ColumnDef<Guest>[] = [
     accessorKey: "image",
     cell: ({ row }) => {
       const guest = row.original as Guest;
+      const imgSrc = guest.userDetail.image;
+      if (!imgSrc) {
+        return (
+          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
+            {(guest.userDetail.first_name?.[0] ?? "G").toUpperCase()}
+          </div>
+        );
+      }
       return (
         <Image
-          src={guest.userDetail.image}
+          src={imgSrc}
           alt={guest.userDetail.first_name || "Guest"}
-          className="h-8 w-8 rounded-full"
+          className="h-8 w-8 rounded-full object-cover"
           width={32}
           height={32}
+          unoptimized
         />
       );
     },

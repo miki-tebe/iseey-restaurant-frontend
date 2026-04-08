@@ -31,7 +31,6 @@ export default function ActiveGuests({ sessionToken }: ActiveGuestsProps) {
     const handleCheckIn = (data: any) => {
       const rid = restaurantIdRef.current;
       if (!rid || data?.restaurant_id?.toString() !== rid) return;
-      console.log("activeGuests", activeGuests);
       setActiveGuests((prev) => prev + 1);
     };
 

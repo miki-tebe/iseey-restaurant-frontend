@@ -66,7 +66,14 @@ export default function EditOfferForm({ offer }: { offer: Offer }) {
     <CardContent>
       {offer.image && (
         <div className="mb-4">
-          <Image src={offer.image} alt="Offer Image" width={200} height={200} />
+          <Image
+            src={offer.image}
+            alt="Offer Image"
+            width={200}
+            height={200}
+            className="rounded-md object-cover"
+            unoptimized
+          />
         </div>
       )}
       <Form {...form}>

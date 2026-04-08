@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/table";
 import ActiveGuests from "@/components/active-guests";
 import GuestActivityChart from "@/components/charts";
-// import GuestActivityChart from "@/components/charts";
 
 type Customer = {
   userDetail: {

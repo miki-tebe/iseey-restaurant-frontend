@@ -20,10 +20,7 @@ export async function login(data: { email: string; password: string }) {
   try {
     const result = await customFetch(`/api/restaurants/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      data,
     });
     if (result.data?.token === undefined) {
       return result;
@@ -45,10 +42,7 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
     data.lng = "103.8198";
     const result = await customFetch(`/api/restaurants/signup`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      data,
     });
 
     if (result.data?.token === undefined) {
@@ -67,7 +61,7 @@ export async function signup(data: z.infer<typeof signupValidationSchema>) {
 
 export async function logout() {
   destroySession();
-  redirect("/");
+  redirect("/login");
 }
 
 export async function getProfile() {
@@ -95,12 +89,11 @@ export async function updateProfile(data: ProfileFormValues) {
     const result = await customFetch(`/api/restaurants/profile`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${session.token}`,
       },
-      body: JSON.stringify(data),
+      data,
     });
-    return await result;
+    return result;
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Failed to update profile";
@@ -156,7 +149,7 @@ export async function deleteUser(data: { id: string }) {
       },
     });
     revalidatePath("/dashboard/users");
-    return await result;
+    return result;
   } catch (error) {
     console.error("Error in deleteUser:", error);
     return { message: "Failed to delete user" };
@@ -209,21 +202,17 @@ export async function addOffer(data: Partial<OfferFormType>) {
     const result = await customFetch(`/api/offers`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${session.token}`,
       },
-      body: JSON.stringify(data),
+      data,
     });
 
-    // revalidatePath("/dashboard/offers");
     return result;
   } catch (error) {
     console.error("Error in addOffer:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to add Offers";
     return { errorMessage, isError: true };
-    // return { message: "Failed to add offer" };
-    // throw error;
   }
 }
 
@@ -235,20 +224,17 @@ export async function updateOffer(data: EditOfferFormType, id: string) {
     const result = await customFetch(`/api/offers/${id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${session.token}`,
       },
-      body: JSON.stringify(data),
+      data,
     });
     revalidatePath("/dashboard/offers");
-    return await result;
+    return result;
   } catch (error) {
     console.error("Error in updateOffer:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to update Offers";
     return { errorMessage, isError: true };
-    // return { message: "Failed to update offer" };
-    // throw error;
   }
 }
 
@@ -264,7 +250,7 @@ export async function deleteOffer(data: { id: string }) {
       },
     });
     revalidatePath("/dashboard/offers");
-    return await result;
+    return result;
   } catch (error) {
     console.error("Error in deleteOffer:", error);
     return { message: "Failed to delete offer" };
@@ -300,54 +286,29 @@ export async function fetchEmails() {
       headers: {
         Authorization: `Bearer ${session.token}`,
       },
-      body: JSON.stringify({}),
+      data: {},
     });
-    console.log("result", result);
     if (result.success == true && result.data) return result.data;
     return null;
   } catch (error) {
-    console.error("Error in sendEmail", error);
+    console.error("Error in fetchEmails", error);
     throw new Error("Failed to fetch newsletter");
   }
 }
 
-// export async function uploadOfferPhoto(data: FormData) {
-//   const session = await verifySession();
-//   if (!session) return null;
-//   try {
-//     const result = await customFetch(`/api/upload/offer`, {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${session.token}`,
-//       },
-//       body: data,
-//     });
-
-//     if (result.success == true) {
-//       return { message: "Offer photo uploaded", url: result.data.url };
-//     } else return { message: "Failed to upload offer photo" };
-//   } catch (error) {
-//     console.error("Error in uploadOfferPhoto:", error);
-//     return { message: "Failed to upload offer photo" };
-//   }
-// }
-
 export async function uploadRestaurantMenus(data: FormData) {
   const session = await verifySession();
   if (!session) return null;
-  // console.log("session", session.token);
   try {
     const result = await customFetch(`/api/upload/menu`, {
       method: "POST",
       headers: {
-        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${session.token}`,
       },
-      body: data,
+      data,
     });
 
     if (result.success == true) {
-      // console.log("result of image posting", result);
       return { message: "Restaurant menu uploaded", url: result.data.url };
     } else return { message: "Failed to upload restaurant menu" };
   } catch (error) {
@@ -362,10 +323,7 @@ export async function forgotPassword(
   try {
     const result = await customFetch(`/api/restaurants/forgot-password`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      data,
     });
 
     return result;
@@ -383,10 +341,7 @@ export async function resetPassword(data: {
   try {
     const result = await customFetch(`/api/restaurants/reset-password`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      data,
     });
 
     return result;
@@ -396,7 +351,6 @@ export async function resetPassword(data: {
   }
 }
 
-// plans actions
 export async function getPlans() {
   const session = await verifySession();
   if (!session) return null;
@@ -407,13 +361,7 @@ export async function getPlans() {
       },
     });
 
-    if (!response.ok) {
-      console.error(`Failed to fetch prices: ${response.statusText}`);
-      throw new Error("Failed to fetch prices");
-    }
-
     if (!response.success) {
-      console.error("Failed to fetch prices:", response);
       throw new Error("Failed to fetch prices");
     }
 
@@ -450,10 +398,9 @@ export async function changePlan(data: z.infer<typeof changePlanSchema>) {
     const result = await customFetch(`/api/stripe/change_plan`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${session.token}`,
       },
-      body: JSON.stringify(data),
+      data,
     });
 
     return result;
@@ -484,17 +431,15 @@ export async function fetchOrders() {
 export async function createTableStand(
   data: z.infer<typeof createTableStandSchema>,
 ) {
-  // console.log("create Table data", data);
   const session = await verifySession();
   if (!session) return null;
   try {
     const result = await customFetch(`/api/stripe/session/purchaseTableStand`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${session.token}`,
       },
-      body: JSON.stringify(data),
+      data,
     });
 
     return result.data;
@@ -538,10 +483,9 @@ export async function sendEmail(emailData: FormData) {
     const response = await customFetch("/api/newsletters/emails/send", {
       method: "POST",
       headers: {
-        // "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${session.token}`,
       },
-      body: emailData,
+      data: emailData,
     });
     if (response.success == true) return response.data;
   } catch (error) {

@@ -18,5 +18,5 @@ export default async function AuthGuard({
   const cookie = cookies().get("session")?.value;
   const session = await decrypt(cookie);
 
-  return <>{session ? children : redirect("/")}</>;
+  return <>{session ? children : redirect("/login")}</>;
 }
